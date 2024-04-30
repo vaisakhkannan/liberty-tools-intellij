@@ -4,8 +4,8 @@ on:
     types: [ opened , reopened ]
 
 jobs:
-  new_push_job:
-    runs-on: ${{ matrix.os }}
+  build:
+    runs-on: ubuntu-latest
     name: PR creation
     steps:
       - name: Send GitHub trigger payload to Slack Workflow Builder
