@@ -8,22 +8,19 @@ jobs:
     runs-on: ubuntu-latest
     name: PR creation
     steps:
-      - name: Check PR type
-        id: check_pr_type
-        run: echo "::set-output name=pr_type::${{ github.event_name }}"
       - name: Send GitHub trigger payload to Slack Workflow Builder
         id: slack
         uses: slackapi/slack-github-action@v1.26.0
         with:
           payload: |
             {
-            "text": "GitHub Action PR {{ steps.check_pr_type.outputs.pr_type }}: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+            "text": "GitHub Action PR ${{ github.event_name }}: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action PR {{ steps.check_pr_type.outputs.pr_type }} recently: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                    "text": "GitHub Action PR ${{ github.event_name }} recently: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
                   }
                 }
               ]
