@@ -1,0 +1,27 @@
+name: PR notification
+on:
+  pull_request:
+    types: [ opened , reopened , closed, review_request_removed, review_requested]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: PR creation
+    steps:
+      - name: Get latest PR info
+        id: pr
+        run: |
+          latest_pr=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUBTOKEN }}" "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=1")
+          pr_branch=$(echo "$latest_pr" | jq -r '.[0].head.ref')
+          pr_sha=$(echo "$latest_pr" | jq -r '.[0].head.sha')
+          echo "::set-output name=branch::$pr_branch"
+          echo "::set-output name=sha::$pr_sha"
+        shell: bash
+          - name: Checkout latest PR
+            if: steps.pr.outputs.branch != null
+            uses: actions/checkout@v3
+            with:
+              ref: ${{ steps.pr.outputs.branch }}
+              repository: redhat-developer/lsp4ij
+              token: ${{ secrets.GITHUBTOKEN }}
+              path: lsp4ij
