@@ -22,7 +22,7 @@ jobs:
 
       - name: Notify to Slack
         if: steps.latest_pr.outputs.latest_pr_url != 'null'
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@v1.26.0
         with:
           status: success
           text: "Latest Pull Request: ${{ steps.latest_pr.outputs.latest_pr_url }}"
