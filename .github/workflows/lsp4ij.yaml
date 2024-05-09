@@ -1,30 +1,31 @@
-name: PR notification
+name: PR notification new
 on:
   pull_request:
     types: [ opened , reopened , closed, review_request_removed, review_requested]
 
 jobs:
-  build:
+  notify_pr:
     runs-on: ubuntu-latest
-    name: PR creation
+
     steps:
-      - name: Get latest PR info
-        id: pr
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch latest pull request
+        id: latest_pr
         run: |
-          latest_pr=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUBTOKEN }}" "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=1")
-          pr_branch=$(echo "$latest_pr" | jq -r '.[0].head.ref')
-          pr_sha=$(echo "$latest_pr" | jq -r '.[0].head.sha')
-          echo "::set-output name=branch::$pr_branch"
-          echo "::set-output name=sha::$pr_sha"
-        shell: bash
-          - name: Checkout latest PR
-            if: steps.pr.outputs.branch != null
-            uses: actions/checkout@v3
-            with:
-              ref: ${{ steps.pr.outputs.branch }}
-              repository: redhat-developer/lsp4ij
-              token: ${{ secrets.GITHUBTOKEN }}
-              path: lsp4ij
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          PR_JSON=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      https://api.github.com/repos/${{ github.repository }}/pulls)
+          LATEST_PR_URL=$(echo "$PR_JSON" | jq -r '.[0].html_url')
+          echo "::set-output name=latest_pr_url::$LATEST_PR_URL"
+
+      - name: Notify to Slack
+        if: steps.latest_pr.outputs.latest_pr_url != 'null'
+        uses: slackapi/slack-github-action@v3
+        with:
+          status: success
+          text: "Latest Pull Request: ${{ steps.latest_pr.outputs.latest_pr_url }}"
+          secrets: |
+            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+            SLACK_CHANNEL: C070N7CG3U4
