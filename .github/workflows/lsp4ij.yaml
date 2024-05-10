@@ -22,11 +22,11 @@ jobs:
 
       - name: Notify to Slack
         if: steps.latest_pr.outputs.latest_pr_url != 'null'
-        uses: slack/slack-github-action@v3
+        uses: slackapi/slack-github-action@v3
         with:
-          status: 'Latest Pull Request'
-          text: 'URL: ${{ steps.latest_pr.outputs.latest_pr_url }}'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
-
+          status: success
+          text: "Latest Pull Request: ${{ steps.latest_pr.outputs.latest_pr_url }}"
+          secrets: |
+            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+            SLACK_CHANNEL: C070N7CG3U4
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
