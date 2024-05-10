@@ -28,4 +28,5 @@ jobs:
           text: 'URL: ${{ steps.latest_pr.outputs.latest_pr_url }}'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
 
