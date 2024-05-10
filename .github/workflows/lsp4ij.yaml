@@ -16,16 +16,16 @@ jobs:
         run: |
           PR_JSON=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                       -H "Accept: application/vnd.github.v3+json" \
-                      https://api.github.com/repos/${{ github.repository }}/pulls)
+                      https://api.github.com/repos/redhat-developer/lsp4ij/pulls)
           LATEST_PR_URL=$(echo "$PR_JSON" | jq -r '.[0].html_url')
           echo "::set-output name=latest_pr_url::$LATEST_PR_URL"
 
       - name: Notify to Slack
         if: steps.latest_pr.outputs.latest_pr_url != 'null'
-        uses: rtCamp/action-slack-notify@v3
-        env:
-          SLACK_CHANNEL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: slackapi/slack-github-action@v3
         with:
-          status: 'Latest Pull Request'
-          fields: 'URL: ${{ steps.latest_pr.outputs.latest_pr_url }}'
+          status: success
+          text: "Latest Pull Request: ${{ steps.latest_pr.outputs.latest_pr_url }}"
+          secrets: |
+            SLACK_BOT_TOKEN: ${{ secrets.SLACK_WEBHOOK_URL }}
+            SLACK_CHANNEL: C070N7CG3U4
