@@ -27,5 +27,5 @@ jobs:
           status: success
           text: "Latest Pull Request: ${{ steps.latest_pr.outputs.latest_pr_url }}"
           secrets: |
-            SLACK_BOT_TOKEN: ${{ secrets.SLACK_WEBHOOK_URL }}
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
             SLACK_CHANNEL: C070N7CG3U4
