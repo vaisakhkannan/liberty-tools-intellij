@@ -1,32 +1,29 @@
-name: PR notification new
+name: Fetch All Open Pull Requests with File Changes
+
 on:
+  push:
   pull_request:
-    types: [ opened , reopened , closed, review_request_removed, review_requested]
+    types: [opened, synchronize]
 
 jobs:
-  notify_pr:
+  fetch_pull_requests_with_file_changes:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Fetch latest pull request
-        id: latest_pr
+      - name: Fetch open pull requests
+        id: fetch_prs
         run: |
-          PR_JSON=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                      -H "Accept: application/vnd.github.v3+json" \
-                      https://api.github.com/repos/redhat-developer/lsp4ij/pulls)
-          LATEST_PR_URL=$(echo "$PR_JSON" | jq -r '.[0].html_url')
-          echo "::set-output name=latest_pr_url::$LATEST_PR_URL"
+          PRS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/MicroShed/lsp4ij/pulls?state=open" | jq -r '.[].number')
+          echo "Open pull requests: $PRS"
+          echo "::set-output name=PRS::$PRS"
 
-      - name: Notify to Slack
-        if: steps.latest_pr.outputs.latest_pr_url != 'null'
-        uses: slackapi/slack-github-action@v3
+      - name: Send PR details to Slack
+        uses: rtCamp/action-slack-notify@v2
         with:
-          status: success
-          text: "Latest Pull Request: ${{ steps.latest_pr.outputs.latest_pr_url }}"
-          secrets: |
-            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-            SLACK_CHANNEL: C070N7CG3U4
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          slack_message: "New pull request opened! Details: ${{ steps.fetch_prs.outputs.PRS }}"
