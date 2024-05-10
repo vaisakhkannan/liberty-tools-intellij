@@ -22,9 +22,10 @@ jobs:
 
       - name: Notify to Slack
         if: steps.latest_pr.outputs.latest_pr_url != 'null'
-        uses: rtCamp/action-slack-notify@v3
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        uses: slack/github-action@v3
         with:
           status: 'Latest Pull Request'
-          fields: 'URL: ${{ steps.latest_pr.outputs.latest_pr_url }}'
+          text: 'URL: ${{ steps.latest_pr.outputs.latest_pr_url }}'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
