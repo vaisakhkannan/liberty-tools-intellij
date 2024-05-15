@@ -3,7 +3,7 @@ name: Fetch All Open Pull Requests with File Changes
 on:
   push:
   pull_request:
-    types: [reopened, opened, synchronize]
+    types: [reopened, opened, synchronize, closed]
 
 jobs:
   fetch_pull_requests_with_file_changes:
