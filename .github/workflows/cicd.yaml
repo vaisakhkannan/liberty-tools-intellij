@@ -1,8 +1,12 @@
 name: Fetch All Open Pull Request SHAs
 
 on:
+  workflow_dispatch:
   push:
-
+    branches: '**'
+  pull_request:
+    branches: [ main, code-action-unification ]
+    
 jobs:
   fetch_all_pull_request_shas:
     runs-on: ${{ matrix.os }}
