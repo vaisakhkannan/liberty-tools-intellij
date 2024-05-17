@@ -50,7 +50,7 @@ jobs:
         run: |
           payload=$(cat <<-EOF
           {
-            "text": "New Pull Request Opened",
+            "text": "*New Pull Request Opened*",
             "attachments": [
               {
                 "title": "Pull Request #${PR_NUMBER}",
