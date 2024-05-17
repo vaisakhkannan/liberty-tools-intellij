@@ -46,10 +46,13 @@ jobs:
           payload=$(cat <<-EOF
           {
             "text": "List of Open Pull Requests",
-            "attachments": [
+            "blocks": [
               {
-                "text": "${pr_list}",
-                "color": "#36a64f"
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${pr_list}"
+                }
               }
             ]
           }
