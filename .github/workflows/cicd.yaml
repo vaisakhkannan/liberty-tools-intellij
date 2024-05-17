@@ -18,14 +18,14 @@ jobs:
         run: |
           pr_info=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=1" \
-          | jq -r '.[] | "\(.number) \(.title) \(.user.login) \(.html_url) \(.merge_commit_sha)"')
+          | jq -r '.[] | [.number, .title, .user.login, .html_url, .merge_commit_sha] | @tsv')
           
           if [[ -n "$pr_info" ]]; then
-            pr_number=$(echo $pr_info | awk '{print $1}')
-            pr_title=$(echo $pr_info | awk '{$1=""; $2=""; print $3}' | sed 's/^[ \t]*//')
-            pr_user=$(echo $pr_info | awk '{print $2}')
-            pr_url=$(echo $pr_info | awk '{print $3}')
-            pr_merge_sha=$(echo $pr_info | awk '{print $4}')
+            pr_number=$(echo -e "$pr_info" | awk '{print $1}')
+            pr_title=$(echo -e "$pr_info" | awk -F'\t' '{print $2}')
+            pr_user=$(echo -e "$pr_info" | awk -F'\t' '{print $3}')
+            pr_url=$(echo -e "$pr_info" | awk -F'\t' '{print $4}')
+            pr_merge_sha=$(echo -e "$pr_info" | awk '{print $5}')
             echo "PULL_REQUEST_NUMBER=$pr_number" >> $GITHUB_ENV
             echo "PULL_REQUEST_TITLE=$pr_title" >> $GITHUB_ENV
             echo "PULL_REQUEST_USER=$pr_user" >> $GITHUB_ENV
