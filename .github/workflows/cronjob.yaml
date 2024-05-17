@@ -2,7 +2,7 @@ name: Cron Job to List All Open Pull Requests
 
 on:
   schedule:
-    - cron: '0 16 * * 1-5'
+    - cron: '0 22 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_cron_job:
