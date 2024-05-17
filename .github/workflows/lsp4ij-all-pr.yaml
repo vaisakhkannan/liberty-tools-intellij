@@ -1,4 +1,4 @@
-name: Fetch All Open Pull Requests and Notify Slack
+name: Fetch All Open Pull Requests
 
 on:
   workflow_dispatch:
