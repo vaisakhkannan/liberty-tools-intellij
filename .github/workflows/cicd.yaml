@@ -12,20 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Fetch latest opened pull request number and merge commit SHA
+      - name: Fetch latest opened pull request details
         shell: bash
         id: fetch_latest_pull_request
         run: |
           pr_info=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=1" \
-          | jq -r '.[] | "\(.number) \(.merge_commit_sha)"')
+          | jq -r '.[] | "\(.number) \(.title) \(.user.login) \(.html_url) \(.merge_commit_sha)"')
           
           if [[ -n "$pr_info" ]]; then
             pr_number=$(echo $pr_info | awk '{print $1}')
-            pr_merge_sha=$(echo $pr_info | awk '{print $2}')
+            pr_title=$(echo $pr_info | awk '{$1=""; $2=""; print $3}' | sed 's/^[ \t]*//')
+            pr_user=$(echo $pr_info | awk '{print $2}')
+            pr_url=$(echo $pr_info | awk '{print $3}')
+            pr_merge_sha=$(echo $pr_info | awk '{print $4}')
             echo "PULL_REQUEST_NUMBER=$pr_number" >> $GITHUB_ENV
+            echo "PULL_REQUEST_TITLE=$pr_title" >> $GITHUB_ENV
+            echo "PULL_REQUEST_USER=$pr_user" >> $GITHUB_ENV
+            echo "PULL_REQUEST_URL=$pr_url" >> $GITHUB_ENV
             echo "PULL_REQUEST_MERGE_SHA=$pr_merge_sha" >> $GITHUB_ENV
             echo "Pull Request Number: $pr_number"
+            echo "Pull Request Title: $pr_title"
+            echo "Pull Request User: $pr_user"
+            echo "Pull Request URL: $pr_url"
             echo "Pull Request Merge SHA: $pr_merge_sha"
           else
             echo "No open pull requests found."
@@ -36,6 +45,9 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           PR_NUMBER: ${{ env.PULL_REQUEST_NUMBER }}
+          PR_TITLE: ${{ env.PULL_REQUEST_TITLE }}
+          PR_USER: ${{ env.PULL_REQUEST_USER }}
+          PR_URL: ${{ env.PULL_REQUEST_URL }}
           PR_MERGE_SHA: ${{ env.PULL_REQUEST_MERGE_SHA }}
         run: |
           payload=$(cat <<-EOF
@@ -43,7 +55,9 @@ jobs:
             "text": "New Pull Request Opened",
             "attachments": [
               {
-                "text": "Pull Request #${PR_NUMBER}\nMerge SHA: ${PR_MERGE_SHA}",
+                "title": "Pull Request #${PR_NUMBER}",
+                "title_link": "${PR_URL}",
+                "text": "Title: ${PR_TITLE}\nCreated by: ${PR_USER}\nMerge SHA: ${PR_MERGE_SHA}",
                 "color": "#36a64f"
               }
             ]
