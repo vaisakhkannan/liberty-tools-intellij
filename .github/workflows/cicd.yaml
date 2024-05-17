@@ -1,4 +1,4 @@
-name: Fetch All Open Pull Request SHAs
+name: Fetch Latest Open Pull Request and Notify Slack
 
 on:
   workflow_dispatch:
@@ -8,32 +8,46 @@ on:
     branches: [ main, code-action-unification ]
 
 jobs:
-  fetch_all_pull_request_shas:
+  fetch_latest_pull_request_and_notify:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Fetch all opened pull request numbers and merge commit SHAs
+      - name: Fetch latest opened pull request number and merge commit SHA
         shell: bash
-        id: fetch_all_pull_requests
+        id: fetch_latest_pull_request
         run: |
           pr_info=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100" \
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=1" \
           | jq -r '.[] | "\(.number) \(.merge_commit_sha)"')
           
-          while read -r pr; do
-            pr_number=$(echo $pr | awk '{print $1}')
-            pr_merge_sha=$(echo $pr | awk '{print $2}')
+          if [[ -n "$pr_info" ]]; then
+            pr_number=$(echo $pr_info | awk '{print $1}')
+            pr_merge_sha=$(echo $pr_info | awk '{print $2}')
             echo "PULL_REQUEST_NUMBER=$pr_number" >> $GITHUB_ENV
             echo "PULL_REQUEST_MERGE_SHA=$pr_merge_sha" >> $GITHUB_ENV
             echo "Pull Request Number: $pr_number"
             echo "Pull Request Merge SHA: $pr_merge_sha"
-          done <<< "$pr_info"
+          else
+            echo "No open pull requests found."
+          fi
 
-      - name: Slack Notification
-        if: always() # Ensure the notification is sent regardless of job status
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. PR: ${{ github.event.pull_request.html_url }}. Status: ${{ job.status }}"
-          }' $SLACK_WEBHOOK_URL
+      - name: Send Slack notification
+        if: env.PULL_REQUEST_NUMBER != ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PR_NUMBER: ${{ env.PULL_REQUEST_NUMBER }}
+          PR_MERGE_SHA: ${{ env.PULL_REQUEST_MERGE_SHA }}
+        run: |
+          payload=$(cat <<-EOF
+          {
+            "text": "New Pull Request Opened",
+            "attachments": [
+              {
+                "text": "Pull Request #${PR_NUMBER}\nMerge SHA: ${PR_MERGE_SHA}",
+                "color": "#36a64f"
+              }
+            ]
+          }
+          EOF
+          )
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
