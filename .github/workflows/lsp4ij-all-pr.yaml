@@ -51,7 +51,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${pr_list}"
+                  "text": "*List of Open Pull Requests*:${pr_list}"
                 }
               }
             ]
