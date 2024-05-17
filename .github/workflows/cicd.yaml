@@ -18,27 +18,25 @@ jobs:
         run: |
           pr_info=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=1" \
-          | jq -r '.[] | [.number, .title, .user.login, .html_url, .merge_commit_sha] | @tsv')
+          | jq -r '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, sha: .merge_commit_sha}')
           
-          if [[ -n "$pr_info" ]]; then
-            pr_number=$(echo -e "$pr_info" | awk '{print $1}')
-            pr_title=$(echo -e "$pr_info" | awk -F'\t' '{print $2}')
-            pr_user=$(echo -e "$pr_info" | awk -F'\t' '{print $3}')
-            pr_url=$(echo -e "$pr_info" | awk -F'\t' '{print $4}')
-            pr_merge_sha=$(echo -e "$pr_info" | awk '{print $5}')
-            echo "PULL_REQUEST_NUMBER=$pr_number" >> $GITHUB_ENV
-            echo "PULL_REQUEST_TITLE=$pr_title" >> $GITHUB_ENV
-            echo "PULL_REQUEST_USER=$pr_user" >> $GITHUB_ENV
-            echo "PULL_REQUEST_URL=$pr_url" >> $GITHUB_ENV
-            echo "PULL_REQUEST_MERGE_SHA=$pr_merge_sha" >> $GITHUB_ENV
-            echo "Pull Request Number: $pr_number"
-            echo "Pull Request Title: $pr_title"
-            echo "Pull Request User: $pr_user"
-            echo "Pull Request URL: $pr_url"
-            echo "Pull Request Merge SHA: $pr_merge_sha"
-          else
-            echo "No open pull requests found."
-          fi
+          pr_number=$(echo "$pr_info" | jq -r '.number')
+          pr_title=$(echo "$pr_info" | jq -r '.title')
+          pr_user=$(echo "$pr_info" | jq -r '.user')
+          pr_url=$(echo "$pr_info" | jq -r '.url')
+          pr_merge_sha=$(echo "$pr_info" | jq -r '.sha')
+          
+          echo "PULL_REQUEST_NUMBER=$pr_number" >> $GITHUB_ENV
+          echo "PULL_REQUEST_TITLE=$pr_title" >> $GITHUB_ENV
+          echo "PULL_REQUEST_USER=$pr_user" >> $GITHUB_ENV
+          echo "PULL_REQUEST_URL=$pr_url" >> $GITHUB_ENV
+          echo "PULL_REQUEST_MERGE_SHA=$pr_merge_sha" >> $GITHUB_ENV
+          
+          echo "Pull Request Number: $pr_number"
+          echo "Pull Request Title: $pr_title"
+          echo "Pull Request User: $pr_user"
+          echo "Pull Request URL: $pr_url"
+          echo "Pull Request Merge SHA: $pr_merge_sha"
 
       - name: Send Slack notification
         if: env.PULL_REQUEST_NUMBER != ''
