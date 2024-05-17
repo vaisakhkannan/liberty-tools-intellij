@@ -5,7 +5,7 @@ on:
     - cron: '0 16 * * 1-5'
 
 jobs:
-  fetch_all_pull_requests_and_notify:
+  fetch_all_pull_requests_and_notify_cron_job:
     runs-on: ubuntu-latest
 
     steps:
