@@ -1,0 +1,55 @@
+name: Fetch All Open Pull Requests and Notify Slack
+
+on:
+  workflow_dispatch:
+  push:
+    branches: '**'
+  pull_request:
+    branches: [ main, code-action-unification ]
+
+jobs:
+  fetch_all_pull_requests_and_notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch all opened pull request details
+        shell: bash
+        id: fetch_all_pull_requests
+        run: |
+          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100" \
+          | jq -r '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, sha: .merge_commit_sha}')
+          
+          pr_list=""
+          while IFS= read -r pr_info; do
+            pr_number=$(echo "$pr_info" | jq -r '.number')
+            pr_title=$(echo "$pr_info" | jq -r '.title')
+            pr_user=$(echo "$pr_info" | jq -r '.user')
+            pr_url=$(echo "$pr_info" | jq -r '.url')
+            pr_merge_sha=$(echo "$pr_info" | jq -r '.sha')
+          
+            pr_list="${pr_list}\nPull Request #${pr_number}: ${pr_title}\nCreated by: ${pr_user}\nURL: ${pr_url}\nMerge SHA: ${pr_merge_sha}\n"
+          done <<< "$(echo "$pr_infos" | jq -c '.[]')"
+
+          echo -e "PR_LIST=$pr_list" >> $GITHUB_ENV
+          echo "PR_LIST: $pr_list"
+
+      - name: Send Slack notification
+        if: env.PR_LIST != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          PR_LIST: ${{ env.PR_LIST }}
+        run: |
+          payload=$(cat <<-EOF
+          {
+            "text": "List of Open Pull Requests",
+            "attachments": [
+              {
+                "text": "${PR_LIST}",
+                "color": "#36a64f"
+              }
+            ]
+          }
+          EOF
+          )
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
