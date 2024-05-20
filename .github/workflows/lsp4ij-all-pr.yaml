@@ -47,13 +47,19 @@ jobs:
           pr_list=$(cat pr_list.txt)
           payload=$(cat <<-EOF
           {
-            "text": "List of Open Pull Requests",
             "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "List of Open Pull Requests"
+                }
+              },
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "*List of Open Pull Requests*:${pr_list}"
+                  "text": "${pr_list}"
                 }
               }
             ]
