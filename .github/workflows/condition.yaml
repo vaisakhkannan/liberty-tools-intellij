@@ -20,9 +20,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_id }}
+          key: ${{ runner.os }}-pr-cache
           restore-keys: |
-            ${{ runner.os }}-pr-cache-
+            ${{ runner.os }}-pr-cache
 
       - name: Fetch all opened pull request details using condition
         shell: bash
@@ -112,4 +112,4 @@ jobs:
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_id }}
+          key: ${{ runner.os }}-pr-cache
