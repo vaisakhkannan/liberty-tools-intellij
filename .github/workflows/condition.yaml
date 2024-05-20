@@ -8,7 +8,7 @@ on:
     branches: [ main, code-action-unification ]
 
 jobs:
-  fetch_all_pull_requests_and_notify:
+  fetch_all_pull_requests_and_notify_using_condition:
     runs-on: ubuntu-latest
 
     steps:
