@@ -15,8 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up cache
-        id: cache
+      - name: Restore cache
+        id: cache-restore
         uses: actions/cache@v2
         with:
           path: cache
@@ -31,7 +31,7 @@ jobs:
 
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=open&sort=created&direction=desc&per_page=100")
-
+          
           echo "API Data ------$pr_infos"
 
           # Load previous PR data if exists
@@ -96,6 +96,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          echo "Condition value------ steps.fetch_all_pull_requests_using_condition.outputs.notify"
           pr_list=$(cat pr_list.txt)
           payload=$(cat <<-EOF
           {
@@ -122,7 +123,8 @@ jobs:
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Save cache
+        if: always()
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache
+          key: ${{ runner.os }}-pr-cache-$(date +%s)
