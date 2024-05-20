@@ -81,8 +81,11 @@ jobs:
           echo "$new_notified_prs" > cache/notified_prs.json
 
           if [ "$notify" = true ]; then
+            echo -e "$pr_list" > pr_list.txt
+            echo "true" > cache/notify.txt
             echo "::set-output name=notify::true"
           else
+            echo "false" > cache/notify.txt
             echo "::set-output name=notify::false"
           fi
 
