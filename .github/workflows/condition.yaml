@@ -87,6 +87,11 @@ jobs:
             echo "false" > cache/notify.txt
           fi
 
+      - name: Debug Notify Value
+        run: |
+          echo "Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.notify }}"
+
+
       - name: Send Slack notification
         if: success()
         env:
