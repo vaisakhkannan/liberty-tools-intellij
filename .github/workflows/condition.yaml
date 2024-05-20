@@ -137,7 +137,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache
+          key: ${{ runner.os }}-pr-cache-${{ github.run_id }}
 
       - name: Verify Cache Save
         if: always()
