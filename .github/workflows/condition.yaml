@@ -1,4 +1,4 @@
-name: Fetch All Open Pull Requests using Condition
+name: Fetch All Open Pull Requests using condition
 
 on:
   workflow_dispatch:
@@ -15,16 +15,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up cache
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: cache
+          key: ${{ runner.os }}-pr-cache
+          restore-keys: |
+            ${{ runner.os }}-pr-cache
+
       - name: Fetch all opened pull request details using condition
         shell: bash
         id: fetch_all_pull_requests
         run: |
+          mkdir -p cache
+
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=open&sort=created&direction=desc&per_page=100")
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
 
           # Load previous PR data if exists
-          if [ -f notified_prs.json ]; then
-            previous_prs=$(cat notified_prs.json)
+          if [ -f cache/notified_prs.json ]; then
+            previous_prs=$(cat cache/notified_prs.json)
           else
             previous_prs="[]"
           fi
@@ -58,13 +69,13 @@ jobs:
           done
 
           # Save current PR data for future comparison
-          echo "$new_notified_prs" > notified_prs.json
+          echo "$new_notified_prs" > cache/notified_prs.json
 
           if [ "$notify" = true ]; then
             echo -e "$pr_list" > pr_list.txt
-            cat pr_list.txt
+            echo "true" > cache/notify.txt
           else
-            echo "No new or updated PRs to notify."
+            echo "false" > cache/notify.txt
           fi
 
       - name: Send Slack notification
@@ -80,7 +91,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open Pull Requests using condition recently"
+                  "text": "List of Open Pull Requests"
                 }
               },
               {
@@ -97,11 +108,8 @@ jobs:
           echo "$payload"
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
 
-      - name: Commit and push notified PRs data
-        if: success()
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add notified_prs.json
-          git commit -m "Update notified PRs data"
-          git push
+      - name: Save cache
+        uses: actions/cache@v2
+        with:
+          path: cache
+          key: ${{ runner.os }}-pr-cache
