@@ -24,6 +24,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pr-cache
 
+      - name: Check if cache restored
+        run: |
+          if [ -f cache/notified_prs.json ]; then
+            echo "Cache restored successfully."
+            cat cache/notified_prs.json
+          else
+            echo "Cache not restored or file does not exist."
+          fi
+
       - name: Fetch all opened pull request details using condition
         id: fetch_all_pull_requests_using_condition
         run: |
@@ -80,7 +89,6 @@ jobs:
           echo "$new_notified_prs" > cache/notified_prs.json
           echo "Latest Modified ------" 
           cat cache/notified_prs.json  # Ensure the JSON file is updated and print its content for debugging
-          
 
           if [ "$notify" = true ]; then
             echo -e "$pr_list" > pr_list.txt
@@ -98,7 +106,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          echo "Condition value------ steps.fetch_all_pull_requests_using_condition.outputs.notify"
+          echo "Condition value ------: ${{ steps.fetch_all_pull_requests_using_condition.outputs.notify }}"
           pr_list=$(cat pr_list.txt)
           payload=$(cat <<-EOF
           {
@@ -129,4 +137,4 @@ jobs:
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-$(date +%s)
+          key: ${{ runner.os }}-pr-cache-${{ github.run_id }}
