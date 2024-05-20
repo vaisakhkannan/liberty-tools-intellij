@@ -88,11 +88,12 @@ jobs:
           fi
 
       - name: Send Slack notification
-        if: success() && steps.fetch_all_pull_requests.outputs.notify == 'true'
+        if: success() && steps.fetch_all_pull_requests.outputs.notify_using_condition == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           pr_list=$(cat pr_list.txt)
+          echo "PR List to sent Slack --- $pr_list"
           payload=$(cat <<-EOF
           {
             "blocks": [
