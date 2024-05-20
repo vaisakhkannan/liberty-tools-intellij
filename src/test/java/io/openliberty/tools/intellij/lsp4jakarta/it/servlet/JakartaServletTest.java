@@ -1,15 +1,15 @@
 /*******************************************************************************
-* Copyright (c) 2021, 2023 IBM Corporation and others.
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License v. 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*     IBM Corporation - initial API and implementation
-*******************************************************************************/
+ * Copyright (c) 2021, 2024 IBM Corporation and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 
 package io.openliberty.tools.intellij.lsp4jakarta.it.servlet;
 
@@ -26,7 +26,7 @@ import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.lsp4jakarta.commons.JakartaDiagnosticsParams;
+import org.eclipse.lsp4jakarta.commons.JakartaJavaDiagnosticsParams;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaCodeActionParams;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class JakartaServletTest extends BaseJakartaTest {
                 + "/src/main/java/io/openliberty/sample/jakarta/servlet/DontExtendHttpServlet.java");
         String uri = VfsUtilCore.virtualToIoFile(javaFile).toURI().toString();
 
-        JakartaDiagnosticsParams diagnosticsParams = new JakartaDiagnosticsParams();
+        JakartaJavaDiagnosticsParams diagnosticsParams = new JakartaJavaDiagnosticsParams();
         diagnosticsParams.setUris(Arrays.asList(uri));
 
         // expected
@@ -57,13 +57,19 @@ public class JakartaServletTest extends BaseJakartaTest {
 
         JakartaForJavaAssert.assertJavaDiagnostics(diagnosticsParams, utils, d);
 
-        if (CHECK_CODE_ACTIONS) {
-            // test associated quick-fix code action
-            JakartaJavaCodeActionParams codeActionParams = JakartaForJavaAssert.createCodeActionParams(uri, d);
-            TextEdit te = JakartaForJavaAssert.te(5, 34, 5, 34, " extends HttpServlet");
-            CodeAction ca = JakartaForJavaAssert.ca(uri, "Let 'DontExtendHttpServlet' extend 'HttpServlet'", d, te);
-            JakartaForJavaAssert.assertJavaCodeAction(codeActionParams, utils, ca);
-        }
+        //TODO: this condition will be enabled when all quickfixes are refactored.
+        // if (CHECK_CODE_ACTIONS) {
+        // test associated quick-fix code action
+        JakartaJavaCodeActionParams codeActionParams = JakartaForJavaAssert.createCodeActionParams(uri, d);
+        String newText = "package io.openliberty.sample.jakarta.servlet;\n\n" +
+                "import jakarta.servlet.annotation.WebServlet;\nimport jakarta.servlet.http.HttpServlet;\n\n" +
+                "@WebServlet(name = \"demoServlet\", urlPatterns = {\"/demo\"})\n" +
+                "public class DontExtendHttpServlet extends HttpServlet {\n\n}";
+
+        TextEdit te = JakartaForJavaAssert.te(0, 0, 7, 1, newText);
+        CodeAction ca = JakartaForJavaAssert.ca(uri, "Let 'DontExtendHttpServlet' extend 'HttpServlet'", d, te);
+        JakartaForJavaAssert.assertJavaCodeAction(codeActionParams, utils, ca);
+        // }
     }
 
     @Test
@@ -75,7 +81,7 @@ public class JakartaServletTest extends BaseJakartaTest {
                 + "/src/main/java/io/openliberty/sample/jakarta/servlet/InvalidWebServlet.java");
         String uri = VfsUtilCore.virtualToIoFile(javaFile).toURI().toString();
 
-        JakartaDiagnosticsParams diagnosticsParams = new JakartaDiagnosticsParams();
+        JakartaJavaDiagnosticsParams diagnosticsParams = new JakartaJavaDiagnosticsParams();
         diagnosticsParams.setUris(Arrays.asList(uri));
 
         Diagnostic d = JakartaForJavaAssert.d(9, 0, 13,

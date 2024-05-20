@@ -15,11 +15,14 @@ package io.openliberty.tools.intellij.lsp4mp4ij.psi.internal.core.java.codeactio
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.RequiredElement;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.serviceContainer.BaseKeyedLazyInstance;
 import com.intellij.util.xmlb.annotations.Attribute;
 import io.openliberty.tools.intellij.lsp4mp4ij.psi.core.java.codeaction.IJavaCodeActionParticipant;
@@ -41,10 +44,14 @@ public class JavaCodeActionDefinition extends BaseKeyedLazyInstance<IJavaCodeAct
 
 	private static final Logger LOGGER = Logger.getLogger(JavaCodeActionDefinition.class.getName());
 	private static final String KIND_ATTR = "kind";
+	private static final String GROUP_ATTR = "group";
 	private static final String TARGET_DIAGNOSTIC_ATTR = "targetDiagnostic";
 
-	@Attribute("kind")
+	@Attribute(KIND_ATTR)
 	private String kind;
+
+	@Attribute(GROUP_ATTR)
+	private String group;
 
 	@Attribute(TARGET_DIAGNOSTIC_ATTR)
 	@RequiredElement
@@ -62,6 +69,8 @@ public class JavaCodeActionDefinition extends BaseKeyedLazyInstance<IJavaCodeAct
 	public boolean isAdaptedForCodeAction(JavaCodeActionContext context) {
 		try {
 			return getInstance().isAdaptedForCodeAction(context);
+		} catch (IndexNotReadyException | ProcessCanceledException | CancellationException e) {
+			throw e;
 		} catch (Exception e) {
 			LOGGER.log(Level.WARNING, "Error while calling isAdaptedForCodeAction", e);
 			return false;
@@ -73,6 +82,8 @@ public class JavaCodeActionDefinition extends BaseKeyedLazyInstance<IJavaCodeAct
 		try {
 			List<? extends CodeAction> codeActions = getInstance().getCodeActions(context, diagnostic);
 			return codeActions != null ? codeActions : Collections.emptyList();
+		} catch (IndexNotReadyException | ProcessCanceledException | CancellationException e) {
+			throw e;
 		} catch (Exception e) {
 			LOGGER.log(Level.WARNING, "Error while calling getCodeActions", e);
 			return Collections.emptyList();
@@ -93,6 +104,15 @@ public class JavaCodeActionDefinition extends BaseKeyedLazyInstance<IJavaCodeAct
 	public String getKind() {
 		return !StringUtils.isEmpty(kind) ? kind : CodeActionKind.QuickFix;
 	}
+
+	/**
+	 * Returns the name of the group which this code action is
+	 * a member or null.
+	 *
+	 * @return the name of the group which this code action is
+	 * a member or null.
+	 */
+	public @Nullable String getGroup() { return group; }
 
 	/**
 	 * Returns the target diagnostic and null otherwise.

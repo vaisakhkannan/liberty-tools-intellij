@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2021, 2023 IBM Corporation and others.
+* Copyright (c) 2021, 2024 IBM Corporation and others.
 *
 * This program and the accompanying materials are made available under the
 * terms of the Eclipse Public License v. 2.0 which is available at
@@ -18,15 +18,15 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import io.openliberty.tools.intellij.lsp4jakarta.it.core.BaseJakartaTest;
+import io.openliberty.tools.intellij.lsp4jakarta.lsp4ij.Messages;
 import io.openliberty.tools.intellij.lsp4mp4ij.psi.core.utils.IPsiUtils;
 import io.openliberty.tools.intellij.lsp4mp4ij.psi.internal.core.ls.PsiUtilsLSImpl;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.lsp4jakarta.commons.JakartaDiagnosticsParams;
+import org.eclipse.lsp4jakarta.commons.JakartaJavaDiagnosticsParams;
 import org.eclipse.lsp4jakarta.commons.JakartaJavaCodeActionParams;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -48,7 +48,7 @@ public class JakartaPersistenceTest extends BaseJakartaTest {
                 + "/src/main/java/io/openliberty/sample/jakarta/persistence/MapKeyAndMapKeyClassTogether.java");
         String uri = VfsUtilCore.virtualToIoFile(javaFile).toURI().toString();
 
-        JakartaDiagnosticsParams diagnosticsParams = new JakartaDiagnosticsParams();
+        JakartaJavaDiagnosticsParams diagnosticsParams = new JakartaJavaDiagnosticsParams();
         diagnosticsParams.setUris(Arrays.asList(uri));
 
         Diagnostic d1 = d(16, 32, 42,
@@ -91,7 +91,7 @@ public class JakartaPersistenceTest extends BaseJakartaTest {
                 + "/src/main/java/io/openliberty/sample/jakarta/persistence/MultipleMapKeyAnnotations.java");
         String uri = VfsUtilCore.virtualToIoFile(javaFile).toURI().toString();
         
-        JakartaDiagnosticsParams diagnosticsParams = new JakartaDiagnosticsParams();
+        JakartaJavaDiagnosticsParams diagnosticsParams = new JakartaJavaDiagnosticsParams();
         diagnosticsParams.setUris(Arrays.asList(uri));
 
         // test diagnostics are present
@@ -146,7 +146,7 @@ public class JakartaPersistenceTest extends BaseJakartaTest {
                 + "/src/main/java/io/openliberty/sample/jakarta/persistence/EntityMissingConstructor.java");
         String uri = VfsUtilCore.virtualToIoFile(javaFile).toURI().toString();
 
-        JakartaDiagnosticsParams diagnosticsParams = new JakartaDiagnosticsParams();
+        JakartaJavaDiagnosticsParams diagnosticsParams = new JakartaJavaDiagnosticsParams();
         diagnosticsParams.setUris(Arrays.asList(uri));
 
         // test diagnostics are present
@@ -156,16 +156,16 @@ public class JakartaPersistenceTest extends BaseJakartaTest {
 
         assertJavaDiagnostics(diagnosticsParams, utils, d);
 
-        if (CHECK_CODE_ACTIONS) {
-            // test quick fixes
-            JakartaJavaCodeActionParams codeActionParams1 = createCodeActionParams(uri, d);
-            TextEdit te1 = te(7, 4, 7, 4, "protected EntityMissingConstructor() {\n\t}\n\n\t");
-            CodeAction ca1 = ca(uri, "Add a no-arg protected constructor to this class", d, te1);
-            TextEdit te2 = te(7, 4, 7, 4, "public EntityMissingConstructor() {\n\t}\n\n\t");
-            CodeAction ca2 = ca(uri, "Add a no-arg public constructor to this class", d, te2);
+//        if (CHECK_CODE_ACTIONS) {
+        // test quick fixes
+        JakartaJavaCodeActionParams codeActionParams1 = createCodeActionParams(uri, d);
+        TextEdit te1 = te(0, 0, 9, 1, "package io.openliberty.sample.jakarta.persistence;\n\nimport jakarta.persistence.Entity;\n\n@Entity\npublic class EntityMissingConstructor {\n\n    protected EntityMissingConstructor() {\n    }\n\n    private EntityMissingConstructor(int x) {\n    }\n\n}");
+        CodeAction ca1 = ca(uri, Messages.getMessage("AddNoArgProtectedConstructor"), d, te1);
+        TextEdit te2 = te(0, 0, 9, 1, "package io.openliberty.sample.jakarta.persistence;\n\nimport jakarta.persistence.Entity;\n\n@Entity\npublic class EntityMissingConstructor {\n\n    public EntityMissingConstructor() {\n    }\n\n    private EntityMissingConstructor(int x) {\n    }\n\n}");
+        CodeAction ca2 = ca(uri, Messages.getMessage("AddNoArgPublicConstructor"), d, te2);
 
-            assertJavaCodeAction(codeActionParams1, utils, ca1, ca2);
-        }
+        assertJavaCodeAction(codeActionParams1, utils, ca1, ca2);
+//        }
     }
 
     @Test
@@ -177,7 +177,7 @@ public class JakartaPersistenceTest extends BaseJakartaTest {
                 + "/src/main/java/io/openliberty/sample/jakarta/persistence/FinalModifiers.java");
         String uri = VfsUtilCore.virtualToIoFile(javaFile).toURI().toString();
 
-        JakartaDiagnosticsParams diagnosticsParams = new JakartaDiagnosticsParams();
+        JakartaJavaDiagnosticsParams diagnosticsParams = new JakartaJavaDiagnosticsParams();
         diagnosticsParams.setUris(Arrays.asList(uri));
 
         // test diagnostics are present

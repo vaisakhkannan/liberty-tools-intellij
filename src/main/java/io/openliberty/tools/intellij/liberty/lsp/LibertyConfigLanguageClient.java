@@ -10,23 +10,16 @@
  ******************************************************************************/
 package io.openliberty.tools.intellij.liberty.lsp;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.vfs.VirtualFile;
-import io.openliberty.tools.intellij.lsp4mp.MicroProfileProjectService;
-import io.openliberty.tools.intellij.lsp4mp.lsp4ij.LanguageClientImpl;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
+import com.intellij.openapi.project.Project;
+import org.microshed.lsp4ij.client.LanguageClientImpl;
 
 /**
  * Client for Liberty language server
  * Adapted from https://github.com/redhat-developer/intellij-quarkus/blob/2585eb422beeb69631076d2c39196d6eca2f5f2e/src/main/java/com/redhat/devtools/intellij/quarkus/lsp/QuarkusLanguageClient.java
  */
-public class LibertyConfigLanguageClient extends LanguageClientImpl implements MicroProfileProjectService.Listener {
+public class LibertyConfigLanguageClient extends LanguageClientImpl {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LibertyConfigLanguageClient.class);
 
@@ -34,13 +27,4 @@ public class LibertyConfigLanguageClient extends LanguageClientImpl implements M
         super(project);
     }
 
-    @Override
-    public void libraryUpdated(Library library) {
-        // not needed for Liberty LS
-    }
-
-    @Override
-    public void sourceUpdated(List<Pair<Module, VirtualFile>> sources) {
-        // not needed for Liberty LS
-    }
 }
