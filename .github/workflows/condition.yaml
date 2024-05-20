@@ -28,7 +28,7 @@ jobs:
         shell: bash
         id: fetch_all_pull_requests_using_condition
         run: |
-          #mkdir -p cache
+          mkdir -p cache
 
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
