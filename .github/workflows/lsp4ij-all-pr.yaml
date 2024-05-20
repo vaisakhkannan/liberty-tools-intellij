@@ -29,9 +29,11 @@ jobs:
             pr_title=$(_jq '.title')
             pr_user=$(_jq '.user.login')
             pr_url=$(_jq '.html_url')
-            pr_merge_sha=$(_jq '.merge_commit_sha')
+            pr_draft=$(_jq '.draft')
+            pr_created_at=$(_jq '.created_at')
+            pr_updated_at=$(_jq '.updated_at')
 
-            pr_list="${pr_list}\nPull Request #${pr_number}: ${pr_title}\nCreated by: ${pr_user}\nURL: ${pr_url}\nMerge SHA: ${pr_merge_sha}\n"
+            pr_list="${pr_list}\nPull Request #${pr_number}: ${pr_title}\nCreated by: ${pr_user}\nURL: ${pr_url}\nDraft: ${pr_draft}\nCreated At: ${pr_created_at}\nLast Updated At: ${pr_updated_at}\n"
           done
 
           echo -e "$pr_list" > pr_list.txt
