@@ -25,20 +25,19 @@ jobs:
             ${{ runner.os }}-pr-cache
 
       - name: Fetch all opened pull request details using condition
-        shell: bash
         id: fetch_all_pull_requests_using_condition
         run: |
           mkdir -p cache
 
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=open&sort=created&direction=desc&per_page=100")
-          
+
           echo "API Data ------$pr_infos"
 
           # Load previous PR data if exists
           if [ -f cache/notified_prs.json ]; then
             previous_prs=$(cat cache/notified_prs.json)
-            echo "Prevoius PRs -------$previous_prs"
+            echo "Previous PRs -------$previous_prs"
           else
             previous_prs="[]"
           fi
@@ -62,7 +61,7 @@ jobs:
 
             pr_data=$(jq -n --arg number "$pr_number" --arg updated_at "$pr_updated_at" '{number: $number, updated_at: $updated_at}')
             new_notified_prs=$(echo "$new_notified_prs" | jq --argjson pr_data "$pr_data" '. += [$pr_data]')
-          
+
             echo "Whole PR data ------- $pr_data"
             echo "New Notified PR List------ $new_notified_prs"
 
@@ -79,13 +78,12 @@ jobs:
 
           # Save current PR data for future comparison
           echo "$new_notified_prs" > cache/notified_prs.json
+          cat cache/notified_prs.json  # Ensure the JSON file is updated and print its content for debugging
 
           if [ "$notify" = true ]; then
             echo -e "$pr_list" > pr_list.txt
-            echo "true" > cache/notify.txt
             echo "::set-output name=notify::true"
           else
-            echo "false" > cache/notify.txt
             echo "::set-output name=notify::false"
           fi
 
@@ -93,13 +91,11 @@ jobs:
         run: |
           echo "Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.notify }}"
 
-
       - name: Send Slack notification
         if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          echo "Condition value------ steps.fetch_all_pull_requests_using_condition.outputs.notify"
           pr_list=$(cat pr_list.txt)
           payload=$(cat <<-EOF
           {
