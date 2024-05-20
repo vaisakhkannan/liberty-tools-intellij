@@ -78,7 +78,7 @@ jobs:
 
           # Save current PR data for future comparison
           echo "$new_notified_prs" > cache/notified_prs.json
-          echo ""Latest Modified ------" 
+          echo "Latest Modified ------" 
           cat cache/notified_prs.json  # Ensure the JSON file is updated and print its content for debugging
           
 
