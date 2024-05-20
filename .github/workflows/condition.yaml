@@ -33,12 +33,12 @@ jobs:
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
           
-          echo "API Data+$pr_infos"
+          echo "API Data ------$pr_infos"
 
           # Load previous PR data if exists
           if [ -f cache/notified_prs.json ]; then
             previous_prs=$(cat cache/notified_prs.json)
-            echo "$previous_prs"
+            echo "Prevoius PRs -------$previous_prs"
           else
             previous_prs="[]"
           fi
@@ -63,15 +63,17 @@ jobs:
             pr_data=$(jq -n --arg number "$pr_number" --arg updated_at "$pr_updated_at" '{number: $number, updated_at: $updated_at}')
             new_notified_prs=$(echo "$new_notified_prs" | jq --argjson pr_data "$pr_data" '. += [$pr_data]')
           
-            echo "$pr_data"
+            echo "Whole PR data ------- $pr_data"
+            echo "New Notified PR List------ $new_notified_prs"
 
             # Check if the PR is new or updated
             previous_pr=$(echo "$previous_prs" | jq --arg number "$pr_number" '.[] | select(.number == $number)')
-            echo "$previous_pr"
+            echo "Checking PR is new or not --- $previous_pr"
             if [ -z "$previous_pr" ] || [ "$(echo "$previous_pr" | jq -r '.updated_at')" != "$pr_updated_at" ]; then
               pr_list="${pr_list}\n*Pull Request* #${pr_number}: ${pr_title}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}\n*Draft*: ${pr_draft}\n*Created At*: ${pr_created_at}\n*Last Updated At*: ${pr_updated_at}\n"
-              echo "$pr_list"
+              echo "New PR List ------- $pr_list"
               notify=true
+              echo "Boolean Value for notify ------- $notify"
             fi
           done
 
