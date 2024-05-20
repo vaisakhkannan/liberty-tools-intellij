@@ -31,7 +31,7 @@ jobs:
           mkdir -p cache
 
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
+          "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=open&sort=created&direction=desc&per_page=100")
           
           echo "API Data ------$pr_infos"
 
