@@ -1,4 +1,4 @@
-name: Fetch All Open Pull Requests using condition
+name: Fetch All Open Pull Requests using Condition
 
 on:
   workflow_dispatch:
@@ -15,27 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Download notified PRs data
-        id: download_prs
-        uses: actions/download-artifact@v2
-        with:
-          name: notified_prs
-          path: notified_prs.json
-        continue-on-error: true
-
-      - name: Fetch all opened pull request details
+      - name: Fetch all opened pull request details using condition
         shell: bash
         id: fetch_all_pull_requests
         run: |
+          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
+
           # Load previous PR data if exists
           if [ -f notified_prs.json ]; then
             previous_prs=$(cat notified_prs.json)
           else
             previous_prs="[]"
           fi
-
-          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
 
           pr_list=""
           new_notified_prs="[]"
@@ -70,21 +62,13 @@ jobs:
 
           if [ "$notify" = true ]; then
             echo -e "$pr_list" > pr_list.txt
-            echo "::set-output name=notify::true"
+            cat pr_list.txt
           else
             echo "No new or updated PRs to notify."
-            echo "::set-output name=notify::false"
           fi
 
-      - name: Upload notified PRs data
-        if: steps.fetch_all_pull_requests.outputs.notify == 'true'
-        uses: actions/upload-artifact@v2
-        with:
-          name: notified_prs
-          path: notified_prs.json
-
       - name: Send Slack notification
-        if: steps.fetch_all_pull_requests.outputs.notify == 'true'
+        if: success() && steps.fetch_all_pull_requests.outputs.notify == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
@@ -96,7 +80,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open Pull Requests using Condition new recently"
+                  "text": "List of Open Pull Requests using condition"
                 }
               },
               {
@@ -112,3 +96,12 @@ jobs:
           )
           echo "$payload"
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
+
+      - name: Commit and push notified PRs data
+        if: success()
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add notified_prs.json
+          git commit -m "Update notified PRs data"
+          git push
