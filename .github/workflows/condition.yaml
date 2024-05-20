@@ -93,7 +93,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           pr_list=$(cat pr_list.txt)
-          echo "PR List to sent Slack --- $pr_list"
           payload=$(cat <<-EOF
           {
             "blocks": [
@@ -101,7 +100,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open Pull Requests Using Condition"
+                  "text": "List of Open Pull Requests using condition"
                 }
               },
               {
@@ -115,8 +114,8 @@ jobs:
           }
           EOF
           )
-          echo "$payload"
-          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
+          echo "$payload"  # Debugging: Print payload to verify its format
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Save cache
         uses: actions/cache@v2
