@@ -95,7 +95,7 @@ jobs:
 
 
       - name: Send Slack notification
-        if: success()
+        if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
