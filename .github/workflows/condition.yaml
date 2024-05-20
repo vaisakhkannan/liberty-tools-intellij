@@ -21,6 +21,8 @@ jobs:
         with:
           path: cache
           key: ${{ runner.os }}-pr-cache-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-pr-cache
 
       - name: Check if cache restored
         run: |
