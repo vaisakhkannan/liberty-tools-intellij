@@ -92,6 +92,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          echo "Condition value------ steps.fetch_all_pull_requests_using_condition.outputs.notify"
           pr_list=$(cat pr_list.txt)
           payload=$(cat <<-EOF
           {
