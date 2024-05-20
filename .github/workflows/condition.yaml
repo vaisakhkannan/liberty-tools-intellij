@@ -129,7 +129,7 @@ jobs:
           }
           EOF
           )
-          echo "$payload"  # Debugging: Print payload to verify its format
+          echo "$payload"  # Debugging: Print payload to verify its formatt
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Save cache
