@@ -115,7 +115,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open Pull Requests using condition latest 3"
+                  "text": "List of Open Pull Requests using condition latest 4"
                 }
               },
               {
