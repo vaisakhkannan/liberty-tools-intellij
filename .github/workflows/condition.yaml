@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition
 
 on:
   schedule:
-    - cron: '30 7 * * 1-5'
+    - cron: '30 8 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition:
