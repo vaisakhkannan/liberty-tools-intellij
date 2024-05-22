@@ -1,11 +1,8 @@
 name: Fetch All Open Pull Requests using condition
 
 on:
-  workflow_dispatch:
-  push:
-    branches: '**'
-  pull_request:
-    branches: [ main, code-action-unification, issue-45-main ]
+  schedule:
+    - cron: '50 6 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition:
@@ -115,7 +112,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open Pull Requests using condition latest 4"
+                  "text": "List of Open Pull Requests using condition latest 5"
                 }
               },
               {
