@@ -1,0 +1,56 @@
+name: Cron Job to List All Open Pull Requests
+
+on:
+  schedule:
+    - cron: '30 6 * * 1-5'
+
+jobs:
+  fetch_all_pull_requests_and_notify_cron_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch all opened pull request details
+        shell: bash
+        id: fetch_all_pull_requests
+        run: |
+          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
+          
+          pr_list=""
+          for pr_info in $(echo "$pr_infos" | jq -r '.[] | @base64'); do
+            _jq() {
+              echo "$pr_info" | base64 --decode | jq -r "${1}"
+            }
+
+            pr_number=$(_jq '.number')
+            pr_title=$(_jq '.title')
+            pr_user=$(_jq '.user.login')
+            pr_url=$(_jq '.html_url')
+            pr_merge_sha=$(_jq '.merge_commit_sha')
+
+            pr_list="${pr_list}\nPull Request #${pr_number}: ${pr_title}\nCreated by: ${pr_user}\nURL: ${pr_url}\nMerge SHA: ${pr_merge_sha}\n"
+          done
+
+          echo -e "$pr_list" > pr_list.txt
+          cat pr_list.txt
+
+      - name: Send Slack notification
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          pr_list=$(cat pr_list.txt)
+          payload=$(cat <<-EOF
+          {
+            "text": "List of Open Pull Requests",
+            "attachments": [
+              {
+                "text": "${pr_list}",
+                "color": "#36a64f"
+              }
+            ]
+          }
+          EOF
+          )
+          echo "$payload"
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL

@@ -1,0 +1,70 @@
+name: Fetch All Open Pull Requests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: '**'
+  pull_request:
+    branches: [ main, code-action-unification ]
+
+jobs:
+  fetch_all_pull_requests_and_notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch all opened pull request details
+        shell: bash
+        id: fetch_all_pull_requests
+        run: |
+          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
+          
+          pr_list=""
+          for pr_info in $(echo "$pr_infos" | jq -r '.[] | @base64'); do
+            _jq() {
+              echo "$pr_info" | base64 --decode | jq -r "${1}"
+            }
+
+            pr_number=$(_jq '.number')
+            pr_title=$(_jq '.title')
+            pr_user=$(_jq '.user.login')
+            pr_url=$(_jq '.html_url')
+            pr_draft=$(_jq '.draft')
+            pr_created_at=$(_jq '.created_at')
+            pr_updated_at=$(_jq '.updated_at')
+
+            pr_list="${pr_list}\n*Pull Request* #${pr_number}: ${pr_title}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}\n*Draft*: ${pr_draft}\n*Created At*: ${pr_created_at}\n*Last Updated At*: ${pr_updated_at}\n"
+          done
+
+          echo -e "$pr_list" > pr_list.txt
+          cat pr_list.txt
+
+      - name: Send Slack notification
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          pr_list=$(cat pr_list.txt)
+          payload=$(cat <<-EOF
+          {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "List of Open Pull Requests"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${pr_list}"
+                }
+              }
+            ]
+          }
+          EOF
+          )
+          echo "$payload"
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
