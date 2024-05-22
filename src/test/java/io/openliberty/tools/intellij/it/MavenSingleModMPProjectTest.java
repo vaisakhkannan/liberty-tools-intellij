@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 IBM Corporation.
+ * Copyright (c) 2023, 2024 IBM Corporation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -60,7 +60,7 @@ public class MavenSingleModMPProjectTest extends SingleModMPProjectTestCommon {
     /**
      * Action command to open the build file.
      */
-    private final String BUILD_FILE_OPEN_CMD = "Liberty: View effective POM";
+    private final String BUILD_FILE_OPEN_CMD = "Liberty: View pom.xml";
 
     /**
      * The path to the integration test reports.
@@ -76,6 +76,11 @@ public class MavenSingleModMPProjectTest extends SingleModMPProjectTestCommon {
      * Dev mode configuration start parameters.
      */
     private final String DEV_MODE_START_PARAMS = "-DhotTests=true";
+
+    /**
+     * Dev mode configuration custom start parameters for debugging.
+     */
+    private final String DEV_MODE_START_PARAMS_DEBUG = "-DdebugPort=9876";
 
     /**
      * Prepares the environment for test execution.
@@ -176,6 +181,16 @@ public class MavenSingleModMPProjectTest extends SingleModMPProjectTestCommon {
     @Override
     public String getStartParams() {
         return DEV_MODE_START_PARAMS;
+    }
+
+    /**
+     * Returns the custom start parameters for debugging to start dev mode.
+     *
+     * @return The custom start parameters for debugging to start dev mode.
+     */
+    @Override
+    public String getStartParamsDebugPort() {
+        return DEV_MODE_START_PARAMS_DEBUG;
     }
 
     /**
