@@ -5,7 +5,7 @@ on:
     - cron: '30 8 * * 1-5'
 
 jobs:
-  fetch_all_pull_requests_and_notify_using_condition:
+  fetch_all_pull_requests_and_notify_using_condition_and_cron:
     runs-on: ubuntu-latest
 
     steps:
@@ -112,7 +112,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open Pull Requests using condition latest 5"
+                  "text": "List of Open Pull Requests using condition latest cron job"
                 }
               },
               {
