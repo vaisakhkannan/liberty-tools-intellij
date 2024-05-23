@@ -1,4 +1,4 @@
-name: Fetch All Open Pull Requests using condition
+name: Fetch All Open Pull Requests using condition cron job
 
 on:
   workflow_dispatch:
