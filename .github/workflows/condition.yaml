@@ -1,8 +1,8 @@
-name: Fetch All Open Pull Requests using condition using cron job
+name: Fetch All Open and Recently Closed Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '50 4 * * 1-5'
+    - cron: '10 7 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -84,25 +84,6 @@ jobs:
             fi
           done
 
-          # Identify closed PRs
-          closed_pr_list=""
-          closed_notify=false
-          for pr in $(echo "$previous_prs" | jq -r '.[] | @base64'); do
-            _jq() {
-              echo "$pr" | base64 --decode | jq -r "${1}"
-            }
-
-            pr_number=$(_jq '.number')
-            pr_exists=$(echo "$pr_infos" | jq --arg number "$pr_number" '.[] | select(.number == ($number | tonumber))')
-            if [ -z "$pr_exists" ]; then
-              pr_title=$(_jq '.title')
-              pr_user=$(_jq '.user.login')
-              pr_url=$(_jq '.html_url')
-              closed_pr_list="${closed_pr_list}\n*Pull Request* #${pr_number}: ${pr_title}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}\n"
-              closed_notify=true
-            fi
-          done
-
           # Save current PR data for future comparison
           echo "$new_notified_prs" > cache/notified_prs.json
           echo "Latest Modified ------" 
@@ -115,19 +96,46 @@ jobs:
             echo "::set-output name=notify::false"
           fi
 
-          if [ "$closed_notify" = true ]; then
-            echo -e "$closed_pr_list" > closed_pr_list.txt
-            echo "::set-output name=closed_notify::true"
-          else
-            echo "::set-output name=closed_notify::false"
-          fi
-
       - name: Debug Notify Value
         run: |
           echo "Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.notify }}"
-          echo "Closed Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.closed_notify }}"
 
-      - name: Send Slack notification for new/updated PRs
+      - name: Fetch closed pull requests within the last 24 hours
+        id: fetch_closed_prs
+        run: |
+          closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=closed&sort=updated&direction=desc&per_page=100")
+
+          echo "Closed PRs API Data ------$closed_prs"
+
+          closed_pr_list=""
+          current_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          past_24_hours=$(date -u -d "-24 hours" +%Y-%m-%dT%H:%M:%SZ)
+
+          for pr_info in $(echo "$closed_prs" | jq -r '.[] | @base64'); do
+            _jq() {
+              echo "$pr_info" | base64 --decode | jq -r "${1}"
+            }
+
+            pr_number=$(_jq '.number')
+            pr_title=$(_jq '.title')
+            pr_user=$(_jq '.user.login')
+            pr_url=$(_jq '.html_url')
+            pr_closed_at=$(_jq '.closed_at')
+
+            if [[ "$pr_closed_at" > "$past_24_hours" ]]; then
+              closed_pr_list="${closed_pr_list}\n*Closed Pull Request* #${pr_number}: ${pr_title}\n*Closed by*: ${pr_user}\n*URL*: ${pr_url}\n*Closed At*: ${pr_closed_at}\n"
+            fi
+          done
+
+          if [ -n "$closed_pr_list" ]; then
+            echo -e "$closed_pr_list" > closed_pr_list.txt
+            echo "::set-output name=notify_closed::true"
+          else
+            echo "::set-output name=notify_closed::false"
+          fi
+
+      - name: Send Slack notification for open PRs
         if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -159,11 +167,11 @@ jobs:
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Send Slack notification for closed PRs
-        if: success() && steps.fetch_all_pull_requests_using_condition.outputs.closed_notify == 'true'
+        if: success() && steps.fetch_closed_prs.outputs.notify_closed == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          echo "Closed PR condition value ------: ${{ steps.fetch_all_pull_requests_using_condition.outputs.closed_notify }}"
+          echo "Condition value for closed PRs ------: ${{ steps.fetch_closed_prs.outputs.notify_closed }}"
           closed_pr_list=$(cat closed_pr_list.txt)
           payload=$(cat <<-EOF
           {
@@ -172,7 +180,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Closed Pull Requests using condition latest cron job"
+                  "text": "List of Closed Pull Requests in the last 24 hours"
                 }
               },
               {
