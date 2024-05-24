@@ -84,6 +84,25 @@ jobs:
             fi
           done
 
+          # Identify closed PRs
+          closed_pr_list=""
+          closed_notify=false
+          for pr in $(echo "$previous_prs" | jq -r '.[] | @base64'); do
+            _jq() {
+              echo "$pr" | base64 --decode | jq -r "${1}"
+            }
+
+            pr_number=$(_jq '.number')
+            pr_exists=$(echo "$pr_infos" | jq --arg number "$pr_number" '.[] | select(.number == ($number | tonumber))')
+            if [ -z "$pr_exists" ]; then
+              pr_title=$(_jq '.title')
+              pr_user=$(_jq '.user.login')
+              pr_url=$(_jq '.html_url')
+              closed_pr_list="${closed_pr_list}\n*Pull Request* #${pr_number}: ${pr_title}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}\n"
+              closed_notify=true
+            fi
+          done
+
           # Save current PR data for future comparison
           echo "$new_notified_prs" > cache/notified_prs.json
           echo "Latest Modified ------" 
@@ -96,11 +115,19 @@ jobs:
             echo "::set-output name=notify::false"
           fi
 
+          if [ "$closed_notify" = true ]; then
+            echo -e "$closed_pr_list" > closed_pr_list.txt
+            echo "::set-output name=closed_notify::true"
+          else
+            echo "::set-output name=closed_notify::false"
+          fi
+
       - name: Debug Notify Value
         run: |
           echo "Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.notify }}"
+          echo "Closed Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.closed_notify }}"
 
-      - name: Send Slack notification
+      - name: Send Slack notification for new/updated PRs
         if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -128,7 +155,38 @@ jobs:
           }
           EOF
           )
-          echo "$payload"  # Debugging: Print payload to verify its formatt
+          echo "$payload"  # Debugging: Print payload to verify its format
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
+
+      - name: Send Slack notification for closed PRs
+        if: success() && steps.fetch_all_pull_requests_using_condition.outputs.closed_notify == 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          echo "Closed PR condition value ------: ${{ steps.fetch_all_pull_requests_using_condition.outputs.closed_notify }}"
+          closed_pr_list=$(cat closed_pr_list.txt)
+          payload=$(cat <<-EOF
+          {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "List of Closed Pull Requests using condition latest cron job"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${closed_pr_list}"
+                }
+              }
+            ]
+          }
+          EOF
+          )
+          echo "$payload"  # Debugging: Print payload to verify its format
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Save cache
