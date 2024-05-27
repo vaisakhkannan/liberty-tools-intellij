@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '10 15 * * 1-5'
+    - cron: '30 15 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -25,6 +25,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pr-cache-${{ github.run_id }}-
             ${{ runner.os }}-pr-cache-
+            echo "::set-output name=cache-hit::true"
 
       - name: Capture restored cache key
         if: steps.cache-restore.outputs.cache-hit == 'true'
