@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '48 8 * * 1-5'
+    - cron: '3 9 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -26,8 +26,8 @@ jobs:
 
       - name: Print Restore Key
         run: |
-          echo "Restore Key: $CACHE_RESTORE_KEY"
-
+          echo "Restore Key: ${{ CACHE_RESTORE_KEY }}"
+      
 
       - name: Ensure cache directory exists
         run: mkdir -p cache
