@@ -21,8 +21,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pr-cache-${{ github.run_id }}-
             ${{ runner.os }}-pr-cache-
-        run: |
-          echo "::set-output name=restore-keys-new::${{ runner.os }}-pr-cache-${{ github.run_id }}-${{ github.run_number }}"
           
 
       - name: Ensure cache directory exists
