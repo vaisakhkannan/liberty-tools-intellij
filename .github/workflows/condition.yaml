@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '3 9 * * 1-5'
+    - cron: '10 9 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -23,6 +23,10 @@ jobs:
             ${{ runner.os }}-pr-cache-
         env:
           CACHE_RESTORE_KEY: ${{ steps.cache-restore.outputs.cache-key }}
+
+      - name: Print Restore Key first
+        run: |
+          echo "Restore Key: ${{ env.CACHE_RESTORE_KEY }}"
 
       - name: Print Restore Key
         run: |
