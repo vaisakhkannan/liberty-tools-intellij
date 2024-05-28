@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '10 7 * * 1-5'
+    - cron: '26 7 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -201,4 +201,11 @@ jobs:
           echo "Checking saved cache content..."
           ls -l cache/
           cat cache/notified_prs.json
+
+      - name: Save cache
+        if: always()
+        uses: actions/cache@v2
+        with:
+          path: cache
+          key: ${{ runner.os }}-pr-cache
 
