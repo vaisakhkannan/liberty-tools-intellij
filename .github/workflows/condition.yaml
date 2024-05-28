@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '30 15 * * 1-5'
+    - cron: '0 16 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -20,6 +20,13 @@ jobs:
           key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
           restore-keys: |
             ${{ runner.os }}-pr-cache-
+
+      - name: Save cache key
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: echo "CACHE_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Use cache key
+        run: echo "The cache key is ${{ env.CACHE_KEY }}"
 
       - name: Ensure cache directory exists
         run: mkdir -p cache
