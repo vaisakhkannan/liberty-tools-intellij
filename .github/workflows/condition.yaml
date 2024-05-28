@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '20 12 * * 1-5'
+    - cron: '40 12 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -12,13 +12,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-
       - name: Ensure cache directory exists
         run: mkdir -p cache
 
-      - name: Fetch notified_prs.json from repository
+      - name: Restore cache
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: cache/notified_prs.json
+          key: ${{ runner.os }}-pr-cache
+
+      - name: Check if cache restored
         run: |
-          if curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o cache/notified_prs.json "https://raw.githubusercontent.com/vaisakhkannan/liberty-tools-intellij/main/cache/notified_prs.json"; then
+          if [ -f cache/notified_prs.json ]; then
             echo "Cache restored successfully."
             cat cache/notified_prs.json
           else
@@ -35,12 +41,8 @@ jobs:
           echo "API Data ------$pr_infos"
 
           # Load previous PR data if exists
-          if [ -f cache/notified_prs.json ]; then
-            previous_prs=$(cat cache/notified_prs.json)
-            echo "Previous PRs -------$previous_prs"
-          else
-            previous_prs="[]"
-          fi
+          previous_prs=$(cat cache/notified_prs.json)
+          echo "Previous PRs -------$previous_prs"
 
           pr_list=""
           new_notified_prs="[]"
@@ -190,17 +192,9 @@ jobs:
           echo "$payload"  # Debugging: Print payload to verify its format
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
-      - name: Verify Cache Directory
-        if: always()
-        run: |
-          echo "Checking saved cache content..."
-          ls -l cache/
-          cat cache/notified_prs.json
-          ls -l /home/runner/work/liberty-tools-intellij/liberty-tools-intellij
-          echo "Checking cache directory location..."
-          ls -l $GITHUB_WORKSPACE/cache
-          echo "Location : $GITHUB_WORKSPACE"
-          cd cache/
-          echo "Present Working Directory : $(pwd)"
-        
-
+      - name: Save cache
+        uses: actions/cache@v2
+        with:
+          path: cache/notified_prs.json
+          key: ${{ runner.os }}-pr-cache
+          restore-keys: ${{ runner.os }}-pr-cache
