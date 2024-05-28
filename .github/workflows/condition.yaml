@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '10 10 * * 1-5'
+    - cron: '12 10 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -189,7 +189,7 @@ jobs:
           echo "$payload"  # Debugging: Print payload to verify its format
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
-      - name: Verify Cache Save
+      - name: Verify Cache Directory
         if: always()
         run: |
           echo "Checking saved cache content..."
@@ -199,4 +199,7 @@ jobs:
           echo "Checking cache directory location..."
           ls -l $GITHUB_WORKSPACE/cache
           echo "Location : $GITHUB_WORKSPACE"
+          cd cache/
+          echo "Present Working Directory : $(pwd)"
+        
 
