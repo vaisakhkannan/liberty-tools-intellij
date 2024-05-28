@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '10 15 * * 1-5'
+    - cron: '30 15 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -129,13 +129,6 @@ jobs:
           )
           echo "$payload"  # Debugging: Print payload to verify its formatt
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
-
-      - name: Save cache
-        if: always()
-        uses: actions/cache@v2
-        with:
-          path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
 
       - name: Verify Cache Save
         if: always()

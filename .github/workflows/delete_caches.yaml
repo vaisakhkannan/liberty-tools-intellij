@@ -1,7 +1,7 @@
 name: cleanup caches by a branch
 on:
   schedule:
-    - cron: '13 15 * * 1-5'
+    - cron: '30 15 * * 1-5'
 
 jobs:
   cleanup:
