@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '50 17 * * 1-5'
+    - cron: '14 18 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -13,12 +13,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Define cache keys
-        id: define-cache-keys
+        id: cache-key
         run: |
             echo "CACHE_PRIMARY_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
             echo "CACHE_RESTORE_KEYS=${{ runner.os }}-pr-cache-" >> $GITHUB_ENV
-            echo "Primary Cache Key: ${{ runner.os }}-pr-cache-${{ github.run_number }}"
-            echo "Restore Key Pattern: ${{ runner.os }}-pr-cache-"
 
       - name: Restore cache
         id: cache-restore
@@ -27,25 +25,30 @@ jobs:
           path: cache
           key: ${{ env.CACHE_PRIMARY_KEY }}
           restore-keys: |
-                  ${{ env.CACHE_RESTORE_KEYS }}
+            ${{ env.CACHE_RESTORE_KEYS }}
 
-      - name: Check cache hit
+      - name: Check cache restore key
+        id: check-key
         run: |
-                echo "Cache Hit: ${{ steps.cache-restore.outputs.cache-hit }}"
-                if [ "${{ steps.cache-restore.outputs.cache-hit }}" == 'true' ]; then
+                if [ "${{ steps.cache-restore.outputs.cache-hit }}" == "true" ]; then
                   echo "RESTORED_CACHE_KEY=${{ env.CACHE_PRIMARY_KEY }}" >> $GITHUB_ENV
                 else
-                  RESTORED_KEY=""
-                  if [[ -d cache ]]; then
-                    RESTORED_KEY="${{ env.CACHE_RESTORE_KEYS }}"
-                  fi
-                  echo "RESTORED_CACHE_KEY=$RESTORED_KEY" >> $GITHUB_ENV
+                  # Output the key that was actually restored from
+                  echo "Cache was restored using a restore key."
+                  RESTORE_KEYS="${{ env.CACHE_RESTORE_KEYS }}"
+                  RESTORE_KEYS_ARRAY=($RESTORE_KEYS)
+                  for key in "${RESTORE_KEYS_ARRAY[@]}"; do
+                    if [ -d "cache" ]; then
+                      echo "RESTORED_CACHE_KEY=$key" >> $GITHUB_ENV
+                      break
+                    fi
+                  done
                 fi
 
       - name: Use restored key
         run: |
-            echo "The restored cache key is ${{ env.RESTORED_CACHE_KEY }}"
-            ls -al cache
+          echo "The restored cache key is ${{ env.RESTORED_CACHE_KEY }}"
+          ls -al cache
 
       - name: Ensure cache directory exists
         run: mkdir -p cache
