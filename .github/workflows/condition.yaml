@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '20 16 * * 1-5'
+    - cron: '30 17 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -12,21 +12,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Define cache key
+        id: cache-key
+        run: |
+            echo "CACHE_PRIMARY_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
+            echo "CACHE_RESTORE_KEYS=${{ runner.os }}-pr-cache-" >> $GITHUB_ENV
+
       - name: Restore cache
         id: cache-restore
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
+          key: ${{ env.CACHE_PRIMARY_KEY }}
           restore-keys: |
-            ${{ runner.os }}-pr-cache-
+            ${{ env.CACHE_RESTORE_KEYS }}
 
-      - name: Save cache key
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        run: echo "CACHE_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Determine restored key
+        id: determine-restored-key
+        run: |
+          if [ "${{ steps.cache-restore.outputs.cache-hit }}" == 'true' ]; then
+            echo "RESTORED_CACHE_KEY=${{ env.CACHE_PRIMARY_KEY }}" >> $GITHUB_ENV
+          else
+            echo "No cache was restored."
+          fi
 
-      - name: Use cache key
-        run: echo "The cache key is ${{ env.CACHE_KEY }}"
+      - name: Use restored key
+        run: echo "The restored cache key is ${{ env.RESTORED_CACHE_KEY }}"
 
       - name: Ensure cache directory exists
         run: mkdir -p cache
