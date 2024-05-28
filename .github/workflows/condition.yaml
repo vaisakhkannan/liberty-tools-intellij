@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '20 10 * * 1-5'
+    - cron: '50 10 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -16,13 +16,14 @@ jobs:
       - name: Ensure cache directory exists
         run: mkdir -p cache
 
-      - name: Check if notified_prs.json fetched successfully
+      - name: Fetch notified_prs.json from repository
         run: |
-          if [ -f cache/notified_prs.json ]; then
+          if curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o cache/notified_prs.json "https://raw.githubusercontent.com/vaisakhkannan/liberty-tools-intellij/main/cache/notified_prs.json"; then
             echo "Cache restored successfully."
             cat cache/notified_prs.json
           else
-            echo "Cache not restored or file does not exist."
+            echo "Cache not restored or file does not exist. Initializing new cache."
+            echo "[]" > cache/notified_prs.json
           fi
 
       - name: Fetch all opened pull request details using condition
