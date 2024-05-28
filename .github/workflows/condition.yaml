@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using condition using cro
 
 on:
   schedule:
-    - cron: '35 5 * * 1-5'
+    - cron: '50 5 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -12,23 +12,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Define cache key
-        id: define-cache-key
-        run: echo "CACHE_KEY=${{ runner.os }}-pr-cache-${{ github.run_id }}-${{ github.run_number }}" >> $GITHUB_ENV
-
       - name: Restore cache
         id: cache-restore
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
-          restore-keys: |
-            ${{ runner.os }}-pr-cache-
-            echo "::set-output name=cache-hit::true"
-
-      - name: Capture restored cache key
-        if: steps.cache-restore.outputs.cache-hit == 'true'
-        run: echo "RESTORED_CACHE_KEY=${{ steps.cache-restore.outputs.cache-hit }}" >> $GITHUB_ENV
+          key: ${{ runner.os }}-pr-cache
 
       - name: Ensure cache directory exists
         run: mkdir -p cache
@@ -211,7 +200,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
+          key: ${{ runner.os }}-pr-cache
 
       - name: Verify Cache Save
         if: always()
