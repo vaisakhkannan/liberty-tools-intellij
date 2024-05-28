@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '32 18 * * 1-5'
+    - cron: '50 18 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -36,7 +36,9 @@ jobs:
                   # Output the key that was actually restored from
                   echo "Cache was restored using a restore key."
                   RESTORE_KEYS="${{ env.CACHE_RESTORE_KEYS }}"
+                  echo "$RESTORE_KEYS"
                   RESTORE_KEYS_ARRAY=($RESTORE_KEYS)
+                  echo "RESTORE_KEYS_ARRAY"
                   for key in "${RESTORE_KEYS_ARRAY[@]}"; do
                     if [ -d "cache" ]; then
                       echo "RESTORED_CACHE_KEY=$key" >> $GITHUB_ENV
