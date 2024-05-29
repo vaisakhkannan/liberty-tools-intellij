@@ -1,25 +1,59 @@
-name: Fetch All Open Pull Requests using condition
+name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '30 8 * * 1-5'
+    - cron: '50 18 * * 1-5'
 
 jobs:
-  fetch_all_pull_requests_and_notify_using_condition:
+  fetch_all_pull_requests_and_notify_using_condition_and_cron:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Define cache keys
+        id: cache-key
+        run: |
+            echo "CACHE_PRIMARY_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
+            echo "CACHE_RESTORE_KEYS=${{ runner.os }}-pr-cache-" >> $GITHUB_ENV
+
       - name: Restore cache
         id: cache-restore
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_id }}
+          key: ${{ env.CACHE_PRIMARY_KEY }}
           restore-keys: |
-            ${{ runner.os }}-pr-cache
+            ${{ env.CACHE_RESTORE_KEYS }}
+
+      - name: Check cache restore key
+        id: check-key
+        run: |
+                if [ "${{ steps.cache-restore.outputs.cache-hit }}" == "true" ]; then
+                  echo "RESTORED_CACHE_KEY=${{ env.CACHE_PRIMARY_KEY }}" >> $GITHUB_ENV
+                else
+                  # Output the key that was actually restored from
+                  echo "Cache was restored using a restore key."
+                  RESTORE_KEYS="${{ env.CACHE_RESTORE_KEYS }}"
+                  echo "$RESTORE_KEYS"
+                  RESTORE_KEYS_ARRAY=($RESTORE_KEYS)
+                  echo "RESTORE_KEYS_ARRAY"
+                  for key in "${RESTORE_KEYS_ARRAY[@]}"; do
+                    if [ -d "cache" ]; then
+                      echo "RESTORED_CACHE_KEY=$key" >> $GITHUB_ENV
+                      break
+                    fi
+                  done
+                fi
+
+      - name: Use restored key
+        run: |
+          echo "The restored cache key is ${{ env.RESTORED_CACHE_KEY }}"
+          ls -al cache
+
+      - name: Ensure cache directory exists
+        run: mkdir -p cache
 
       - name: Check if cache restored
         run: |
@@ -33,8 +67,6 @@ jobs:
       - name: Fetch all opened pull request details using condition
         id: fetch_all_pull_requests_using_condition
         run: |
-          mkdir -p cache
-
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=open&sort=created&direction=desc&per_page=100")
           
@@ -112,7 +144,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open Pull Requests using condition latest 5"
+                  "text": "List of Open Pull Requests using condition latest cron job"
                 }
               },
               {
@@ -128,13 +160,6 @@ jobs:
           )
           echo "$payload"  # Debugging: Print payload to verify its formatt
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
-
-      - name: Save cache
-        if: always()
-        uses: actions/cache@v2
-        with:
-          path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_id }}
 
       - name: Verify Cache Save
         if: always()
