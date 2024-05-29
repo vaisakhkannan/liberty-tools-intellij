@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '11 9 * * 1-5'
+    - cron: '35 17 * * 1-5'
   workflow_dispatch:
 
 jobs:
