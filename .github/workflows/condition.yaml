@@ -2,17 +2,18 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '27 8 * * 1-5'
+    - cron: '11 9 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
+    if: github.ref == 'refs/heads/Issue-45-Lsp4ij-Workitem-2'  # Ensure this job runs only on the 'example' branch
     runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          ref: Issue-45-Lsp4ij-Workitem-2
 
       - name: Define cache keys
         id: cache-key
