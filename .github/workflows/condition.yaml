@@ -1,54 +1,60 @@
-name: Fetch All Open Pull Requests using condition using cron job
+name: Fetch All Open Pull Requests using condition and cron job
 
 on:
   schedule:
-    - cron: '35 17 * * 1-5'
-  workflow_dispatch:
+    - cron: '50 17 * * 1-5'  # Adjust the cron schedule as needed
+  workflow_dispatch:  # Optional: Allows manual triggering for testing
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
-    if: github.ref == 'refs/heads/Issue-45-Lsp4ij-Workitem-2'  # Ensure this job runs only on the 'example' branch
     runs-on: ubuntu-latest
-
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Check branch
+        id: check_branch
+        run: |
+          echo "Current branch is $GITHUB_REF"
+          if [ "$GITHUB_REF" != "refs/heads/Issue-45-Lsp4ij-Workitem-2" ]; then
+            echo "This job only runs on the Issue-45-Lsp4ij-Workitem-2 branch. Exiting."
+            exit 1
+          fi
+
       - name: Define cache keys
         id: cache-key
         run: |
-            echo "CACHE_PRIMARY_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
-            echo "CACHE_RESTORE_KEYS=${{ runner.os }}-pr-cache-" >> $GITHUB_ENV
+          echo "CACHE_PRIMARY_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
+          echo "CACHE_RESTORE_KEYS=${{ runner.os }}-pr-cache-" >> $GITHUB_ENV
 
       - name: Restore cache
         id: cache-restore
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ env.CACHE_RESTORE_KEYS }}
+          key: ${{ env.CACHE_PRIMARY_KEY }}
           restore-keys: |
             ${{ env.CACHE_RESTORE_KEYS }}
 
       - name: Check cache restore key
         id: check-key
         run: |
-                if [ "${{ steps.cache-restore.outputs.cache-hit }}" == "true" ]; then
-                  echo "RESTORED_CACHE_KEY=${{ env.CACHE_RESTORE_KEYS }}" >> $GITHUB_ENV
-                else
-                  # Output the key that was actually restored from
-                  echo "Cache was restored using a restore key."
-                  RESTORE_KEYS="${{ env.CACHE_RESTORE_KEYS }}"
-                  echo "$RESTORE_KEYS"
-                  RESTORE_KEYS_ARRAY=($RESTORE_KEYS)
-                  echo "$RESTORE_KEYS_ARRAY"
-                  for key in "${RESTORE_KEYS_ARRAY[@]}"; do
-                    if [ -d "cache" ]; then
-                      echo "RESTORED_CACHE_KEY=$key" >> $GITHUB_ENV
-                      break
-                    fi
-                  done
-                fi
+          if [ "${{ steps.cache-restore.outputs.cache-hit }}" == "true" ]; then
+            echo "RESTORED_CACHE_KEY=${{ env.CACHE_PRIMARY_KEY }}" >> $GITHUB_ENV
+          else
+            echo "Cache was restored using a restore key."
+            RESTORE_KEYS="${{ env.CACHE_RESTORE_KEYS }}"
+            echo "$RESTORE_KEYS"
+            RESTORE_KEYS_ARRAY=($RESTORE_KEYS)
+            echo "$RESTORE_KEYS_ARRAY"
+            for key in "${RESTORE_KEYS_ARRAY[@]}"; do
+              if [ -d "cache" ]; then
+                echo "RESTORED_CACHE_KEY=$key" >> $GITHUB_ENV
+                break
+              fi
+            done
+          fi
 
       - name: Use restored key
         run: |
