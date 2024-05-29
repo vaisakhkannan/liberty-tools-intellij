@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition and cron job
 
 on:
   schedule:
-    - cron: '50 9 * * 1-5'  # Adjust the cron schedule as needed
+    - cron: '10 18 * * 1-5'  # Adjust the cron schedule as needed
   workflow_dispatch:  # Optional: Allows manual triggering for testing
 
 jobs:
@@ -12,15 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Check branch
-        id: check_branch
-        run: |
-          echo "Current branch is $GITHUB_REF"
-          if [ "$GITHUB_REF" != "refs/heads/Issue-45-Lsp4ij-Workitem-2" ]; then
-            echo "This job only runs on the Issue-45-Lsp4ij-Workitem-2 branch. Exiting."
-            exit 1
-          fi
 
       - name: Define cache keys
         id: cache-key
