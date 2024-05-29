@@ -2,7 +2,7 @@ name: Fetch All Open Pull Requests using condition using cron job
 
 on:
   schedule:
-    - cron: '15 8 * * 1-5'
+    - cron: '27 8 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: Issue-45-Lsp4ij-Workitem-2
 
       - name: Define cache keys
         id: cache-key
