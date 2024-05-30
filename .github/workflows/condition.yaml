@@ -213,20 +213,27 @@ jobs:
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           echo "Cache keys-->: $cacheKeys"
           
-          # Extract the first two cache keys
-          mostRecentCacheKeys=$(echo "$cacheKeysForPR" | head -n 2)
-  
-          # Print the most recent cache keys
-          echo "Most recent cache keys:"
-          echo "$mostRecentCacheKeys"
-          
-          # Extract all cache keys except the first two
-          otherCacheKeys=$(echo "$cacheKeysForPR" | tail -n +3)
-  
-          # Print the cache keys except the most recent ones
-          echo "Cache keys except the two most recent ones:"
-          echo "$otherCacheKeys"
+          echo "Fetching list of cache keys"
 
+          # Print the contents of the cacheKeysForPR variable
+            echo "Contents of cacheKeysForPR:"
+            echo "$cacheKeysForPR"
+            
+            # Extract the first two cache keys
+            mostRecentCacheKeys=$(echo "$cacheKeysForPR" | head -n 2)
+            
+            # Print the most recent cache keys
+            echo "Most recent cache keys:"
+            echo "$mostRecentCacheKeys"
+            
+            # Extract all cache keys except the first two
+            otherCacheKeys=$(echo "$cacheKeysForPR" | tail -n +3)
+            
+            # Print the cache keys except the most recent ones
+            echo "Cache keys except the two most recent ones:"
+            echo "$otherCacheKeys"
+            
+  
           ## Setting this to not fail the workflow while deleting cache keys.
           
           echo "Done"
