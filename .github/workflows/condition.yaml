@@ -18,7 +18,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-
+          key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
+          restore-keys: |
+            ${{ runner.os }}-pr-cache-
 
       - name: Ensure cache directory exists
         run: mkdir -p cache
@@ -210,14 +212,23 @@ jobs:
           echo "Fetching list of cache keys"
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           echo "Cache keys-->: $cacheKeys"
+          
+          # Extract the first two cache keys
+          mostRecentCacheKeys=$(echo "$cacheKeysForPR" | head -n 2)
+  
+          # Print the most recent cache keys
+          echo "Most recent cache keys:"
+          echo "$mostRecentCacheKeys"
+          
+          # Extract all cache keys except the first two
+          otherCacheKeys=$(echo "$cacheKeysForPR" | tail -n +3)
+  
+          # Print the cache keys except the most recent ones
+          echo "Cache keys except the two most recent ones:"
+          echo "$otherCacheKeys"
 
           ## Setting this to not fail the workflow while deleting cache keys.
-          set +e
-          echo "Deleting caches..."
-          for cacheKey in $cacheKeys
-          do
-              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
-          done
+          
           echo "Done"
         env:
           GH_TOKEN: ${{ secrets.PAT }}
