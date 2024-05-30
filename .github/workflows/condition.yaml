@@ -20,7 +20,7 @@ jobs:
           path: cache
           key: ${{ runner.os }}-pr-cache-
 
-      - name: Ensure cache directory exists
+      - name: Ensure cache directory existss
         run: mkdir -p cache
 
       - name: Check if cache restored
