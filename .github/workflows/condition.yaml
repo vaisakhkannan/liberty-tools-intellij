@@ -219,14 +219,14 @@ jobs:
             echo "$cacheKeys"
             
             # Extract the first two cache keys
-            mostRecentCacheKeys=$(echo "$cacheKeys" | head -n 2)
+            mostRecentCacheKeys=$(echo "$cacheKeys" | head -n 1)
             
             # Print the most recent cache keys
             echo "Most recent cache keys:"
             echo "$mostRecentCacheKeys"
             
             # Extract all cache keys except the first two
-            otherCacheKeys=$(echo "$cacheKeys" | tail -n +3)
+            otherCacheKeys=$(echo "$cacheKeys" | tail -n +4)
             
             # Print the cache keys except the most recent ones
             echo "Cache keys except the two most recent ones:"
