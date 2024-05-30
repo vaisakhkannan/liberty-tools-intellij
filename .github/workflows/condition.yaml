@@ -196,13 +196,6 @@ jobs:
           echo "$payload"  # Debugging: Print payload to verify its format
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
-      - name: Save cache
-        if: always()
-        uses: actions/cache@v2
-        with:
-          path: cache
-          key: ${{ runner.os }}-pr-cache-
-
       - name: Verify Cache Save
         if: always()
         run: |
