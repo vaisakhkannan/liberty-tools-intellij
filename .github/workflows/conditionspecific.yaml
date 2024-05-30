@@ -13,14 +13,50 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Fetch recent cache
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          echo "Fetching list of cache keys"
+          cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
+          echo "Cache keys-->: $cacheKeys"
+
+
+          # Print the contents of the cacheKeysForPR variable
+            echo "Contents of cacheKeys:"
+            echo "$cacheKeys"
+
+            # Extract the first two cache keys
+            mostRecentCacheKeys=$(echo "$cacheKeys" | head -n 1)
+
+            # Print the most recent cache keys
+            echo "Most recent one cache keys:"
+            echo "$mostRecentCacheKeys"
+          
+          echo "CACHE_KEY=$mostRecentCacheKeys" >> $GITHUB_ENV
+
+
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+          REPO: ${{ github.repository }}
+          BRANCH: main
+
       - name: Restore cache
         id: cache-restore
         uses: actions/cache@v2
         with:
           path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
-          restore-keys: |
-            ${{ runner.os }}-pr-cache-
+          key: ${{ env.CACHE_KEY }}
+
+      - name: Check cache hit or not
+        id: check-cache-result
+        run: |
+          if [ "${{ steps.cache-restore.outputs.cache-hit }}" == "true" ]; then
+          echo "Cache restored from exact key: ${{ env.CACHE_KEY }}"
+          else
+            echo "Cache was not restored from the exact key. Checking restore keys..."
+          fi
 
       - name: Ensure cache directory existss
         run: mkdir -p cache
@@ -213,21 +249,21 @@ jobs:
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           echo "Cache keys-->: $cacheKeys"
           
-
+          
           # Print the contents of the cacheKeysForPR variable
             echo "Contents of cacheKeys:"
             echo "$cacheKeys"
-            
+          
             # Extract the first two cache keys
             mostRecentCacheKeys=$(echo "$cacheKeys" | head -n 1)
-            
+          
             # Print the most recent cache keys
             echo "Most recent one cache keys:"
             echo "$mostRecentCacheKeys"
-            
+          
             # Extract all cache keys except the first one
             otherCacheKeys=$(echo "$cacheKeys" | tail -n +2)
-            
+          
             # Print the cache keys except the most recent ones
             echo "Cache keys except the most recent ones:"
             echo "$otherCacheKeys"
