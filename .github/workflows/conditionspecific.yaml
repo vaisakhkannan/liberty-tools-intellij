@@ -269,12 +269,12 @@ jobs:
             echo "$otherCacheKeys"
           
           ## Setting this to not fail the workflow while deleting cache keys....
-          set +e
-          echo "Deleting caches..."
-          for cacheKey in $cacheKeys
-          do
-          gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
-          done
+          #          set +e
+          #          echo "Deleting caches..."
+          #          for cacheKey in $cacheKeys
+          #          do
+          #          gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+          #          done
           
           echo "Done"
         env:
