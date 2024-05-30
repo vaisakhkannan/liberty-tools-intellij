@@ -59,7 +59,7 @@ jobs:
           if [ "${{ steps.cache-restore.outputs.cache-hit }}" == "true" ]; then
           echo "Cache restored from exact key: ${{ env.CACHE_KEY }}"
           else
-            echo "Cache was not restored from the exact key. Checking restore keys..."
+            echo "Cache was not restored from the exact key."
           fi
 
       - name: Ensure cache directory existss
