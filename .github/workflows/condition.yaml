@@ -31,7 +31,7 @@ jobs:
             echo "Cache restored successfully."
             cat cache/notified_prs.json
           else
-            echo "Cache not restored or file does not exist."
+            echo "Cache not restored or file does not exist.."
           fi
 
       - name: Fetch all opened pull request details using condition
