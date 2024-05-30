@@ -229,7 +229,7 @@ jobs:
             otherCacheKeys=$(echo "$cacheKeys" | tail -n +2)
             
             # Print the cache keys except the most recent ones
-            echo "Cache keys except the two most recent ones:"
+            echo "Cache keys except the most recent ones:"
             echo "$otherCacheKeys"
             
   
@@ -237,6 +237,5 @@ jobs:
           
           echo "Done"
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
           REPO: ${{ github.repository }}
           BRANCH: main
