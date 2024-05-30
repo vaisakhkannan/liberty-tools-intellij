@@ -20,7 +20,7 @@ jobs:
           path: cache
           key: ${{ runner.os }}-pr-cache-
 
-      - name: Ensure cache directory existss
+      - name: Ensure cache directory exists
         run: mkdir -p cache
 
       - name: Check if cache restored
@@ -202,3 +202,24 @@ jobs:
           echo "Checking saved cache content..."
           ls -l cache/
           cat cache/notified_prs.json
+
+      - name: Cleanup
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          echo "Fetching list of cache keys"
+          cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
+          echo "Cache keys-->: $cacheKeys"
+
+          ## Setting this to not fail the workflow while deleting cache keys.
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeys
+          do
+              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+          REPO: ${{ github.repository }}
+          BRANCH: main
