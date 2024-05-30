@@ -33,7 +33,9 @@ jobs:
             echo "Most recent one cache keys:"
             echo "$mostRecentCacheKeys"
           if [ -n "$mostRecentCacheKeys" ]; then
-            echo "CACHE_KEY=$mostRecentCacheKey" >> $GITHUB_ENV
+            echo "Before.."
+            echo "CACHE_KEY=${{ mostRecentCacheKey }}" >> $GITHUB_ENV
+            echo "After.."
           else
             echo "No recent cache key found, generating a new one.."
             echo "CACHE_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
