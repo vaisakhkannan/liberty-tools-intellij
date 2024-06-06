@@ -277,7 +277,7 @@ jobs:
           otherCacheKeys=$(echo "$cacheKeys" | tail -n +2)
 
           # Print the cache keys except the most recent one
-          echo "Cache keys except the most recent one::"
+          echo "Cache keys except the most recent one:::"
           echo "$otherCacheKeys"
 
           echo "Done"
