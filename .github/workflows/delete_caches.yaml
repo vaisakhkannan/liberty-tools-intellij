@@ -7,7 +7,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Cleanup
+      - name: Cleanup edit
         run: |
           gh extension install actions/gh-actions-cache
 
