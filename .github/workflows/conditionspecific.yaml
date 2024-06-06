@@ -44,7 +44,7 @@ jobs:
 
           echo "Done"
         env:
-          GH_TOKEN: ${{ secrets.PATT }}
+          GH_TOKEN: ${{ secrets.PAT }}
           REPO: ${{ github.repository }}
           BRANCH: main
 
