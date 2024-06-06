@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     name: PR creation
     steps:
-      - name: Send GitHub trigger payload to Slack Workflow Builder
+      - name: Send GitHub trigger payload to Slack Workflow-Builder
         id: slack
         uses: slackapi/slack-github-action@v1.26.0
         with:
