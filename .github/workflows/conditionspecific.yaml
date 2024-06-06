@@ -64,7 +64,7 @@ jobs:
             echo "Cache was not restored from the exact key."
           fi
 
-      - name: Ensure cache directory existss
+      - name: Ensure cache directory exists
         run: mkdir -p cache
 
       - name: Check if cache restored
@@ -294,10 +294,3 @@ jobs:
           GH_TOKEN: ${{ secrets.PAT }}
           REPO: ${{ github.repository }}
           BRANCH: main
-
-      - name: Save cache with new key
-        if: always()
-        uses: actions/cache@v2
-        with:
-          path: cache
-          key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
