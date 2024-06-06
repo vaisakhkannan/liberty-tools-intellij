@@ -279,6 +279,15 @@ jobs:
           # Print the cache keys except the most recent one
           echo "Cache keys except the most recent one:::"
           echo "$otherCacheKeys"
+          
+          # Setting this to not fail the workflow while deleting cache keys......
+          set +e
+          if [ -n "$mostRecentCacheKey" ]; then
+            echo "Deleting the most recent cache key..."
+            gh actions-cache delete $mostRecentCacheKey -R $REPO -B $BRANCH --confirm
+          else
+            echo "No cache keys found."
+          fi
 
           echo "Done"
         env:
