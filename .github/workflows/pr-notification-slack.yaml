@@ -40,7 +40,7 @@ jobs:
           fi
           
           echo "Done"
-          # secrets.PAT - Add a Personal Access Token as a secret named 'PAT', and specify the branch as 'main' since we want to implement the cache mechanism on our 'main' branch.
+          # secrets.GITHUB_TOKEN - Add a Personal Access Token as a secret named 'PAT', and specify the branch as 'main' since we want to implement the cache mechanism on our 'main' branch.
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
