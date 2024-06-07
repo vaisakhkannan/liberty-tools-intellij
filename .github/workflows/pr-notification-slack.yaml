@@ -1,9 +1,9 @@
 name: Fetch All Open and Recently Closed Pull Requests using cron job
 
 on:
+  schedule:
+    - cron: '0 6 * * 1-5'  # At 05:50 on every day-of-week from Monday through Friday.
   workflow_dispatch:
-  push:
-    branches: '**'
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -78,7 +78,7 @@ jobs:
         id: fetch_all_pull_requests_using_condition
         run: |
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=open&sort=created&direction=desc&per_page=100")
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=open&sort=created&direction=desc&per_page=100")
           
           echo "API Data ------$pr_infos"
 
@@ -144,7 +144,7 @@ jobs:
         id: fetch_closed_prs
         run: |
           closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=closed&sort=updated&direction=desc&per_page=100")
+          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=closed&sort=updated&direction=desc&per_page=100")
 
           echo "Closed PRs API Data ------$closed_prs"
 
@@ -289,7 +289,7 @@ jobs:
 
           echo "Done"
           # The permissions can be fine-tuned in the repository settings under "Settings" > "Actions" > "General" > "Workflow permissions."
-          # Make sure to enable "Read and write permissions" in order to delete the cache key with secrets.GITHUB_TOKEN. 
+          # Make sure to enable "Read and write permissions" in order to delete the cache key with "secrets.GITHUB_TOKEN". 
           # Otherwise, the repository owner will need to create a Personal Access Token (PAT) with write permissions, add it as a secret, and specify it as GH_TOKEN.
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
