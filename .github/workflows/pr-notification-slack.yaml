@@ -242,7 +242,7 @@ jobs:
       - name: Verify Cache Save
         if: always()
         run: |
-          echo "Checking saved cache content..."
+          echo "Checking saved cache content...."
           ls -l cache/
           cat cache/notified_prs.json
 
