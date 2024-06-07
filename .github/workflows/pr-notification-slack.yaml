@@ -1,8 +1,8 @@
 name: Fetch All Open and Recently Closed Pull Requests using cron job
 
 on:
-  schedule:
-    - cron: '30 7 * * 1-5'  # At 07:30 on every day-of-week from Monday through Friday(UTC Time).
+  push:
+  branches: '**'  d
   workflow_dispatch:
 
 
@@ -296,3 +296,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           BRANCH: main
+
+    permissions:
+      actions: write
