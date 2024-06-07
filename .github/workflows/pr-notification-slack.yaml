@@ -292,7 +292,7 @@ jobs:
           # Make sure to enable "Read and write permissions" in order to delete the cache key with "secrets.GITHUB_TOKEN". 
           # Otherwise, the repository owner will need to create a Personal Access Token (PAT) with write permissions, add it as a secret, and specify it as GH_TOKEN.
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT }}
           REPO: ${{ github.repository }}
           BRANCH: main
 
