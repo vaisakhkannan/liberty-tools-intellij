@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: '**'
-    
+
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
     runs-on: ubuntu-latest
@@ -296,5 +296,4 @@ jobs:
           REPO: ${{ github.repository }}
           BRANCH: main
 
-    permissions:
-      actions: write
+    
