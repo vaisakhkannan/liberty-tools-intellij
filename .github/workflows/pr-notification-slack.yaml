@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using cron job
 
 on:
   push:
-  branches: '**'  d
+  branches: '**' 
   workflow_dispatch:
 
 
