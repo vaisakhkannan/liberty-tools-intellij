@@ -296,5 +296,3 @@ jobs:
           REPO: ${{ github.repository }}
           BRANCH: main
 
-    permissions:
-      actions: write
