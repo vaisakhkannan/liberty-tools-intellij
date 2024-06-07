@@ -2,7 +2,7 @@ name: Fetch All Open and Recently Closed Pull Requests using cron job
 
 on:
   schedule:
-    - cron: '50 6 * * 1-5'  # At 05:50 on every day-of-week from Monday through Friday.
+    - cron: '30 7 * * 1-5'  # At 07:30 on every day-of-week from Monday through Friday(UTC Time).
   workflow_dispatch:
 
 
@@ -191,7 +191,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Open/New Pull Requests using Cron Job"
+                  "text": "List of Open/New/Updated Pull Requests using Cron Job"
                 }
               },
               {
