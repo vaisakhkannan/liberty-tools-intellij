@@ -1,4 +1,4 @@
-name: Fetch All Open and Recently Closed Pull Requests using condition using cron job
+name: Fetch All Open and Recently Closed Pull Requests using cron job
 
 on:
   workflow_dispatch:
@@ -21,32 +21,31 @@ jobs:
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           echo "Cache keys-->: $cacheKeys"
 
-
           # Print the contents of the cacheKeysForPR variable
-            echo "Contents of cacheKeys:"
-            echo "$cacheKeys"
+          echo "Contents of cacheKeys:"
+          echo "$cacheKeys"
 
-            # Extract the first two cache keys
-            mostRecentCacheKeys=$(echo "$cacheKeys" | head -n 1)
+          # Extract the first two cache keys
+          mostRecentCacheKeys=$(echo "$cacheKeys" | head -n 1)
 
-            # Print the most recent cache keys
-            echo "Most recent one cache keys:"
-            echo "$mostRecentCacheKeys"
+          # Print the most recent cache keys
+          echo "Most recent one cache key:"
+          echo "$mostRecentCacheKeys"
+          
           if [ -n "$mostRecentCacheKeys" ]; then
-            echo "Before.."
             echo "CACHE_KEY=$mostRecentCacheKeys" >> $GITHUB_ENV
-            echo "After.."
           else
             echo "No recent cache key found, generating a new one...."
             echo "CACHE_KEY=${{ runner.os }}-pr-cache-${{ github.run_number }}" >> $GITHUB_ENV
           fi
-
-
+          
           echo "Done"
+          # secrets.PAT - Add a Personal Access Token as a secret named 'PAT', and specify the branch as 'main' since we want to implement the cache mechanism on our 'main' branch.
         env:
           GH_TOKEN: ${{ secrets.PAT }}
           REPO: ${{ github.repository }}
           BRANCH: main
+
 
       - name: Restore cache
         id: cache-restore
@@ -87,7 +86,7 @@ jobs:
           # Load previous PR data if exists
           if [ -f cache/notified_prs.json ]; then
             previous_prs=$(cat cache/notified_prs.json)
-            echo "Previous PRs -------$previous_prs"
+            echo "Previous PRs ------- $previous_prs"
           else
             previous_prs="[]"
           fi
@@ -138,7 +137,7 @@ jobs:
             echo "::set-output name=notify::false"
           fi
 
-      - name: Debug Notify Value
+      - name: Debug Notify Value for Open PRs or Updated PRs
         run: |
           echo "Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.notify }}"
 
@@ -254,7 +253,7 @@ jobs:
           path: cache
           key: ${{ runner.os }}-pr-cache-${{ github.run_number }}
 
-      - name: Cleanup
+      - name: Cleanup the restored cache key
         run: |
           gh extension install actions/gh-actions-cache
 
