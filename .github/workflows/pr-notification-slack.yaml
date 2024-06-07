@@ -46,7 +46,6 @@ jobs:
           REPO: ${{ github.repository }}
           BRANCH: main
 
-
       - name: Restore cache
         id: cache-restore
         uses: actions/cache@v2
@@ -281,7 +280,7 @@ jobs:
           
           # Setting this to not fail the workflow while deleting cache keys.........
           set +e
-          if [ -n "$mostRecentCacheKey" ]; then
+          if [ -n "$mostRecentCacheKey" ] && [[ $mostRecentCacheKey == Linux-pr-cache-* ]]; then
             echo "Deleting the most recent cache key..."
             gh actions-cache delete $mostRecentCacheKey -R $REPO -B $BRANCH --confirm
           else
