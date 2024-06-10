@@ -251,32 +251,32 @@ jobs:
                 "text": {
                   "type": "mrkdwn",
                   "text": "Do you approve this request?"
+                },
+                "accessory": {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Yes"
+                      },
+                      "style": "primary",
+                      "value": "yes",
+                      "action_id": "approve_action"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "No"
+                      },
+                      "style": "danger",
+                      "value": "no",
+                      "action_id": "reject_action"
+                    }
+                  ]
                 }
-              },
-              {
-                "type": "actions",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "Yes"
-                    },
-                    "style": "primary",   // Highlighted positive action
-                    "value": "yes",
-                    "action_id": "approve_action"
-                  },
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "No"
-                    },
-                    "style": "danger",    // Highlighted negative action
-                    "value": "no",
-                    "action_id": "reject_action"
-                  }
-                ]
               }
             ]
           }
@@ -284,7 +284,6 @@ jobs:
           )
           echo "$payload"
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
-
 
       - name: Verify Cache Save
         if: always()
