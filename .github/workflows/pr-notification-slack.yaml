@@ -261,7 +261,6 @@ jobs:
                         "type": "plain_text",
                         "text": "Yes"
                       },
-                      "style": "primary",
                       "value": "yes",
                       "action_id": "approve_action"
                     },
@@ -271,7 +270,6 @@ jobs:
                         "type": "plain_text",
                         "text": "No"
                       },
-                      "style": "danger",
                       "value": "no",
                       "action_id": "reject_action"
                     }
