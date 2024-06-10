@@ -245,36 +245,27 @@ jobs:
         run: |
           payload=$(cat <<-EOF
           {
-            "blocks": [
+            "text": "Do you approve this request?",
+            "attachments": [
               {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "Do you approve this request?"
-                },
-                "accessory": {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "Yes"
-                      },
-                      "value": "yes",
-                      "action_id": "approve_action"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "No"
-                      },
-                      "value": "no",
-                      "action_id": "reject_action"
-                    }
-                  ]
-                }
+                "fallback": "You are unable to approve this request",
+                "callback_id": "approval_buttons",
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "Yes",
+                    "name": "approve",
+                    "value": "yes",
+                    "style": "primary"
+                  },
+                  {
+                    "type": "button",
+                    "text": "No",
+                    "name": "reject",
+                    "value": "no",
+                    "style": "danger"
+                  }
+                ]
               }
             ]
           }
@@ -282,6 +273,7 @@ jobs:
           )
           echo "$payload"
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
+          
 
       - name: Verify Cache Save
         if: always()
