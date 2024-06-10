@@ -245,7 +245,7 @@ jobs:
         run: |
           payload=$(cat <<-EOF
           {
-            "text": "Do you approve this request?",
+            "text": "Do you think the recent changes in the Redhat Lsp4ij repo PRs are okay?",
             "attachments": [
               {
                 "fallback": "You are unable to approve this request",
