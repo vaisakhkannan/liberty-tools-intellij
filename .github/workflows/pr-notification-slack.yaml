@@ -238,7 +238,7 @@ jobs:
           echo "$payload"  # Debugging: Print payload to verify its format
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
-      - name: Send Slack notification
+      - name: Send Slack notification of adding buttons
         if: success()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -262,8 +262,9 @@ jobs:
                       "type": "plain_text",
                       "text": "Yes"
                     },
+                    "style": "primary",   // Highlighted positive action
                     "value": "yes",
-                    "action_id": "approve_yes"
+                    "action_id": "approve_action"
                   },
                   {
                     "type": "button",
@@ -271,8 +272,9 @@ jobs:
                       "type": "plain_text",
                       "text": "No"
                     },
+                    "style": "danger",    // Highlighted negative action
                     "value": "no",
-                    "action_id": "approve_no"
+                    "action_id": "reject_action"
                   }
                 ]
               }
