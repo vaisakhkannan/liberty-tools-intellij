@@ -250,6 +250,7 @@ jobs:
         run: |
           current_timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           echo "$current_timestamp" > cache/last_run_timestamp.txt
+          echo "Current run timestamp: $current_timestamp"
 
       - name: Verify Cache Save
         if: always()
