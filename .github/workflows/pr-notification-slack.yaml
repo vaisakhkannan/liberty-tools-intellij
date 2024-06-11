@@ -3,7 +3,7 @@ name: Fetch All Open and Recently Closed Pull Requests using cron job
 on:
   workflow_dispatch:
   schedule:
-    - cron: '13 9 * * 1-5'  # At 07:30 on every day-of-week from Monday through Friday(UTC Time), 1pm in IST.
+    - cron: '32 9 * * 1-5'  # At 07:30 on every day-of-week from Monday through Friday(UTC Time), 1pm in IST.
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
