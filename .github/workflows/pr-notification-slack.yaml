@@ -157,7 +157,6 @@ jobs:
           echo "Closed PRs API Data ------$closed_prs"
 
           closed_pr_list=""
-          current_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
           for pr_info in $(echo "$closed_prs" | jq -r '.[] | @base64'); do
             _jq() {
@@ -175,6 +174,8 @@ jobs:
               closed_pr_list="${closed_pr_list}\n*Closed Pull Request* #${pr_number}: ${pr_title}\n*Closed by*: ${pr_user}\n*URL*: ${pr_url}\n*Closed At*: ${pr_closed_at}\n"
             fi
           done
+          
+          echo "Latest Closed PR List ------$closed_pr_list"
 
           if [ -n "$closed_pr_list" ]; then
             echo -e "$closed_pr_list" > closed_pr_list.txt
