@@ -1,12 +1,19 @@
 name: Cron Job to List All Open Pull Requests
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '30 6 * * 1-5'
+    - cron: '38 9 * * 1-5'
 
 jobs:
   fetch_all_pull_requests_and_notify_cron_job:
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: Issue-45-Lsp4ij-Workitem-2
 
     steps:
       - name: Fetch all opened pull request details using cron jobs
