@@ -228,7 +228,7 @@ jobs:
                 "type": "header",
                 "text": {
                   "type": "plain_text",
-                  "text": "List of Closed Pull Requests in the last 24 hours"
+                  "text": "List of Pull Requests Closed Since the Last Cron Job"
                 }
               },
               {
