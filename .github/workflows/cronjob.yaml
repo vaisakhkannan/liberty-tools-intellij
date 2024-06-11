@@ -15,7 +15,6 @@ jobs:
         with:
           ref: Issue-45-Lsp4ij-Workitem-2
 
-    steps:
       - name: Fetch all opened pull request details using cron jobs
         shell: bash
         id: fetch_all_pull_requests_using_cron
