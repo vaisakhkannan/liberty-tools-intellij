@@ -140,9 +140,17 @@ jobs:
         run: |
           echo "Notify value: ${{ steps.fetch_all_pull_requests_using_condition.outputs.notify }}"
 
-      - name: Fetch closed pull requests within the last 24 hours
+      - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
         run: |
+          if [ -f cache/last_run_timestamp.txt ]; then
+            last_run_timestamp=$(cat cache/last_run_timestamp.txt)
+          else
+            last_run_timestamp=$(date -u -d "-24 hours" +%Y-%m-%dT%H:%M:%SZ)
+          fi
+
+          echo "Last run timestamp: $last_run_timestamp"
+
           closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=closed&sort=updated&direction=desc&per_page=100")
 
@@ -150,7 +158,6 @@ jobs:
 
           closed_pr_list=""
           current_time=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-          past_24_hours=$(date -u -d "-24 hours" +%Y-%m-%dT%H:%M:%SZ)
 
           for pr_info in $(echo "$closed_prs" | jq -r '.[] | @base64'); do
             _jq() {
@@ -164,7 +171,7 @@ jobs:
             pr_closed_at=$(_jq '.closed_at')
             pr_created_at=$(_jq '.created_at')
 
-            if [[ "$pr_closed_at" > "$past_24_hours" ]]; then
+            if [[ "$pr_closed_at" > "$last_run_timestamp" ]]; then
               closed_pr_list="${closed_pr_list}\n*Closed Pull Request* #${pr_number}: ${pr_title}\n*Closed by*: ${pr_user}\n*URL*: ${pr_url}\n*Closed At*: ${pr_closed_at}\n"
             fi
           done
@@ -174,7 +181,7 @@ jobs:
             echo "::set-output name=notify_closed::true"
           else
             echo "::set-output name=notify_closed::false"
-          fi
+          fi      
 
       - name: Send Slack notification for open PRs
         if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
@@ -238,42 +245,10 @@ jobs:
           echo "$payload"  # Debugging: Print payload to verify its format
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
-      - name: Send Slack notification of adding buttons
-        if: success()
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Save current timestamp
         run: |
-          payload=$(cat <<-EOF
-          {
-            "text": "Do you think the recent changes in the Redhat Lsp4ij repo PRs are okay?",
-            "attachments": [
-              {
-                "fallback": "You are unable to approve this request",
-                "callback_id": "approval_buttons",
-                "actions": [
-                  {
-                    "type": "button",
-                    "text": "Yes",
-                    "name": "approve",
-                    "value": "yes",
-                    "style": "primary"
-                  },
-                  {
-                    "type": "button",
-                    "text": "No",
-                    "name": "reject",
-                    "value": "no",
-                    "style": "danger"
-                  }
-                ]
-              }
-            ]
-          }
-          EOF
-          )
-          echo "$payload"
-          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL
-          
+          current_timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "$current_timestamp" > cache/last_run_timestamp.txt
 
       - name: Verify Cache Save
         if: always()
