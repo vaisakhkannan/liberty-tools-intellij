@@ -152,7 +152,7 @@ jobs:
           echo "Last run timestamp: $last_run_timestamp"
 
           closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/redhat-developer/lsp4ij/pulls?state=closed&sort=updated&direction=desc&per_page=100")
+          "https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls?state=closed&sort=updated&direction=desc&per_page=100")
 
           echo "Closed PRs API Data ------$closed_prs"
 
