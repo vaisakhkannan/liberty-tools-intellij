@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: '**'
-  schedule:
-    - cron: '0 10 * * 1-5'  # At 10:00 on every day-of-week from Monday through Friday(UTC Time), 7:30pm in IST.
 
 jobs:
   fetch_all_pull_requests_and_notify_using_condition_and_cron:
@@ -241,15 +239,6 @@ jobs:
 
           # Extract the most recent cache key
           mostRecentCacheKey=$(echo "$cacheKeys" | head -n 1)
-          
-          # Setting this to not fail the workflow while deleting cache key
-          set +e
-          if [ -n "$mostRecentCacheKey" ] && [[ $mostRecentCacheKey == Linux-pr-cache-* ]]; then
-            echo "Deleting the most recent cache key..."
-            gh actions-cache delete $mostRecentCacheKey -R $REPO -B $BRANCH --confirm
-          else
-            echo "No cache keys found."
-          fi
 
           echo "Done"
           # The permissions can be fine-tuned in the repository settings under "Settings" > "Actions" > "General" > "Workflow permissions."
