@@ -14,7 +14,6 @@ jobs:
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
     steps:
       - name: Checkout repository
@@ -150,7 +149,7 @@ jobs:
               closed_pr_list="${closed_pr_list}\n*Closed Pull Request* #${pr_number}: ${pr_title}\n*Closed by*: ${pr_user}\n*URL*: ${pr_url}\n*Closed At*: ${pr_closed_at}\n"
             fi
           done
-          
+
           echo "Latest Closed PR List ------$closed_pr_list"
 
           if [ -n "$closed_pr_list" ]; then
@@ -158,9 +157,11 @@ jobs:
             echo "::set-output name=notify_closed::true"
           else
             echo "::set-output name=notify_closed::false"
-          fi      
+          fi       
 
       - name: Send Slack notification for open PRs
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
         run: |
           pr_list=$(cat pr_list.txt)
@@ -189,6 +190,8 @@ jobs:
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Send Slack notification for closed PRs
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: success() && steps.fetch_closed_prs.outputs.notify_closed == 'true'
         run: |
           closed_pr_list=$(cat closed_pr_list.txt)
