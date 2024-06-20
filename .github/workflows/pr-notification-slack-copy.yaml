@@ -13,7 +13,7 @@ jobs:
       REPO: ${{ github.repository }}
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      API_URL: https://github.com/vaisakhkannan/liberty-tools-intellij/pulls
+      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
 
     steps:
       - name: Checkout repository
