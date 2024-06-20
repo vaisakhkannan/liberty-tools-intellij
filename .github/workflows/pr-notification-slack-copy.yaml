@@ -96,6 +96,7 @@ jobs:
             echo "Checking PR is new or not --- $previous_pr"
             if [ -z "$previous_pr" ] || [ "$(echo "$previous_pr" | jq -r '.updated_at')" != "$pr_updated_at" ]; then
               draft_status=""
+              echo "------Draft value ---- $pr_draft"
               if [ "$pr_draft" = "true" ]; then
                 draft_status="\n*Draft*: true"
               fi
