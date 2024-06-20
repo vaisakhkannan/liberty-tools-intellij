@@ -14,6 +14,7 @@ jobs:
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
 
     steps:
       - name: Checkout repository
@@ -160,8 +161,6 @@ jobs:
           fi      
 
       - name: Send Slack notification for open PRs
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
         if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
         run: |
           pr_list=$(cat pr_list.txt)
@@ -190,8 +189,6 @@ jobs:
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Send Slack notification for closed PRs
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
         if: success() && steps.fetch_closed_prs.outputs.notify_closed == 'true'
         run: |
           closed_pr_list=$(cat closed_pr_list.txt)
