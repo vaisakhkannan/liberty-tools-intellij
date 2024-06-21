@@ -160,60 +160,66 @@ jobs:
             echo "::set-output name=notify_closed::false"
           fi      
 
-      - name: Send Slack notification for open PRs
-        if: success() && steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true'
+      - name: Send Slack notification for PRs
+        if: success() && (steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true' || steps.fetch_closed_prs.outputs.notify_closed == 'true')
         run: |
+          # Read PR lists
           pr_list=$(cat pr_list.txt)
-          payload=$(cat <<-EOF
-          {
-            "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "List of Open/New/Updated Pull Requests using Cron Job"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "${pr_list}"
-                }
-              }
-            ]
-          }
-          EOF
-          )
-          echo "$payload"  # Debugging: Print payload to verify its format
-          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
-
-      - name: Send Slack notification for closed PRs
-        if: success() && steps.fetch_closed_prs.outputs.notify_closed == 'true'
-        run: |
           closed_pr_list=$(cat closed_pr_list.txt)
+      
+          # Initialize payload blocks
+          payload_blocks=()
+      
+          # Add open PRs section if not empty
+          if [ -n "$pr_list" ]; then
+            payload_blocks+=("{
+              \"type\": \"header\",
+              \"text\": {
+                \"type\": \"plain_text\",
+                \"text\": \"List of Open/New/Updated Pull Requests using Cron Job\"
+              }
+            }")
+            payload_blocks+=("{
+              \"type\": \"section\",
+              \"text\": {
+                \"type\": \"mrkdwn\",
+                \"text\": \"$pr_list\"
+              }
+            }")
+          fi
+      
+          # Add closed PRs section if not empty
+          if [ -n "$closed_pr_list" ]; then
+            payload_blocks+=("{
+              \"type\": \"header\",
+              \"text\": {
+                \"type\": \"plain_text\",
+                \"text\": \"List of Pull Requests Closed Since the Last Cron Job\"
+              }
+            }")
+            payload_blocks+=("{
+              \"type\": \"section\",
+              \"text\": {
+                \"type\": \"mrkdwn\",
+                \"text\": \"$closed_pr_list\"
+              }
+            }")
+          fi
+      
+          # Construct the payload
           payload=$(cat <<-EOF
           {
             "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "List of Pull Requests Closed Since the Last Cron Job"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "${closed_pr_list}"
-                }
-              }
+              $(IFS=,; echo "${payload_blocks[*]}")
             ]
           }
           EOF
           )
-          echo "$payload"  # Debugging: Print payload to verify its format
+      
+          # Debugging: Print payload to verify its format
+          echo "$payload"
+      
+          # Send the payload to Slack
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
       - name: Save current timestamp
