@@ -51,7 +51,7 @@ jobs:
         with:
           repository: OpenLiberty/liberty-tools-intellij
           path: liberty-tools-intellij
-          ref: refs/tags/24.0.6
+          ref: refs/tags/24.0.3
       - name: 'Install required integration test software'
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/setup.sh
