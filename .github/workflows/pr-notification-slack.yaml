@@ -150,7 +150,7 @@ jobs:
               closed_pr_list="${closed_pr_list}\n*Closed Pull Request* #${pr_number}: ${pr_title}\n*Closed by*: ${pr_user}\n*URL*: ${pr_url}\n*Closed At*: ${pr_closed_at}\n"
             fi
           done
-
+          
           echo "Latest Closed PR List ------$closed_pr_list"
 
           if [ -n "$closed_pr_list" ]; then
@@ -158,7 +158,7 @@ jobs:
             echo "::set-output name=notify_closed::true"
           else
             echo "::set-output name=notify_closed::false"
-          fi
+          fi      
 
       - name: Send Slack notification for PRs
         if: success() && (steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true' || steps.fetch_closed_prs.outputs.notify_closed == 'true')
