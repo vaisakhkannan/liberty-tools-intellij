@@ -25,6 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        tag: [ '24.0.6', '24.0.3' ]
         runtime: [ linux, mac, windows ]
         include:
           - runtime: linux
@@ -51,7 +52,7 @@ jobs:
         with:
           repository: OpenLiberty/liberty-tools-intellij
           path: liberty-tools-intellij
-          ref: refs/tags/24.0.3
+          ref: refs/tags/${{ matrix.tag }}
       - name: 'Install required integration test software'
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/setup.sh
