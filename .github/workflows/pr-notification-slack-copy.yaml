@@ -163,13 +163,23 @@ jobs:
       - name: Send Slack notification for PRs
         if: success() && (steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true' || steps.fetch_closed_prs.outputs.notify_closed == 'true')
         run: |
-          # Read PR lists
-          pr_list=$(cat pr_list.txt)
-          closed_pr_list=$(cat closed_pr_list.txt)
-      
+          # Initialize PR lists
+          pr_list=""
+          closed_pr_list=""
+
+          # Check if the open PRs file exists and read its content
+          if [ -f pr_list.txt ]; then
+            pr_list=$(cat pr_list.txt)
+          fi
+
+          # Check if the closed PRs file exists and read its content
+          if [ -f closed_pr_list.txt ]; then
+            closed_pr_list=$(cat closed_pr_list.txt)
+          fi
+
           # Initialize payload blocks
           payload_blocks=()
-      
+
           # Add open PRs section if not empty
           if [ -n "$pr_list" ]; then
             payload_blocks+=("{
@@ -187,7 +197,7 @@ jobs:
               }
             }")
           fi
-      
+
           # Add closed PRs section if not empty
           if [ -n "$closed_pr_list" ]; then
             payload_blocks+=("{
@@ -205,7 +215,7 @@ jobs:
               }
             }")
           fi
-      
+
           # Construct the payload
           payload=$(cat <<-EOF
           {
@@ -215,13 +225,13 @@ jobs:
           }
           EOF
           )
-      
+
           # Debugging: Print payload to verify its format
           echo "$payload"
-      
+
           # Send the payload to Slack
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
-
+      
       - name: Save current timestamp
         run: |
           current_timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
