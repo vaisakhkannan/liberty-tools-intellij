@@ -24,7 +24,7 @@ jobs:
         run: |
           gh extension install actions/gh-actions-cache
 
-          # Fetching list of cache keys........
+          # Fetching list of cache keys.........
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           
           # Extract the most recent cache key
@@ -231,7 +231,7 @@ jobs:
 
           # Send the payload to Slack
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
-      
+
       - name: Save current timestamp
         run: |
           current_timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
