@@ -50,6 +50,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: liberty-tools-intellij
+          ref: refs/tags/24.0.6
       - name: 'Install required integration test software'
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/setup.sh
