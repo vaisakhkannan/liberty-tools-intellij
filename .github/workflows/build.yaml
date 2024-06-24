@@ -3,6 +3,11 @@ name: Build
 on:
   workflow_call:
     inputs:
+      refLsp4ij:
+        description: 'Lsp4ij ref'
+        type: string
+        required: true
+        default: main
       useLocalPlugin:
         description: 'Use lsp4ij locally'
         required: true
@@ -37,8 +42,10 @@ jobs:
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
+      max-parallel: 1
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || 'false' }}
+      REF_LSP4IJ: ${{ inputs.refLsp4ij }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -63,7 +70,7 @@ jobs:
         with:
           repository: redhat-developer/lsp4ij
           path: lsp4ij
-          ref: main
+          ref: ${{ env.REF_LSP4IJ }}
       - name: 'Build Lsp4ij'
         if: env.USE_LOCAL_PLUGIN == 'true'
         working-directory: ./lsp4ij
