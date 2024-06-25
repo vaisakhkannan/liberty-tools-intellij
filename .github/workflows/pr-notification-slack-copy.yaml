@@ -89,6 +89,8 @@ jobs:
 
             pr_data=$(jq -n --arg number "$pr_number" --arg updated_at "$pr_updated_at" '{number: $number, updated_at: $updated_at}')
             new_notified_prs=$(echo "$new_notified_prs" | jq --argjson pr_data "$pr_data" '. += [$pr_data]')
+          
+            echo "New Notified PR List------ $new_notified_prs"
 
             # Check if the PR is new or updated
             previous_pr=$(echo "$previous_prs" | jq --arg number "$pr_number" '.[] | select(.number == $number)')
