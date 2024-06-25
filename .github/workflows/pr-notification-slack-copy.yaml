@@ -118,7 +118,7 @@ jobs:
                 pr_list="${pr_list}\n*Pull Request* #${pr_number}: ${pr_title}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}${draft_status}\n*Created At*: ${pr_created_at}\n*Last Updated At*: ${pr_updated_at}\n"
                 notify_open=true
               fi
-            else if [ -n "$pr_closed_at" ]; then
+            elif [ -n "$pr_closed_at" ]; then
               echo "PR #${pr_number} closed at ${pr_closed_at} (Last run timestamp: ${last_run_timestamp})"
               echo "Comparing: pr_closed_at (${pr_closed_at}) > last_run_timestamp (${last_run_timestamp})"
               if [[ "$pr_closed_at" > "$last_run_timestamp" ]]; then
