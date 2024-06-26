@@ -63,8 +63,8 @@ jobs:
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "${{ env.API_URL }}?state=open&direction=desc&per_page=100")
 
-          echo "List of Open PRs fetched:"
-          echo "$pr_infos" | jq '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, created_at: .created_at, updated_at: .updated_at, draft: .draft}'
+          echo "List of Open PRs fetched: $pr_infos"
+          # echo "$pr_infos" | jq '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, created_at: .created_at, updated_at: .updated_at, draft: .draft}'
 
           # Load previous PR data if exists
           if [ -f cache/notified_prs.json ]; then
@@ -138,8 +138,8 @@ jobs:
           closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "${{ env.API_URL }}?state=closed&direction=desc&per_page=100")
 
-          echo "List of Closed PRs fetched:"
-          echo "$closed_prs" | jq '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, created_at: .created_at, updated_at: .updated_at, closed_at: .closed_at, draft: .draft}'
+          echo "List of Closed PRs fetched: $closed_prs"
+          # echo "$closed_prs" | jq '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, created_at: .created_at, updated_at: .updated_at, closed_at: .closed_at, draft: .draft}'
 
           closed_pr_list=""
 
