@@ -13,7 +13,7 @@ jobs:
       REPO: ${{ github.repository }}
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
+      API_URL: https://github.com/vaisakhkannan/liberty-tools-intellij/pulls
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
 
     steps:
@@ -137,7 +137,7 @@ jobs:
 
           closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "${{ env.API_URL }}?state=closed&direction=desc&per_page=100")
-          
+
           echo "List of Closed PRs fetched:"
           echo "$closed_prs" | jq '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, created_at: .created_at, updated_at: .updated_at, closed_at: .closed_at, draft: .draft}'
 
@@ -145,7 +145,7 @@ jobs:
 
           for pr_info in $(echo "$closed_prs" | jq -r '.[] | @base64'); do
             _jq() {
-              echo "$pr_info" | base64 --decode | jq -r "${1}"
+              echo "${pr_info}" | base64 --decode | jq -r "${1}"
             }
 
             pr_number=$(_jq '.number')
@@ -160,9 +160,8 @@ jobs:
             fi
           done
 
-          echo "Latest Closed PR List ------ "
+          echo "Closed PR List since last cron job :"
           echo "$closed_pr_list" | jq '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, created_at: .created_at, updated_at: .updated_at, closed_at: .closed_at, draft: .draft}'
-
 
           if [ -n "$closed_pr_list" ]; then
             echo -e "$closed_pr_list" > closed_pr_list.txt
@@ -170,7 +169,6 @@ jobs:
           else
             echo "::set-output name=notify_closed::false"
           fi      
-      
 
       - name: Send Slack notification for PRs
         if: success() && (steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true' || steps.fetch_closed_prs.outputs.notify_closed == 'true')
