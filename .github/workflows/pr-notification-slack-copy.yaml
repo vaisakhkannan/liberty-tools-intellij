@@ -128,14 +128,14 @@ jobs:
           fi
 
           echo "Last run timestamp: $last_run_timestamp"
-      
-
+          
+          
           closed_prs=$(curl -s -H "Authorization: token ${{ env.GH_TOKEN }}" \
           "${{ env.API_URL }}?state=closed&sort=updated&direction=desc&per_page=100")
           
           echo "Closed PRs from API"
           echo "$closed_prs" | jq -r '.[] | "\(.number), \(.title), \(.user.login), \(.state), \(.created_at), \(.updated_at)"'
-      
+          
           closed_pr_list=$(echo "$closed_prs" | jq -r \
           --arg last_run "$last_run_timestamp" \
           '.[] | select(.closed_at > $last_run) | "*Closed Pull Request* #\(.number): \(.title)\n*Closed by*: \(.user.login)\n*URL*: \(.html_url)\n*Closed At*: \(.closed_at)\n"')
@@ -207,14 +207,11 @@ jobs:
           fi
 
           # Construct the payload
-          payload=$(cat <<-EOF
+          payload=$(jq -n --argjson blocks "$(echo "${payload_blocks[@]}" | jq -s '.')" '
           {
-            "blocks": [
-              $(IFS=,; echo "${payload_blocks[*]}")
-            ]
-          }
-          EOF
-          )
+            "blocks": $blocks
+          }')
+
           # Send the payload to Slack
           curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
 
@@ -240,7 +237,6 @@ jobs:
 
       - name: Cleanup the restored cache key
         run: |
-
           # Fetching list of cache keys........
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           echo "Cache keys-->: $cacheKeys"
@@ -265,7 +261,7 @@ jobs:
     steps:
       - name: 'Slack Notification Reminder'
         run: |
-          payload=$(cat <<-EOF
+          payload=$(jq -n '
           {
             "blocks": [
               {
@@ -275,6 +271,6 @@ jobs:
                   "text": "Slack Notification to perform Workflow Builder Action"
                 }
               }
-          EOF
-          )
+            ]
+          }')
           curl -X POST -H 'Content-type: application/json' --data "$payload" $WORKFLOW_BUILDER_WEBHOOK || echo "Slack notification failed with status code: $?"
