@@ -67,15 +67,24 @@ jobs:
           # Load previous PR data if exists
           previous_prs=$(if [ -f cache/notified_prs.json ]; then cat cache/notified_prs.json; else echo "[]"; fi)
 
-          # Process PRs using jq
-          new_notified_prs=$(echo "$pr_infos" | jq -r '.[] | {number: .number, updated_at: .updated_at}')
+          # Extract relevant fields from current PRs
+          new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number: .number, title: .title, user: .user.login, html_url: .html_url, draft: .draft, created_at: .created_at, updated_at: .updated_at}]')
 
           # Check for new or updated PRs
-          notify=$(echo "$new_notified_prs" "$previous_prs" | jq -s 'group_by(.number) | map(.[0] + .[1] | {number: .number, updated_at: .updated_at}) | length > 0')
+          pr_list=$(echo "$new_notified_prs" "$previous_prs" | jq -s '
+            (.[0] - .[1]) as $new_prs |
+            (.[1] - .[0]) as $updated_prs |
+            ($new_prs + $updated_prs) | 
+            map(
+              "*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user)\n*URL*: \(.html_url)\n" + 
+              if .draft == true then "*Draft*: true\n" else "" end + 
+              "*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n"
+            ) | join("\n")
+          ')
 
-          if [ "$notify" = true ]; then
-            # Prepare PR list for notification
-            pr_list=$(echo "$new_notified_prs" | jq -r 'map("*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n") | join("\n")')
+          notify=$(if [ -z "$pr_list" ]; then echo "false"; else echo "true"; fi)
+
+          if [ "$notify" = "true" ]; then
             echo -e "$pr_list" > pr_list.txt
           fi
 
@@ -84,7 +93,6 @@ jobs:
 
           # Set output based on whether to notify or not
           echo "::set-output name=notify::$notify"
-      
       
       - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
