@@ -24,7 +24,7 @@ jobs:
         run: |
           gh extension install actions/gh-actions-cache
 
-          # Fetching list of cache keys....
+          # Fetching list of cache keys.....
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           
           # Extract the most recent cache key
