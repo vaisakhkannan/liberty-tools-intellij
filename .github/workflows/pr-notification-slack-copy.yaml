@@ -90,7 +90,7 @@ jobs:
           pr_list=$(jq -n --argjson current "$pr_infos" --argjson previous "$previous_prs" '
           $current | map(select(
             .number as $num |
-            ($previous | map(select(.number == $num and .updated_at == .updated_at)) | length) == 0
+            ($previous | map(select(.number == $num or .updated_at == .updated_at)) | length) == 0
           ) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\(if .draft == true then "\n*Draft*: true" else "" end)\n") | join("\n")' | tr -d '"')
 
           echo "List of Open PRs that need to be notified in this run:"
