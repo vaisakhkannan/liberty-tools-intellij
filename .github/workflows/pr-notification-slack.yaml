@@ -105,7 +105,7 @@ jobs:
             fi
           done
           
-          echo "List of PRs that need to be sent to Slack now: "
+          echo "List of PRs that need to be sent to Slack now:"
           echo "$pr_list"
 
           # Save current PR data for future comparison
@@ -128,7 +128,8 @@ jobs:
           fi
 
           echo "Last run timestamp: $last_run_timestamp"
-
+          
+          
           closed_prs=$(curl -s -H "Authorization: token ${{ env.GH_TOKEN }}" \
           "${{ env.API_URL }}?state=closed&sort=updated&direction=desc&per_page=100")
           
@@ -254,7 +255,7 @@ jobs:
           fi
 
           echo "Done"
-          
+
     # 'secrets.GITHUB_TOKEN' is automatically provided by GitHub Actions for each workflow run. We don't need to manually create or manage this token.
     # The below way, the workflow is granting write access to the actions scope of the GITHUB_TOKEN.
     # If the below specific way is not successful to delete the cache key, then the repository owner will need to create a Personal Access Token (PAT) with write permissions, add it as a secret, and specify the name in GH_TOKEN.
