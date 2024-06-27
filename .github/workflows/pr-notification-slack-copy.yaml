@@ -122,48 +122,28 @@ jobs:
       - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
         run: |
-          if [ -f cache/last_run_timestamp.txt ]; then
-            last_run_timestamp=$(cat cache/last_run_timestamp.txt)
-          else
-            last_run_timestamp=$(date -u -d "-24 hours" +%Y-%m-%dT%H:%M:%SZ)
-          fi
-
+          last_run_timestamp=$(cat cache/last_run_timestamp.txt 2>/dev/null || date -u -d "-24 hours" +%Y-%m-%dT%H:%M:%SZ)
           echo "Last run timestamp: $last_run_timestamp"
-
+      
           closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "${{ env.API_URL }}?state=closed&direction=desc&per_page=100")
-
+      
           echo "List of Closed PRs fetched:"
-          echo "$closed_prs" | jq '.[] | {number: .number, title: .title, user: .user.login, url: .html_url, created_at: .created_at, updated_at: .updated_at, closed_at: .closed_at, draft: .draft}'
-
-          closed_pr_list=""
-
-          for pr_info in $(echo "$closed_prs" | jq -r '.[] | @base64'); do
-            _jq() {
-              echo "${pr_info}" | base64 --decode | jq -r "${1}"
-            }
-
-            pr_number=$(_jq '.number')
-            pr_title=$(_jq '.title')
-            pr_user=$(_jq '.user.login')
-            pr_url=$(_jq '.html_url')
-            pr_closed_at=$(_jq '.closed_at')
-            pr_created_at=$(_jq '.created_at')
-
-            if [[ "$pr_closed_at" > "$last_run_timestamp" ]]; then
-              closed_pr_list="${closed_pr_list}\n*Closed Pull Request* #${pr_number}: ${pr_title}\n*Closed by*: ${pr_user}\n*URL*: ${pr_url}\n*Closed At*: ${pr_closed_at}\n"
-            fi
-          done
-
-          echo "Closed PR List since last cron job::"
+          echo "$closed_prs" | jq '.[] | {number, title, user: .user.login, url: .html_url, created_at, updated_at, closed_at, draft}'
+      
+          closed_pr_list=$(echo "$closed_prs" | jq -r \
+          --arg last_run "$last_run_timestamp" \
+          '.[] | select(.closed_at > $last_run) | "*Closed Pull Request* #\(.number): \(.title)\n*Closed by*: \(.user.login)\n*URL*: \(.html_url)\n*Closed At*: \(.closed_at)\n"')
+      
+          echo "Closed PR List since last cron job:"
           echo "$closed_pr_list"
-
+      
           if [ -n "$closed_pr_list" ]; then
             echo -e "$closed_pr_list" > closed_pr_list.txt
             echo "::set-output name=notify_closed::true"
           else
             echo "::set-output name=notify_closed::false"
-          fi      
+          fi
 
       - name: Send Slack notification for PRs
         if: success() && (steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true' || steps.fetch_closed_prs.outputs.notify_closed == 'true')
