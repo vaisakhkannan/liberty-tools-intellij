@@ -60,7 +60,7 @@ jobs:
         id: fetch_all_pull_requests_using_condition
         run: |
           pr_infos=$(curl -s -H "Authorization: token ${{ env.GH_TOKEN }}" \
-          "${{ env.API_URL }}?state=open&sort=created&direction=desc&per_page=100")
+          "${{ env.API_URL }}?state=open&direction=desc&per_page=100")
           
           echo "List of Currently Opened PRs: "
           echo "$pr_infos" | jq '.[] | {number, updated_at, draft}'
@@ -129,7 +129,7 @@ jobs:
           echo "Last run timestamp: $last_run_timestamp"
       
           closed_prs=$(curl -s -H "Authorization: token ${{ env.GH_TOKEN }}" \
-          "${{ env.API_URL }}?state=closed&direction=desc&per_page=100")
+          "${{ env.API_URL }}?state=closed&sort=updated&direction=desc&per_page=100")
       
           closed_pr_list=$(echo "$closed_prs" | jq -r \
           --arg last_run "$last_run_timestamp" \
