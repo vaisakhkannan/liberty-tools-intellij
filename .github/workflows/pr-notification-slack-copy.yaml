@@ -57,57 +57,34 @@ jobs:
             echo "Cache not restored or file does not exist.."
           fi
 
+      # Fetch all opened pull request details using condition
       - name: Fetch all opened pull request details using condition
         id: fetch_all_pull_requests_using_condition
         run: |
-          # Fetch pull request details
-          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "${{ env.API_URL }}?state=open&direction=desc&per_page=100")
-
-          # Check if pr_infos is valid JSON
-          echo "$pr_infos" | jq '.' > /dev/null 2>&1
-          if [ $? -ne 0 ]; then
-            echo "Invalid JSON payload from API"
-            exit 1
-          fi
-
-          echo "List of Open PRs fetched: "
-          echo "$pr_infos" | jq '.[] | {number, title, user: .user.login, url: .html_url, created_at, updated_at, draft}'
+          # Fetch PR info from GitHub API
+          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}?state=open&sort=created&direction=desc&per_page=100")
 
           # Load previous PR data if exists
-          previous_prs=$(cat cache/notified_prs.json 2>/dev/null || echo "[]")
+          previous_prs=$(if [ -f cache/notified_prs.json ]; then cat cache/notified_prs.json; else echo "[]"; fi)
 
-          echo "Previous cache prs: $previous_prs"
+          # Process PRs using jq
+          new_notified_prs=$(echo "$pr_infos" | jq -r '.[] | {number: .number, updated_at: .updated_at}')
 
-          # Check if previous_prs is valid JSON
-          echo "$previous_prs" | jq '.' > /dev/null 2>&1
-          if [ $? -ne 0 ]; then
-            echo "Invalid JSON in cache/notified_prs.json"
-            exit 1
+          # Check for new or updated PRs
+          notify=$(echo "$new_notified_prs" "$previous_prs" | jq -s 'group_by(.number) | map(.[0] + .[1] | {number: .number, updated_at: .updated_at}) | length > 0')
+
+          if [ "$notify" = true ]; then
+            # Prepare PR list for notification
+            pr_list=$(echo "$new_notified_prs" | jq -r 'map("*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n") | join("\n")')
+            echo -e "$pr_list" > pr_list.txt
           fi
-
-          # Extract only the relevant fields for comparison
-          new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number, updated_at}]')
-
-          pr_list=$(jq -n --argjson current "$pr_infos" --argjson previous "$previous_prs" '
-            $current | map(select(
-              .number as $num |
-              ($previous | map(select(.number == $num and (.updated_at > .updated_at or .updated_at == null))) | length) == 0
-            ) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\(if .draft == true then "\n*Draft*: true" else "" end)\n") | join("\n")' | tr -d '"')
-
-
-          echo "List of Open PRs that need to be notified in this run:"
-          echo "PR List: $pr_list"
 
           # Save current PR data for future comparison
           echo "$new_notified_prs" > cache/notified_prs.json
 
-          if [ -n "$pr_list" ]; then
-            echo -e "$pr_list" > pr_list.txt
-            echo "::set-output name=notify::true"
-          else
-            echo "::set-output name=notify::false"
-          fi
+          # Set output based on whether to notify or not
+          echo "::set-output name=notify::$notify"
+      
       
       - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
