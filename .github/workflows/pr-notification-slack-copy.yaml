@@ -68,26 +68,27 @@ jobs:
           echo "$pr_infos" | jq '.[] | {number, title, user: .user.login, url: .html_url, created_at, updated_at, draft}'
                                                          
                                                          # Load previous PR data if exists
+          # Load previous PR data if exists
           previous_prs=$(if [ -f cache/notified_prs.json ]; then cat cache/notified_prs.json; else echo "[]"; fi)
           
           echo "List of Previous PRs: $previous_prs"
 
           # Extract relevant fields from current PRs
           new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number: .number, title: .title, user: .user.login, html_url: .html_url, draft: .draft, created_at: .created_at, updated_at: .updated_at}]')
-          
-          echo "Relavent data from current PRs: $new_notified_prs"
 
-          # Check for new or updated PRs
-          pr_list=$(echo "$new_notified_prs" "$previous_prs" | jq -s '
-            (.[0] - .[1]) as $new_prs |
-            (.[1] - .[0]) as $updated_prs |
-            ($new_prs + $updated_prs) | 
-            map(
+          # Combine current and previous PRs to find new or updated ones
+          combined_prs=$(echo "$previous_prs" "$new_notified_prs" | jq -s '.[0] as $prev | .[1] as $new |
+            [$new[] | select(
+              .number as $num |
+              ($prev | map(select(.number == $num and .updated_at == $updated_at)) | length) == 0
+            )]')
+
+          # Generate the PR list for notification
+          pr_list=$(echo "$combined_prs" | jq -r 'map(
               "*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user)\n*URL*: \(.html_url)\n" + 
               if .draft == true then "*Draft*: true\n" else "" end + 
               "*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n"
-            ) | join("\n")
-          ')
+            ) | join("\n\n")')
           
           echo "List of PRs that need to be send to slack: $pr_list"
 
@@ -102,7 +103,7 @@ jobs:
 
           # Set output based on whether to notify or not
           echo "::set-output name=notify::$notify"
-      
+
       - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
         run: |
