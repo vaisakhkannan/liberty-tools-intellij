@@ -126,7 +126,7 @@ jobs:
             fi
           done
 
-          echo "Closed PR List since last cron job:"
+          echo "Closed PR List since last cron job::"
           echo "$closed_pr_list"
 
           if [ -n "$closed_pr_list" ]; then
