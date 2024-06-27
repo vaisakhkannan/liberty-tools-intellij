@@ -106,7 +106,7 @@ jobs:
             fi
           done
           
-          echo "List of PRs that need to send to Slack now: "
+          echo "List of PRs that need to be sent to Slack now:"
           echo "$pr_list"
 
           # Save current PR data for future comparison
