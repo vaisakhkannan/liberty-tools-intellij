@@ -13,7 +13,7 @@ jobs:
       REPO: ${{ github.repository }}
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      API_URL: https://api.github.com/repos/OpenLiberty/liberty-tools-intellij/pulls
+      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
 
     steps:
