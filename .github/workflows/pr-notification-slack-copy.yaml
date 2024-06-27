@@ -91,7 +91,7 @@ jobs:
 
           # Compare current and previous PRs to find new or updated ones
           pr_list=$(jq -n --argjson current "$pr_infos" --argjson previous "$previous_prs" '
-            ($current - $previous) | map(select(.updated_at > .updated_at or .updated_at == null)) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\(if .draft == true then "\n*Draft*: true" else "" end)\n" | join("\n")' | tr -d '"')
+            ($current - $previous) | map(select(.updated_at > .updated_at or .updated_at == null)) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\(if .draft then "\n*Draft*: true" else "" end)\n" | join("\n")' | tr -d '"')
 
           echo "List of Open PRs that need to be notified in this run:"
           echo "PR List: $pr_list"
@@ -105,7 +105,7 @@ jobs:
           else
             echo "::set-output name=notify::false"
           fi
-      
+
       - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
         run: |
