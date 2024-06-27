@@ -13,7 +13,7 @@ jobs:
       REPO: ${{ github.repository }}
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      API_URL: https://api.github.com/repos/OpenLiberty/liberty-tools-intellij/pulls
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
 
     steps:
@@ -25,7 +25,7 @@ jobs:
           gh extension install actions/gh-actions-cache
 
           # Fetching list of cache keys...
-          cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 101 | cut -f 1 )
+          cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           
           # Extract the most recent cache key
           mostRecentCacheKey=$(echo "$cacheKeys" | head -n 1)
@@ -60,7 +60,7 @@ jobs:
         id: fetch_all_pull_requests_using_condition
         run: |
           pr_infos=$(curl -s -H "Authorization: token ${{ env.GH_TOKEN }}" \
-          "${{ env.API_URL }}?state=open&direction=desc&per_page=101")
+          "${{ env.API_URL }}?state=open&direction=desc&per_page=100")
           
           echo "List of Currently Opened PRs: "
           echo "$pr_infos" | jq '.[] | {number, updated_at, draft}'
