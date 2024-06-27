@@ -90,8 +90,8 @@ jobs:
           $current | map(select(
             .number as $num |
             ($previous | map(select(.number == $num and .updated_at == .updated_at)) | length) == 0
-          ) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n\(.draft // "" | select(. != false) | "*Draft*: true\n")") | join("\n")' | tr -d '"')
-  
+          ) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n\(.draft // "" | select(.) | "*Draft*: true\n")") | join("\n")' | tr -d '"')
+
           echo "List of Open PRs that need to be notified in this run:"
           echo "PR List: $pr_list"
           
