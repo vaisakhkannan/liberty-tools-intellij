@@ -183,7 +183,7 @@ jobs:
               \"type\": \"section\",
               \"text\": {
                 \"type\": \"mrkdwn\",
-                \"text\": \"$pr_list\"
+                \"text\": \"$(echo "$pr_list" | jq -sRr @text)\"
               }
             }")
           fi
@@ -201,13 +201,13 @@ jobs:
               \"type\": \"section\",
               \"text\": {
                 \"type\": \"mrkdwn\",
-                \"text\": \"$closed_pr_list\"
+                \"text\": \"$(echo "$closed_pr_list" | jq -sRr @text)\"
               }
             }")
           fi
 
           # Construct the payload
-          payload=$(jq -n --argjson blocks "$(echo "${payload_blocks[@]}" | jq -s '.')" '
+          payload=$(jq -n --argjson blocks "$(printf '%s\n' "${payload_blocks[@]}" | jq -s '.')" '
           {
             "blocks": $blocks
           }')
