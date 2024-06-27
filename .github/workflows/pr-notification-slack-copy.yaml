@@ -87,14 +87,11 @@ jobs:
           new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number, updated_at}]')
 
           pr_list=$(jq -n --argjson current "$pr_infos" --argjson previous "$previous_prs" '
-            $current | map(select(
-              .number as $num |
-              ($previous | map(select(.number == $num and .updated_at == .updated_at)) | length) == 0
-            ) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n\(.draft // "" | select(. != false) | "*Draft*: true\n")") | join("\n")')
-
-          pr_list=$(printf "%b" "$pr_list")
-          
-
+          $current | map(select(
+            .number as $num |
+            ($previous | map(select(.number == $num and .updated_at == .updated_at)) | length) == 0
+          ) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n\(.draft // "" | select(. != false) | "*Draft*: true\n")") | join("\n")' | tr -d '"')
+  
           echo "List of Open PRs that need to be notified in this run:"
           echo "PR List: $pr_list"
           
@@ -153,7 +150,7 @@ jobs:
           else
             echo "::set-output name=notify_closed::false"
           fi      
-      
+
       - name: Send Slack notification for PRs
         if: success() && (steps.fetch_all_pull_requests_using_condition.outputs.notify == 'true' || steps.fetch_closed_prs.outputs.notify_closed == 'true')
         run: |
