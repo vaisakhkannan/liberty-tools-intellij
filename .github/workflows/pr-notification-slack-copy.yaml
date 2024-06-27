@@ -76,7 +76,7 @@ jobs:
 
           # Load previous PR data if exists
           previous_prs=$(cat cache/notified_prs.json 2>/dev/null || echo "[]")
-          
+
           echo "Previous cache prs: $previous_prs"
 
           # Check if previous_prs is valid JSON
@@ -86,19 +86,16 @@ jobs:
             exit 1
           fi
 
+          # Extract only the relevant fields for comparison
           new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number, updated_at}]')
-          echo "New notified prs: $new_notified_prs"
 
+          # Compare current and previous PRs to find new or updated ones
           pr_list=$(jq -n --argjson current "$pr_infos" --argjson previous "$previous_prs" '
-            $current | map(select(
-              .number as $num |
-              ($previous | map(select(.number == $num and (.updated_at > .updated_at or .updated_at == null))) | length) == 0
-            ) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\(if .draft == true then "\n*Draft*: true" else "" end)\n") | join("\n")' | tr -d '"')
-  
-  
+            ($current - $previous) | map(select(.updated_at > .updated_at or .updated_at == null)) | "\n*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\(if .draft == true then "\n*Draft*: true" else "" end)\n" | join("\n")' | tr -d '"')
+
           echo "List of Open PRs that need to be notified in this run:"
           echo "PR List: $pr_list"
-          
+
           # Save current PR data for future comparison
           echo "$new_notified_prs" > cache/notified_prs.json
 
@@ -108,7 +105,7 @@ jobs:
           else
             echo "::set-output name=notify::false"
           fi
-
+      
       - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
         run: |
