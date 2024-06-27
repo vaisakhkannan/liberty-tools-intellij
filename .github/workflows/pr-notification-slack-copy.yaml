@@ -64,7 +64,7 @@ jobs:
           "${{ env.API_URL }}?state=open&sort=created&direction=desc&per_page=100")
           
           echo "List of Currently Opened PRs: "
-          echo "$pr_infos" | jq '.[] | {number, title, user: .user.login, url: .html_url, created_at, updated_at, draft}'
+          echo "$pr_infos" | jq '.[] | {number, updated_at, draft}'
 
           # Load previous PR data if exists
           if [ -f cache/notified_prs.json ]; then
