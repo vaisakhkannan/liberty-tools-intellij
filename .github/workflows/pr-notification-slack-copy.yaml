@@ -128,9 +128,6 @@ jobs:
           closed_prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "${{ env.API_URL }}?state=closed&direction=desc&per_page=100")
       
-          echo "List of Closed PRs fetched:"
-          echo "$closed_prs" | jq '.[] | {number, title, user: .user.login, url: .html_url, created_at, updated_at, closed_at, draft}'
-      
           closed_pr_list=$(echo "$closed_prs" | jq -r \
           --arg last_run "$last_run_timestamp" \
           '.[] | select(.closed_at > $last_run) | "*Closed Pull Request* #\(.number): \(.title)\n*Closed by*: \(.user.login)\n*URL*: \(.html_url)\n*Closed At*: \(.closed_at)\n"')
