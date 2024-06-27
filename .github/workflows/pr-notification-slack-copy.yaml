@@ -57,6 +57,7 @@ jobs:
             echo "Cache not restored or file does not exist.."
           fi
 
+
       # Fetch all opened pull request details using condition
       - name: Fetch all opened pull request details using condition
         id: fetch_all_pull_requests_using_condition
@@ -80,8 +81,9 @@ jobs:
           combined_prs=$(echo "$previous_prs" "$new_notified_prs" | jq -s '
             .[0] as $prev | .[1] as $new |
             [$new[] | select(
-              .number as $num |
-              ($prev | map(select(.number == $num and .updated_at == .updated_at)) | length) == 0
+              .number as $num | 
+              ($prev | map(select(.number == $num and .updated_at != .updated_at)) | length) > 0 or 
+              ($prev | map(select(.number == $num)) | length) == 0
             )]
           ')
 
@@ -103,6 +105,7 @@ jobs:
 
           # Set output based on whether to notify or not
           echo "::set-output name=notify::$notify"
+      
 
       - name: Fetch closed pull requests since the last run
         id: fetch_closed_prs
