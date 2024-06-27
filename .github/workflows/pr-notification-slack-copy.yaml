@@ -60,14 +60,29 @@ jobs:
       - name: Fetch all opened pull request details using condition
         id: fetch_all_pull_requests_using_condition
         run: |
+          # Fetch pull request details
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "${{ env.API_URL }}?state=open&direction=desc&per_page=100")
+
+          # Check if pr_infos is valid JSON
+          echo "$pr_infos" | jq '.' > /dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            echo "Invalid JSON payload from API"
+            exit 1
+          fi
 
           echo "List of Open PRs fetched: "
           echo "$pr_infos" | jq '.[] | {number, title, user: .user.login, url: .html_url, created_at, updated_at, draft}'
 
           # Load previous PR data if exists
           previous_prs=$(cat cache/notified_prs.json 2>/dev/null || echo "[]")
+
+          # Check if previous_prs is valid JSON
+          echo "$previous_prs" | jq '.' > /dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            echo "Invalid JSON in cache/notified_prs.json"
+            exit 1
+          fi
 
           new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number, updated_at}]')
 
@@ -76,9 +91,9 @@ jobs:
               .number as $num |
               ($previous | map(select(.number == $num and .updated_at == .updated_at)) | length) == 0
             ) | "*Pull Request* #\(.number): \(.title)\n*Created by*: \(.user.login)\n*URL*: \(.html_url)\n*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n\(.draft // "" | select(. != false) | "*Draft*: true\n")") | join("\n")')
-
+          
           echo "List of Open PRs that need to be notified in this run:"
-          echo "$pr_list"
+          echo "PR List: $pr_list"
 
           # Save current PR data for future comparison
           echo "$new_notified_prs" > cache/notified_prs.json
