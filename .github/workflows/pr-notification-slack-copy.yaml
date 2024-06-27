@@ -77,11 +77,13 @@ jobs:
           new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number: .number, title: .title, user: .user.login, html_url: .html_url, draft: .draft, created_at: .created_at, updated_at: .updated_at}]')
 
           # Combine current and previous PRs to find new or updated ones
-          combined_prs=$(echo "$previous_prs" "$new_notified_prs" | jq -s '.[0] as $prev | .[1] as $new |
+          combined_prs=$(echo "$previous_prs" "$new_notified_prs" | jq -s '
+            .[0] as $prev | .[1] as $new |
             [$new[] | select(
               .number as $num |
-              ($prev | map(select(.number == $num and .updated_at == $updated_at)) | length) == 0
-            )]')
+              ($prev | map(select(.number == $num and .updated_at == .updated_at)) | length) == 0
+            )]
+          ')
 
           # Generate the PR list for notification
           pr_list=$(echo "$combined_prs" | jq -r 'map(
@@ -89,8 +91,6 @@ jobs:
               if .draft == true then "*Draft*: true\n" else "" end + 
               "*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n"
             ) | join("\n\n")')
-          
-          echo "List of PRs that need to be send to slack: $pr_list"
 
           notify=$(if [ -z "$pr_list" ]; then echo "false"; else echo "true"; fi)
 
