@@ -74,6 +74,8 @@ jobs:
 
           # Extract relevant fields from current PRs
           new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number: .number, title: .title, user: .user.login, html_url: .html_url, draft: .draft, created_at: .created_at, updated_at: .updated_at}]')
+          
+          echo "Relavent data from current PRs: $new_notified_prs"
 
           # Check for new or updated PRs
           pr_list=$(echo "$new_notified_prs" "$previous_prs" | jq -s '
