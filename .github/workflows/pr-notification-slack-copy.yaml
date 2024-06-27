@@ -64,8 +64,13 @@ jobs:
           # Fetch PR info from GitHub API
           pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}?state=open&sort=created&direction=desc&per_page=100")
 
-          # Load previous PR data if exists
+          echo "List of Open PRs fetched: "
+          echo "$pr_infos" | jq '.[] | {number, title, user: .user.login, url: .html_url, created_at, updated_at, draft}'
+                                                         
+                                                         # Load previous PR data if exists
           previous_prs=$(if [ -f cache/notified_prs.json ]; then cat cache/notified_prs.json; else echo "[]"; fi)
+          
+          echo "List of Previous PRs: $previous_prs"
 
           # Extract relevant fields from current PRs
           new_notified_prs=$(echo "$pr_infos" | jq '[.[] | {number: .number, title: .title, user: .user.login, html_url: .html_url, draft: .draft, created_at: .created_at, updated_at: .updated_at}]')
@@ -81,6 +86,8 @@ jobs:
               "*Created At*: \(.created_at)\n*Last Updated At*: \(.updated_at)\n"
             ) | join("\n")
           ')
+          
+          echo "List of PRs that need to be send to slack: $pr_list"
 
           notify=$(if [ -z "$pr_list" ]; then echo "false"; else echo "true"; fi)
 
