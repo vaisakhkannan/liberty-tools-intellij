@@ -13,7 +13,7 @@ jobs:
       REPO: ${{ github.repository }}
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
 
     steps:
@@ -25,6 +25,7 @@ jobs:
           gh extension install actions/gh-actions-cache
 
           # Fetching list of cache keys...
+          # Allowed values are within the limit 1-100 ,If we give 100, only the latest 100 cache keys will be listed. Any older cache keys beyond this limit will not be included in '$cacheKeys'
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           
           # Extract the most recent cache key
@@ -59,6 +60,7 @@ jobs:
       - name: Fetch all opened pull request details using condition
         id: fetch_all_pull_requests_using_condition
         run: |
+          # The number of results per page is limited to a maximum of 100. We need "pagination", if we require more than this limit, but for open PRs, it will be within the limit 100.
           pr_infos=$(curl -s -H "Authorization: token ${{ env.GH_TOKEN }}" \
           "${{ env.API_URL }}?state=open&direction=desc&per_page=100")
           
@@ -129,7 +131,7 @@ jobs:
 
           echo "Last run timestamp: $last_run_timestamp"
           
-          
+          # We used 'sort=updated' to fetch list of closed PRs with max limit of 100(Default value). In the future, we expect to have more than 100 closed PRs, so it's better to keep 'sort=updated'.
           closed_prs=$(curl -s -H "Authorization: token ${{ env.GH_TOKEN }}" \
           "${{ env.API_URL }}?state=closed&sort=updated&direction=desc&per_page=100")
           
@@ -238,6 +240,7 @@ jobs:
       - name: Cleanup the restored cache key
         run: |
           # Fetching list of cache keys........
+          # Allowed values are within the limit 1-100
           cacheKeys=$(gh actions-cache list -R $REPO -B $BRANCH -L 100 | cut -f 1 )
           echo "Cache keys-->: $cacheKeys"
 
