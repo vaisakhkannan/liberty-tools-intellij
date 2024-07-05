@@ -56,7 +56,9 @@ jobs:
         run: echo "REF is $REF"
 
   call-build-workflow-for-each-merge-commit-sha-:
-    needs: fetch_all_pull_request_shas
+    needs: 
+      - fetch_all_pull_request_shas
+      - call-build-workflow-for-each-merge-commit-sha
     uses: ./.github/workflows/build.yaml
     strategy:
       fail-fast: false
