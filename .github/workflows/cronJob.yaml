@@ -62,13 +62,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [ 'main', 'ref/tag/v0.0.0.1', 'ref/tag/v0.0.0.2' ]
+        tag: [ 'main', 'refs/tags/v0.0.0.1', 'refs/tags/v0.0.0.2' ]
         pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
     with:
       useLocalPlugin: true
       refLsp4ij: ${{ matrix.pr_details.sha }}
       refLTITag: ${{ matrix.tag }}
-    name: Run PR 
+    name: Run PR
 
 
   # Run the LTI Tests against lsp4ij main branch
