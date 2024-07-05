@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [ 'main', 'v0.0.0.1', 'v0.0.0.2' ]
+        tag: ['main', 'v0.0.0.1', 'v0.0.0.2']
     steps:
       - name: Set up reference
         id: set-ref
@@ -50,8 +50,9 @@ jobs:
           else
             echo "REF=refs/tags/${{ matrix.tag }}" >> $GITHUB_ENV
           fi
-          echo "$REF"
-          echo "${{ env.REF }}"
+      - name: Check REF value
+        run: echo "REF is ${{ env.REF }}"
+
 
   call-build-workflow-for-each-merge-commit-sha-:
     needs: fetch_all_pull_request_shas
