@@ -35,6 +35,7 @@ jobs:
 
   # Run the LTI Tests against each open lsp4ij PRs
   call-build-workflow-for-each-merge-commit-sha:
+    needs: fetch_all_pull_request_shas
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
