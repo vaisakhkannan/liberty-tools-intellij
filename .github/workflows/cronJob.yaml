@@ -63,5 +63,5 @@ jobs:
         tag: [ 'v0.0.0.1', 'v0.0.0.2' ]
     with:
       useLocalPlugin: true
-      REF_LTI_TAG: ${{ refs/tags/${{ matrix.tag }} }}
+      REF_LTI_TAG: refs/tags/${{ matrix.tag }}
     name: Run LTI Tags for PR #${{ matrix.pr_details.number }}
