@@ -37,6 +37,8 @@ jobs:
   call-build-workflow-for-each-merge-commit-sha:
     needs: fetch_all_pull_request_shas
     runs-on: ubuntu-latest
+    outputs:
+      ref: ${{ steps.set-ref.outputs.REF }}
     strategy:
       fail-fast: false
       matrix:
@@ -46,12 +48,12 @@ jobs:
         id: set-ref
         run: |
           if [[ "${{ matrix.tag }}" == "main" ]]; then
-            echo "REF=main" >> $GITHUB_ENV
+            echo "REF=main" >> $GITHUB_OUTPUT
           else
-            echo "REF=refs/tags/${{ matrix.tag }}" >> $GITHUB_ENV
+            echo "REF=refs/tags/${{ matrix.tag }}" >> $GITHUB_OUTPUT
           fi
       - name: Check REF value
-        run: echo "REF is ${{ env.REF }}"
+        run: echo "REF is $REF"
 
   call-build-workflow-for-each-merge-commit-sha-:
     needs: fetch_all_pull_request_shas
@@ -63,14 +65,15 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: ${{ matrix.pr_details.sha }}
-      refLTITag: ${{ fromJson(needs.call-build-workflow-for-each-merge-commit-sha.steps.set-ref.outputs.REF) }}
+      refLTITag: ${{ fromJson(needs.call-build-workflow-for-each-merge-commit-sha.outputs.ref) }}
     name: Run LTI tests for PR #${{ matrix.pr_details.number }}
 
   # Run the LTI Tests against lsp4ij main branch
   call-build-workflow-for-lsp4ij-main-branch:
+    needs: call-build-workflow-for-each-merge-commit-sha
     uses: ./.github/workflows/build.yaml
     with:
       useLocalPlugin: true
       refLsp4ij: main
-      refLTITag: ${{ fromJson(needs.call-build-workflow-for-each-merge-commit-sha.steps.set-ref.outputs.REF) }}
+      refLTITag: ${{ fromJson(needs.call-build-workflow-for-each-merge-commit-sha.outputs.ref) }}
     name: Run LTI tests for Lsp4ij Main branch
