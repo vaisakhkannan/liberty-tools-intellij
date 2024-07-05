@@ -50,6 +50,7 @@ jobs:
           else
             echo "ref=refs/tags/${{ matrix.tag }}" >> $GITHUB_OUTPUT
           fi
+          echo "$ref"
 
   call-build-workflow-for-each-merge-commit-sha-:
     needs: fetch_all_pull_request_shas
