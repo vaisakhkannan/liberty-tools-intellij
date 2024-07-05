@@ -55,12 +55,7 @@ jobs:
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
-      REF_LTI_TAG:
-        if [[ "${{ inputs.refLTITag }}" == "main" ]]; then
-        echo "REF=main"
-        else
-        echo "REF=refs/tags/${{ matrix.tag }}"
-        fi
+      REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
