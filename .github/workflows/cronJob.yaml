@@ -46,12 +46,12 @@ jobs:
         id: set-ref
         run: |
           if [[ "${{ matrix.tag }}" == "main" ]]; then
-            ref=main
+            echo "REF=main" >> $GITHUB_ENV
           else
-            ref=refs/tags/${{ matrix.tag }}
+            echo "REF=refs/tags/${{ matrix.tag }}" >> $GITHUB_ENV
           fi
-          echo "ref=$ref" >> $GITHUB_ENV
-          echo "$ref"
+          echo "$REF"
+          echo "${{ env.REF }}"
 
   call-build-workflow-for-each-merge-commit-sha-:
     needs: fetch_all_pull_request_shas
@@ -63,7 +63,7 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: ${{ matrix.pr_details.sha }}
-      refLTITag: ${{ env.ref }}
+      refLTITag: ${{ env.REF }}
     name: Run LTI tests for PR #${{ matrix.pr_details.number }}
 
   # Run the LTI Tests against lsp4ij main branch
@@ -72,5 +72,5 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: main
-      refLTITag: ${{ env.ref }}
+      refLTITag: ${{ env.REF }}
     name: Run LTI tests for Lsp4ij Main branch
