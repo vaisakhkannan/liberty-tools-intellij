@@ -260,7 +260,7 @@ jobs:
     needs: fetch_all_pull_requests_and_notify_using_condition_and_cron
     env:
       WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.WORKFLOW_BUILDER_WEBHOOK_COPY }}
-    if: (${{ env.notify }} == 'true' || ${{ env.notify_closed }} == 'true')
+    if: ${{ env.notify }} == 'true' || ${{ env.notify_closed }} == 'true'
     steps:
       - name: 'Slack Notification Reminder'
         run: |
