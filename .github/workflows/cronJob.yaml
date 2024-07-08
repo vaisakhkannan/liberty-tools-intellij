@@ -33,29 +33,6 @@ jobs:
           pr_details=$(echo "$pr_details" | jq -nc '[inputs | {number: .number, sha: .sha}]')
           echo "pr_details=$pr_details" >> $GITHUB_OUTPUT
 
-  # Run the LTI Tests against each open lsp4ij PRs
-#  call-build-workflow-for-each-merge-commit-sha:
-#    needs: fetch_all_pull_request_shas
-#    runs-on: ubuntu-latest
-#    outputs:
-#      ref: ${{ steps.set-ref.outputs.REF }}
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        tag: ['main', 'v0.0.0.1', 'v0.0.0.2']
-#    steps:
-#      - name: Set up reference
-#        id: set-ref
-#        run: |
-#          if [[ "${{ matrix.tag }}" == "main" ]]; then
-#            echo "REF=main" >> $GITHUB_OUTPUT
-#          else
-#            echo "REF=refs/tags/${{ matrix.tag }}" >> $GITHUB_OUTPUT
-#          fi
-#      - name: Check REF value
-#        run: echo "REF is $REF"
-
-
   call-build-workflow-for-each-merge-commit-sha-:
     needs: fetch_all_pull_request_shas
     uses: ./.github/workflows/build.yaml
