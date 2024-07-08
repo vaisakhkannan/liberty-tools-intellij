@@ -251,7 +251,7 @@ jobs:
 
           echo "Done"
 
-      - name: 'Slack Notification Reminder for Response'
+      - name: Slack Notification Reminder for Response
         if: success() && (${{ env.notify }} == 'true' || ${{ env.notify_closed }} == 'true')
         run: |
           payload=$(jq -n '
@@ -268,7 +268,7 @@ jobs:
           }')
           curl -X POST -H 'Content-type: application/json' --data "$payload" $WORKFLOW_BUILDER_WEBHOOK || echo "Slack notification failed with status code: $?"
 
-      - name: 'Slack Notification for No PRs'
+      - name: Slack Notification for No PRs
         if: success() && (${{ env.notify }} == 'false' && ${{ env.notify_closed }} == 'false')
         run: |
           payload=$(jq -n '
