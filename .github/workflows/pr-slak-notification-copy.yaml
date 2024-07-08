@@ -15,6 +15,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
+      WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.WORKFLOW_BUILDER_WEBHOOK_COPY }}
+      NO_PR_WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.NO_PR_WORKFLOW_BUILDER_WEBHOOK_COPY }}
 
     steps:
       - name: Checkout repository
@@ -249,20 +251,8 @@ jobs:
 
           echo "Done"
 
-        # 'secrets.GITHUB_TOKEN' is automatically provided by GitHub Actions for each workflow run. We don't need to manually create or manage this token.
-    # Below, the workflow is granting "write" access to the actions scope of the GITHUB_TOKEN. This enables the workflow to be able to delete cache keys.
-    # If the "write" permission does not enable the ability to delete the cache keys, then the repository owner will need to create a Personal Access Token (PAT) with write permissions, add it as a secret, and then specify the name in GH_TOKEN.
-    permissions:
-      actions: write
-
-  slack-notification:
-    runs-on: ubuntu-latest
-    needs: fetch_all_pull_requests_and_notify_using_condition_and_cron
-    env:
-      WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.WORKFLOW_BUILDER_WEBHOOK_COPY }}
-    if: ${{ env.notify }} == 'true' || ${{ env.notify_closed }} == 'true'
-    steps:
-      - name: 'Slack Notification Reminder'
+      - name: 'Slack Notification Reminder for Response'
+        if: success() && (${{ env.notify }} == 'true' || ${{ env.notify_closed }} == 'true')
         run: |
           payload=$(jq -n '
           {
@@ -277,3 +267,28 @@ jobs:
             ]
           }')
           curl -X POST -H 'Content-type: application/json' --data "$payload" $WORKFLOW_BUILDER_WEBHOOK || echo "Slack notification failed with status code: $?"
+
+      - name: 'Slack Notification for No PRs'
+        if: success() && (${{ env.notify }} == 'false' && ${{ env.notify_closed }} == 'false')
+        run: |
+          payload=$(jq -n '
+          {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Slack Notification to perform Workflow Builder Action"
+                }
+              }
+            ]
+          }')
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $NO_PR_WORKFLOW_BUILDER_WEBHOOK || echo "Slack notification failed with status code: $?"
+
+    # 'secrets.GITHUB_TOKEN' is automatically provided by GitHub Actions for each workflow run. We don't need to manually create or manage this token.
+    # Below, the workflow is granting "write" access to the actions scope of the GITHUB_TOKEN. This enables the workflow to be able to delete cache keys.
+    # If the "write" permission does not enable the ability to delete the cache keys, then the repository owner will need to create a Personal Access Token (PAT) with write permissions, add it as a secret, and then specify the name in GH_TOKEN.
+    permissions:
+      actions: write
+
+
