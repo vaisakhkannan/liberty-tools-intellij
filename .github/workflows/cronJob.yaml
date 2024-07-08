@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [ 'main', 'v0.0.0.1', 'v0.0.0.2' ]
+        tag: [ 'main', 'v0.0.0.1', 'v0.0.0.2', 'lsp4ij-market-0.0.2-integration' ]
         pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
     with:
       useLocalPlugin: true
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [ 'main', 'v0.0.0.1', 'v0.0.0.2' ]
+        tag: [ 'main', 'v0.0.0.1', 'v0.0.0.2', 'lsp4ij-market-0.0.2-integration' ]
     with:
       useLocalPlugin: true
       refLsp4ij: main

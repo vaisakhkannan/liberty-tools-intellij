@@ -30,6 +30,11 @@ on:
         type: string
         required: true
         default: main
+      refLTITag:
+        description: 'Reference LTI Tag'
+        type: string
+        required: true
+        default: main
   push:
     branches: '**'
   pull_request:
