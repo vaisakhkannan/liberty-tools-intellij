@@ -285,7 +285,7 @@ jobs:
             ]
           }')
           
-          curl -X POST -H 'Content-type: application/json' --data "$payload" $NO_PR_WORKFLOW_BUILDER_WEBHOOK -w "%{http_code}"
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $NO_PR_WORKFLOW_BUILDER_WEBHOOKS || echo "Slack notification failed with status code: $?"
 
     # 'secrets.GITHUB_TOKEN' is automatically provided by GitHub Actions for each workflow run. We don't need to manually create or manage this token.
     # Below, the workflow is granting "write" access to the actions scope of the GITHUB_TOKEN. This enables the workflow to be able to delete cache keys.
