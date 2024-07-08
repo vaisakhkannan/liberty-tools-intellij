@@ -268,7 +268,7 @@ jobs:
           }')
           curl -X POST -H 'Content-type: application/json' --data "$payload" $WORKFLOW_BUILDER_WEBHOOK || echo "Slack notification failed with status code: $?"
 
-      - name: 'Slack Notification for No PRs'
+      - name: 'Slack Notification for No PRs.'
         if: success() && (${{ env.notify }} == 'false' && ${{ env.notify_closed }} == 'false')
         run: |
           payload=$(jq -n '
