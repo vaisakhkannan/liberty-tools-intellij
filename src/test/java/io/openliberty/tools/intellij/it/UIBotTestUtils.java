@@ -118,6 +118,7 @@ public class UIBotTestUtils {
             cf.click();
         } else if (currentFrame == Frame.PROJECT) {
             // From the project frame.
+            remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
             ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
