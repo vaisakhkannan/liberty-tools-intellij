@@ -11,7 +11,6 @@ package io.openliberty.tools.intellij.it;
 
 import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
-import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -20,14 +19,11 @@ import org.junit.jupiter.api.condition.OS;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Map;
 
-
 import static com.intellij.remoterobot.utils.RepeatUtilsKt.waitForIgnoringError;
-
 
 /**
  * Holds common tests that use a single module MicroProfile project.
@@ -74,10 +70,18 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
         UIBotTestUtils.validateProjectFrameClosed(remoteRobot);
-        String PROJECTS_PATH_NEW = Paths.get("src", "test", "resources", "projects", "gradle-sample").toAbsolutePath().toString();
-        File oldDirPath = new File(PROJECTS_PATH_NEW);
-        deleteDirectory(oldDirPath);
-        Files.deleteIfExists(oldDirPath.toPath());
+        String PROJECTS_PATH_NEW_GRADLE = Paths.get("src", "test", "resources", "projects", "gradle sample").toAbsolutePath().toString();
+        String PROJECTS_PATH_NEW_MAVEN = Paths.get("src", "test", "resources", "projects", "maven sample").toAbsolutePath().toString();
+        File oldDirPathGradle = new File(PROJECTS_PATH_NEW_GRADLE);
+        File oldDirPathMaven = new File(PROJECTS_PATH_NEW_MAVEN);
+        if (oldDirPathGradle.exists()) {
+            deleteDirectory(oldDirPathGradle);
+            Files.deleteIfExists(oldDirPathGradle.toPath());
+        }
+        if (oldDirPathMaven.exists()) {
+            deleteDirectory(oldDirPathMaven);
+            Files.deleteIfExists(oldDirPathMaven.toPath());
+        }
     }
     public static void deleteDirectory(File file)
     {
@@ -92,9 +96,9 @@ public abstract class SingleModMPProjectTestCommon {
         }
     }
 
-    /**
-     * Tests the liberty: View <project build file> action run from the project's pop-up action menu.
-     */
+    //    /**
+//     * Tests the liberty: View <project build file> action run from the project's pop-up action menu.
+//     */
 //    @Test
 //    @Video
 //    public void testOpenBuildFileActionUsingPopUpMenu() {
@@ -114,10 +118,10 @@ public abstract class SingleModMPProjectTestCommon {
 //        // Close the editor tab.
 //        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "10");
 //    }
-
-    /**
-     * Tests dashboard start.../stop actions run from the project's drop-down action menu.
-     */
+//
+//    /**
+//     * Tests dashboard start.../stop actions run from the project's drop-down action menu.
+//     */
 //    @Test
 //    @Video
 //    public void testStartWithParamsActionUsingDropDownMenu() {
@@ -168,11 +172,11 @@ public abstract class SingleModMPProjectTestCommon {
 //            UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 //        }
 //    }
-
-    /**
-     * Tests Liberty tool window start.../stop actions selected on the project's drop-down action
-     * menu and run using the play action button on the Liberty tool window's toolbar.
-     */
+//
+//    /**
+//     * Tests Liberty tool window start.../stop actions selected on the project's drop-down action
+//     * menu and run using the play action button on the Liberty tool window's toolbar.
+//     */
 //    @Test
 //    @Video
 //    public void testStartWithParamsActionUsingPlayToolbarButton() {
@@ -223,10 +227,10 @@ public abstract class SingleModMPProjectTestCommon {
 //            UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 //        }
 //    }
-
-    /**
-     * Tests Liberty tool window start.../stop actions run from the project's pop-up action menu.
-     */
+//
+//    /**
+//     * Tests Liberty tool window start.../stop actions run from the project's pop-up action menu.
+//     */
 //    @Test
 //    @Video
 //    public void testStartWithParamsActionUsingPopUpMenu() {
@@ -331,46 +335,49 @@ public abstract class SingleModMPProjectTestCommon {
 //            UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 //        }
 //    }
-
-    /**
-     * Tests dashboard start/RunTests/stop actions run from the project's drop-down action menu.
-     */
-    @Test
-    @Video
-    public void testStartActionUsingDropDownMenu() {
-        String testName = "testStartActionUsingDropDownMenu";
+//
+//    /**
+//     * Tests dashboard start/RunTests/stop actions run from the project's drop-down action menu.
+//     */
+//    @Test
+//    @Video
+//    public void testRunTestsActionUsingDropDownMenu() {
+//        String testName = "testRunTestsActionUsingDropDownMenu";
 //        String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
-        String PROJECTS_PATH_NEW = Paths.get("src", "test", "resources", "projects", "gradle-sample").toAbsolutePath().toString();
-        String absoluteWLPPath = Paths.get(PROJECTS_PATH_NEW, getSmMPProjectName(), getWLPInstallPath()).toString();
-
-        // Delete any existing test report files.
-        deleteTestReports();
-
-        // Start dev mode.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start", false, 3);
-
-        try {
-            // Validate that the application started.
-            TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, false);
-
-        } finally {
-            if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
-                // Sleep for a few seconds to allow dev mode to finish running the tests. Specially
-                // for those times when the tests are run twice. Not waiting, opens up a window
-                // that leads to false negative results, and the Liberty server being left active.
-                // If the Liberty server is left active, subsequent tests will fail.
-                TestUtils.sleepAndIgnoreException(60);
-
-                // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3);
-            }
-        }
-    }
-
-    /**
-     * Tests Liberty tool window start/RunTests/stop actions selected on the project's drop-down action
-     * menu and run using the play action button on the Liberty tool window's toolbar.
-     */
+//
+//        // Delete any existing test report files.
+//        deleteTestReports();
+//
+//        // Start dev mode.
+//        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start", false, 3);
+//
+//        // Validate that the project started.
+//        TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, false);
+//
+//        try {
+//            // Run the project's tests.
+//            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Run tests", false, 3);
+//
+//            // Validate that the report was generated.
+//            validateTestReportsExist();
+//        } finally {
+//            if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
+//                // Sleep for a few seconds to allow dev mode to finish running the tests. Specially
+//                // for those times when the tests are run twice. Not waiting, opens up a window
+//                // that leads to false negative results, and the Liberty server being left active.
+//                // If the Liberty server is left active, subsequent tests will fail.
+//                TestUtils.sleepAndIgnoreException(60);
+//
+//                // Stop Liberty dev mode and validates that the Liberty server is down.
+//                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Tests Liberty tool window start/RunTests/stop actions selected on the project's drop-down action
+//     * menu and run using the play action button on the Liberty tool window's toolbar.
+//     */
 //    @Test
 //    @Video
 //    public void testRunTestsActionUsingPlayToolbarButton() {
@@ -447,41 +454,41 @@ public abstract class SingleModMPProjectTestCommon {
 //    /**
 //     * Tests start/runTests/stop actions run from the search everywhere panel.
 //     */
-//    @Test
-//    @Video
-//    public void testRunTestsActionUsingSearch() {
-//        String testName = "testRunTestsActionUsingSearch";
-//        String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
-//
-//        // Delete any existing test report files.
-//        deleteTestReports();
-//
-//        // Start dev mode.
-//        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3);
-//
-//        try {
-//            // Validate that the application started.
-//            TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, false);
-//
-//            // Run the application's tests.
-//            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3);
-//
-//            // Validate that the reports were generated.
-//            validateTestReportsExist();
-//        } finally {
-//            if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
-//                // Sleep for a few seconds to allow dev mode to finish running the tests. Specially
-//                // for those times when the tests are run twice. Not waiting, opens up a window
-//                // that leads to false negative results, and the Liberty server being left active.
-//                // If the Liberty server is left active, subsequent tests will fail.
-//                TestUtils.sleepAndIgnoreException(60);
-//
-//                // Stop Liberty dev mode and validates that the Liberty server is down.
-//                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.SEARCH, absoluteWLPPath, getSmMPProjectName(), 3);
-//            }
-//        }
-//    }
-//
+    @Test
+    @Video
+    public void testRunTestsActionUsingSearch() {
+        String testName = "testRunTestsActionUsingSearch";
+        String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
+
+        // Delete any existing test report files.
+        deleteTestReports();
+
+        // Start dev mode.
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3);
+
+        try {
+            // Validate that the application started.
+            TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, false);
+
+            // Run the application's tests.
+            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3);
+
+            // Validate that the reports were generated.
+            validateTestReportsExist();
+        } finally {
+            if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
+                // Sleep for a few seconds to allow dev mode to finish running the tests. Specially
+                // for those times when the tests are run twice. Not waiting, opens up a window
+                // that leads to false negative results, and the Liberty server being left active.
+                // If the Liberty server is left active, subsequent tests will fail.
+                TestUtils.sleepAndIgnoreException(60);
+
+                // Stop Liberty dev mode and validates that the Liberty server is down.
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.SEARCH, absoluteWLPPath, getSmMPProjectName(), 3);
+            }
+        }
+    }
+
 //    /**
 //     * Tests:
 //     * - Creating a new Liberty tools configuration.
@@ -674,12 +681,12 @@ public abstract class SingleModMPProjectTestCommon {
 //            }
 //        }
 //    }
-
-    /**
-     * Tests:
-     * - Customized configuration history preservation across multiple configs.
-     * - Customized configuration change preservation across multiple configs.
-     */
+//
+//    /**
+//     * Tests:
+//     * - Customized configuration history preservation across multiple configs.
+//     * - Customized configuration change preservation across multiple configs.
+//     */
 //    @Test
 //    @Video
 //    public void testMultipleConfigEditHistory() {
@@ -912,7 +919,7 @@ public abstract class SingleModMPProjectTestCommon {
 //            }
 //        }
 //    }
-//
+
     /**
      * Prepares the environment to run the tests.
      *
@@ -942,6 +949,7 @@ public abstract class SingleModMPProjectTestCommon {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Exit. ProjectName: " + projectName);
     }
+
 
 //    /**
 //     * Tests that when a Liberty run configuration is removed, any custom start parameters
@@ -1004,8 +1012,8 @@ public abstract class SingleModMPProjectTestCommon {
 //            }
 //        }
 //    }
-//
-//
+
+
     /**
      * Returns the projects directory path.
      *

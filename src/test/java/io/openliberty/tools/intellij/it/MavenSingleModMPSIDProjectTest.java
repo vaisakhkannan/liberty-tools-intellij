@@ -9,31 +9,32 @@
  *******************************************************************************/
 package io.openliberty.tools.intellij.it;
 
+import com.intellij.remoterobot.stepsProcessing.StepLogger;
+import com.intellij.remoterobot.stepsProcessing.StepWorker;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Tests Liberty Tools actions using a single module MicroProfile Gradle project.
+ * Tests Liberty Tools actions using a single module MicroProfile Maven project.
  */
-public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon {
+public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon {
 
     /**
      * Single module Microprofile project name.
      */
-    private static final String SM_MP_PROJECT_NAME = "singleMod GradleMP";
+    private static final String SM_MP_PROJECT_NAME = "singleModMavenMP";
 
     /**
      * The path to the folder containing the test projects.
      */
-    private static final String PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "gradle").toAbsolutePath().toString();
+    private static final String PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "maven").toAbsolutePath().toString();
 
-    private static final String PROJECTS_PATH_NEW = Paths.get("src", "test", "resources", "projects", "gradle sample").toAbsolutePath().toString();
+    private static final String PROJECTS_PATH_NEW = Paths.get("src", "test", "resources", "projects", "maven sample").toAbsolutePath().toString();
 
     /**
      * Project port.
@@ -53,59 +54,50 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
     /**
      * Relative location of the WLP installation.
      */
-    private final String WLP_INSTALL_PATH = "build";
-
-    /**
-     * The path to the test report.
-     */
-    private final Path TEST_REPORT_PATH = Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "build", "reports", "tests", "test", "index.html");
+    private final String WLP_INSTALL_PATH = Paths.get("target", "liberty").toString();
 
     /**
      * Build file name.
      */
-    private final String BUILD_FILE_NAME = "build.gradle";
+    private final String BUILD_FILE_NAME = "pom.xml";
 
     /**
      * Action command to open the build file.
      */
-    private final String BUILD_FILE_OPEN_CMD = "Liberty: View Gradle config";
+    private final String BUILD_FILE_OPEN_CMD = "Liberty: View pom.xml";
+
+    /**
+     * The path to the integration test reports.
+     */
+    private final Path pathToITReport = Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "target", "site", "failsafe-report.html");
+
+    /**
+     * The path to the unit test reports.
+     */
+    private final Path pathToUTReport = Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "target", "site", "surefire-report.html");
 
     /**
      * Dev mode configuration start parameters.
      */
-    private final String DEV_MODE_START_PARAMS = "--hotTests";
+    private final String DEV_MODE_START_PARAMS = "-DhotTests=true";
 
     /**
      * Dev mode configuration custom start parameters for debugging.
      */
-    private final String DEV_MODE_START_PARAMS_DEBUG = "--libertyDebugPort=9876";
+    private final String DEV_MODE_START_PARAMS_DEBUG = "-DdebugPort=9876";
 
     /**
      * Prepares the environment for test execution.
      */
     @BeforeAll
     public static void setup() {
-        Path path = getNewDir(PROJECTS_PATH, "gradle sample");
-        Path targetPath = path.resolve("singleModGradleMP");
-        String targetPathString = targetPath.toString();
-        getNewDir(targetPathString, "singleMod GradleMP");
-        prepareEnv(String.valueOf(path),"singleMod GradleMP");
-    }
-
-    @AfterAll
-    public static void clean(){
-        Path path = getNewDir(PROJECTS_PATH_NEW, "gradle");
-        Path targetPath = path.resolve("singleMod GradleMP");
-        String targetPathString = targetPath.toString();
-        getNewDir(targetPathString, "singleModGradleMP");
-    }
-
-    public static Path getNewDir(String path, String newDirName) {
-        File dir = new File(path);
+        StepWorker.registerProcessor(new StepLogger());
+        File dir = new File(PROJECTS_PATH);
         File newDir = null;
         if (!dir.isDirectory()) {
             System.err.println("There is no directory @ given path");
         } else {
+            String newDirName = "maven sample";
 //            File newDir = new File(dir.getParent() + "\" + newDirName);
             newDir = new File(dir.getParent() + File.separator + newDirName);
             boolean success = dir.renameTo(newDir);
@@ -115,7 +107,27 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
                 System.err.println("Failed to rename directory.");
             }
         }
-        return newDir.toPath();
+        prepareEnv(String.valueOf(newDir), SM_MP_PROJECT_NAME);
+    }
+
+    @AfterAll
+    public static void clean() {
+        File dir = new File(PROJECTS_PATH_NEW);
+        File newDir = null;
+        if (!dir.isDirectory()) {
+            System.err.println("There is no directory @ given path");
+        } else {
+            String newDirName = "maven";
+//            File newDir = new File(dir.getParent() + "\" + newDirName);
+            newDir = new File(dir.getParent() + File.separator + newDirName);
+            boolean success = dir.renameTo(newDir);
+            if (success) {
+                System.out.println("Directory renamed successfully.");
+            } else {
+                System.err.println("Failed to rename directory.");
+            }
+        }
+//        prepareEnv(String.valueOf(newDir), SM_MP_PROJECT_NAME);
     }
 
     /**
@@ -225,8 +237,11 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
      */
     @Override
     public void deleteTestReports() {
-        boolean testReportDeleted = TestUtils.deleteFile(TEST_REPORT_PATH);
-        Assertions.assertTrue(testReportDeleted, () -> "Test report file: " + TEST_REPORT_PATH + " was not be deleted.");
+        boolean itReportDeleted = TestUtils.deleteFile(pathToITReport);
+        Assertions.assertTrue(itReportDeleted, () -> "Test report file: " + pathToITReport + " was not be deleted.");
+
+        boolean utReportDeleted = TestUtils.deleteFile(pathToUTReport);
+        Assertions.assertTrue(utReportDeleted, () -> "Test report file: " + pathToUTReport + " was not be deleted.");
     }
 
     /**
@@ -234,6 +249,7 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
      */
     @Override
     public void validateTestReportsExist() {
-        TestUtils.validateTestReportExists(TEST_REPORT_PATH);
+        TestUtils.validateTestReportExists(pathToITReport);
+        TestUtils.validateTestReportExists(pathToUTReport);
     }
 }
