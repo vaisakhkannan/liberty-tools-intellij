@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -84,18 +85,35 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
      * Prepares the environment for test execution.
      */
     @BeforeAll
-    public static void setup() {
+    public static void setup() throws IOException {
+
         Path path = getNewDir(PROJECTS_PATH, "gradle sample");
         Path targetPath = path.resolve("singleModGradleMP");
+
+        Path originalPath = targetPath.resolve("settings.gradle");
+        Path originalPathCopy = targetPath.resolve("settings-copy.gradle");
+
+        Files.move(originalPath, originalPath.resolveSibling("settings-copy1.gradle"));
+        Files.move(originalPathCopy, originalPathCopy.resolveSibling("settings.gradle"));
+
         String targetPathString = targetPath.toString();
         getNewDir(targetPathString, "singleMod GradleMP");
+
+
         prepareEnv(String.valueOf(path),"singleMod GradleMP");
     }
 
     @AfterAll
-    public static void clean(){
+    public static void clean() throws IOException {
         Path path = getNewDir(PROJECTS_PATH_NEW, "gradle");
         Path targetPath = path.resolve("singleMod GradleMP");
+
+        Path originalPath = targetPath.resolve("settings.gradle");
+        Path originalPathCopy = targetPath.resolve("settings-copy1.gradle");
+        
+        Files.move(originalPath, originalPath.resolveSibling("settings-copy.gradle"));
+        Files.move(originalPathCopy, originalPathCopy.resolveSibling("settings.gradle"));
+
         String targetPathString = targetPath.toString();
         getNewDir(targetPathString, "singleModGradleMP");
     }

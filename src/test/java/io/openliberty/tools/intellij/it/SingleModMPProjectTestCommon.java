@@ -11,6 +11,8 @@ package io.openliberty.tools.intellij.it;
 
 import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
+import com.intellij.remoterobot.fixtures.JTreeFixture;
+import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.condition.OS;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Map;
@@ -454,6 +457,33 @@ public abstract class SingleModMPProjectTestCommon {
 //    /**
 //     * Tests start/runTests/stop actions run from the search everywhere panel.
 //     */
+
+
+    // My code
+//    @Test
+//    @Video
+//    public void testInsertLibertyConfigElementIntoServerXML() {
+//        String stanzaSnippet = " ";
+//        String insertedConfig = " ";
+//
+//        // get focus on server.xml tab prior to copy
+//        UIBotTestUtils.clickOnFileTab(remoteRobot, "settings.gradle");
+//
+//        // Save the current server.xml content.
+//        UIBotTestUtils.copyWindowContent(remoteRobot);
+//
+//        // Insert a new element in server.xml.
+//        try {
+//            UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 1, 29, UIBotTestUtils.InsertionType.ELEMENT, true);
+//            Path pathToServerXML = Paths.get(getProjectsDirPath(), getSmMPProjectName(), "settings.gradle");
+//            TestUtils.validateStanzaInConfigFile(pathToServerXML.toString(), insertedConfig);
+//        } finally {
+//            // Replace server.xml content with the original content
+//            UIBotTestUtils.pasteOnActiveWindow(remoteRobot, true);
+//        }
+//    }
+
+
     @Test
     @Video
     public void testRunTestsActionUsingSearch() {
@@ -948,6 +978,25 @@ public abstract class SingleModMPProjectTestCommon {
 
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Exit. ProjectName: " + projectName);
+        String path = Paths.get("src", "test", "resources", "projects", "gradle sample").toAbsolutePath().toString();
+
+        if (path.equals(projectPath)) {
+            ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
+            JTreeFixture projTree = projectFrame.getProjectViewJTree(projectName);
+            projTree.expand(projectName, "src", "main", "liberty", "config");
+//
+            // open server.xml file
+            UIBotTestUtils.openFile(remoteRobot, projectName, "settings.gradle", projectName);
+//
+//            // open server.env file
+//            UIBotTestUtils.openFile(remoteRobot, projectName, "server.env", projectName, "src", "main", "liberty", "config");
+//
+//            // open bootstrap.properties file
+//            UIBotTestUtils.openFile(remoteRobot, projectName, "bootstrap.properties", projectName, "src", "main", "liberty", "config");
+//
+//            // Removes the build tool window if it is opened. This prevents text to be hidden by it.
+//            UIBotTestUtils.removeToolWindow(remoteRobot, "Build:");
+        }
     }
 
 
