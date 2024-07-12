@@ -14,10 +14,15 @@ on:
         type: boolean
         default: false
       refLTITag:
-        description: 'Reference LTI Tag'
+        description: 'Reference LTI Tag/Branch'
         type: string
         required: true
         default: main
+      specifyRepo:
+        description: 'Specify Repo Path'
+        type: string
+        required: true
+        default: Liberty-tools-intellij
   workflow_dispatch:
     inputs:
       useLocalPlugin:
@@ -31,9 +36,9 @@ on:
         required: true
         default: main
       refLTITag:
-        description: 'Reference LTI Tag'
+        description: 'Reference LTI Tag/Branch'
         type: string
-        required: true
+        required: false
         default: main
   push:
     branches: '**'
@@ -61,6 +66,7 @@ jobs:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
+      SPECIFY_REPO: ${{ inputs.specifyRepo }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -72,7 +78,7 @@ jobs:
       - name: 'Checkout liberty-tools-intellij'
         uses: actions/checkout@v3
         with:
-          repository: OpenLiberty/Liberty-tools-intellij
+          repository: ${{ env.SPECIFY_REPO }}
           path: liberty-tools-intellij
           ref: ${{ env.REF_LTI_TAG }}
       - name: 'Install required integration test software'
@@ -102,9 +108,9 @@ jobs:
         run: bash ./gradlew buildPlugin -PuseLocal=${{ env.USE_LOCAL_PLUGIN }}
       - name: 'Archive artifacts'
         if: ${{ runner.os == 'Linux' && !failure() }}
-        uses: actions/upload-artifact@v4.3.4
+        uses: actions/upload-artifact@v3
         with:
-          name: liberty-tools-intellij-${{ github.sha }}-${{ env.REF_LSP4IJ }}
+          name: liberty-tools-intellij-${{ github.sha }}
           path: |
             ./**/*liberty-tools-intellij*.zip
             ./**/libs/*liberty-tools-intellij*.jar
