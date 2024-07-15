@@ -8,7 +8,7 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  fetch_all_pull_request_shass:
+  fetch_all_pull_request_shas:
     runs-on: ubuntu-latest
     outputs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
