@@ -959,8 +959,9 @@ public abstract class SingleModMPProjectTestCommon {
     public static void prepareEnv(String projectPath, String projectName) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Entry. ProjectPath: " + projectPath + ". ProjectName: " + projectName);
-        waitForIgnoringError(Duration.ofMinutes(4), Duration.ofSeconds(5), "Wait for IDE to start", "IDE did not start", () -> remoteRobot.callJs("true"));
-        remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(2));
+        waitForIgnoringError(Duration.ofMinutes(5), Duration.ofSeconds(10), "Wait for IDE to start", "IDE did not start", () -> remoteRobot.callJs("true"));
+        remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(4));
+//        remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
         UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         UIBotTestUtils.openProjectView(remoteRobot);
         UIBotTestUtils.openLibertyToolWindow(remoteRobot);

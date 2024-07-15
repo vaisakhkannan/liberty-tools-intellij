@@ -130,6 +130,7 @@ public class UIBotTestUtils {
         // Specify the project's path. The text field is pre-populated by default.
         DialogFixture newProjectDialog = commonFixture.find(DialogFixture.class, DialogFixture.byTitle("Open File or Project"), Duration.ofSeconds(10));
         JTextFieldFixture textField = newProjectDialog.getBorderLessTextField();
+//        JTextFieldFixture textField = null;
         JButtonFixture okButton = newProjectDialog.getButton("OK");
 
         RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
@@ -1317,9 +1318,9 @@ public class UIBotTestUtils {
     public static void goToLineAndColumn(RemoteRobot remoteRobot, Keyboard keyboard, int line, int column) {
         // trigger the line:col popup window to place cursor at exact location in file
         if (remoteRobot.isMac())
-            keyboard.hotKey(KeyEvent.VK_META, KeyEvent.VK_L);
+            keyboard.hotKey(VK_META, VK_L);
         else
-            keyboard.hotKey(KeyEvent.VK_CONTROL, KeyEvent.VK_G);
+            keyboard.hotKey(VK_CONTROL, VK_G);
         keyboard.enterText(line + ":" + column);
         keyboard.enter();
     }
@@ -1564,7 +1565,7 @@ public class UIBotTestUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Assertions.fail("Failed to collect UI Component Hierarchy information: " + e.getCause());
+            fail("Failed to collect UI Component Hierarchy information: " + e.getCause());
         }
     }
 
