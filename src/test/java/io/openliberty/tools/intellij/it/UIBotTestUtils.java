@@ -133,19 +133,20 @@ public class UIBotTestUtils {
 //        JTextFieldFixture textField = null;
         JButtonFixture okButton = newProjectDialog.getButton("OK");
 
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
-                Duration.ofSeconds(1),
-                "Waiting for the OK button on the open project dialog to be enabled",
-                "The OK button on the open project dialog was not enabled",
-                okButton::isEnabled);
-
         String projectFullPath = Paths.get(projectsPath, projectName).toString();
+//        textField.setText("");
         textField.setText(projectFullPath);
         RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
                 Duration.ofSeconds(1),
                 "Waiting for the text box on the Open \"File or Project\" dialog to be populated with the given value",
                 "The text box on the Open \"File or Project\" dialog was not populated with the given value",
                 () -> textField.getText().equals(projectFullPath));
+
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+                Duration.ofSeconds(1),
+                "Waiting for the OK button on the open project dialog to be enabled",
+                "The OK button on the open project dialog was not enabled",
+                okButton::isEnabled);
 
         ComponentFixture projectTree = newProjectDialog.getTree();
         RepeatUtilsKt.waitFor(Duration.ofSeconds(10),

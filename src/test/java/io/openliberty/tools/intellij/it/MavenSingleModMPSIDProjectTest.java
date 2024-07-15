@@ -107,6 +107,7 @@ public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon
                 System.err.println("Failed to rename directory.");
             }
         }
+
         prepareEnv(String.valueOf(newDir), SM_MP_PROJECT_NAME);
     }
 
