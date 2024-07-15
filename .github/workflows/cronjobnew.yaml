@@ -1,11 +1,10 @@
 name: Cron-Job
 
 on:
-  push:
-  workflow_dispatch:
   schedule:
     # The job runs every midnight (UTC time) Ref - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onschedule
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   fetch_all_pull_request_shas:
