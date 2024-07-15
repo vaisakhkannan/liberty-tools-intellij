@@ -18,11 +18,11 @@ on:
         type: string
         required: true
         default: main
-      specifyRepo:
-        description: 'Specify Repo Path'
-        type: string
-        required: true
-        default: Liberty-tools-intellij
+#      specifyRepo:
+#        description: 'Specify Repo Path'
+#        type: string
+#        required: true
+#        default: Liberty-tools-intellij
   workflow_dispatch:
     inputs:
       useLocalPlugin:
@@ -66,7 +66,7 @@ jobs:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
-      SPECIFY_REPO: ${{ inputs.specifyRepo }}
+#      SPECIFY_REPO: ${{ inputs.specifyRepo }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -78,7 +78,7 @@ jobs:
       - name: 'Checkout liberty-tools-intellij'
         uses: actions/checkout@v3
         with:
-          repository: ${{ env.SPECIFY_REPO }}
+#          repository: ${{ env.SPECIFY_REPO }}
           path: liberty-tools-intellij
           ref: ${{ env.REF_LTI_TAG }}
       - name: 'Install required integration test software'
