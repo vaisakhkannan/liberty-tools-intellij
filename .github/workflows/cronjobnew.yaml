@@ -8,7 +8,7 @@ on:
   push:
 
 jobs:
-  fetch_all_pull_request_shas:
+  fetch_all_pull_request_shass:
     runs-on: ubuntu-latest
     outputs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
@@ -69,13 +69,13 @@ jobs:
 
   # Run the LTI Tests against each open lsp4ij PRs
   call-build-workflow-for-each-merge-commit-sha:
-    needs: fetch_all_pull_request_shas
-    if: ${{ needs.fetch_all_pull_request_shas.outputs.is_empty == 'false' }}
+    needs: fetch_all_pull_request_shass
+    if: ${{ needs.fetch_all_pull_request_shass.outputs.is_empty == 'false' }}
     uses: ./.github/workflows/build.yaml
     strategy:
       fail-fast: false
       matrix:
-        pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
+        pr_details: ${{ fromJson(needs.fetch_all_pull_request_shass.outputs.pr_details) }}
     with:
       useLocalPlugin: true
       refLsp4ij: ${{ matrix.pr_details.sha }}
