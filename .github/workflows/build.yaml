@@ -86,7 +86,9 @@ jobs:
 
       - name: 'Build Liberty-Tools-Intellij'
         working-directory: ./liberty-tools-intellij
-        run: bash ./gradlew buildPlugin -PuseLocal=${{ env.USE_LOCAL_PLUGIN }}
+        run: |
+          bash ./gradlew buildPlugin -PuseLocal=${{ env.USE_LOCAL_PLUGIN }}
+          echo "${{ github.event_name }}"
       - name: 'Archive artifacts'
         if: ${{ runner.os == 'Linux' && !failure() }}
         uses: actions/upload-artifact@v3
@@ -111,7 +113,7 @@ jobs:
   slack-notification:
     runs-on: ubuntu-latest
     needs: build
-    if: always()
+    if: always() && (${{ github.event_name }} == 'workflow_call' || ${{ github.event_name }} == 'workflow_dispatch')
     steps:
       - name: 'Slack Notification'
         run: |
