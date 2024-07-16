@@ -132,7 +132,6 @@ jobs:
     outputs:
       output1: ${{ steps.step1.outputs.firstword }}
     needs: build
-#    if: ${{ inputs.slack == 'true' }}
     steps:
       - name: 'Slack Notification'
         id: step1
