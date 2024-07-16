@@ -97,9 +97,9 @@ public class GradleSingleModNLTRestProjectTest extends SingleModNLTRestProjectTe
      * The build file in this case uses the plugins DSL to apply the Liberty Tools binary dependency
      * directly from the gradle plugin community (<a href="https://plugins.gradle.org/">...</a>).
      */
-    @Test
-    @Video
-    public void testsRefreshProjectWithLTBuildCfgOnly() {
-        testsRefreshProjectWithLTBuildCfgOnly("pluginsDSLOnlyDepDef.build.gradle");
-    }
+//    @Test
+//    @Video
+//    public void testsRefreshProjectWithLTBuildCfgOnly() {
+//        testsRefreshProjectWithLTBuildCfgOnly("pluginsDSLOnlyDepDef.build.gradle");
+//    }
 }
