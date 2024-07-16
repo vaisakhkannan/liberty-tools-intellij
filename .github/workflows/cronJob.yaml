@@ -88,6 +88,11 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: main
+    name: Run LTI tests for Lsp4ij Main branch
+
+  call-build-workflow-slack-notification:
+    needs: [fetch_all_pull_request_shas, call-build-workflow-for-each-merge-commit-sha]
+    uses: ./.github/workflows/build.yaml
     secrets:
       SLACK_WEBHOOK_URL_COPY: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
-    name: Run LTI tests for Lsp4ij Main branch
+    name: Run Slack Notification
