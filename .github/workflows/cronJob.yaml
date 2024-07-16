@@ -81,6 +81,7 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: ${{ matrix.pr_details.sha }}
+      repo-token: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Running PR
 
   # Run the LTI Tests against lsp4ij main branch
@@ -89,4 +90,5 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: main
+      repo-token: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Run LTI tests for Lsp4ij Main branch
