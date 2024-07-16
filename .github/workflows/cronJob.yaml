@@ -92,19 +92,35 @@ jobs:
     runs-on: ubuntu-latest
     needs: call-build-workflow-for-lsp4ij-main-branch
     steps:
-      - run: echo ${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.firstword }}
+      - run: |
+          echo ${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.firstword }}
+          echo "value=${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.firstword }}" >> $GITHUB_OUTPUT
 
   job3:
     runs-on: ubuntu-latest
     needs: call-build-workflow-for-each-merge-commit-sha
     steps:
-      - run: echo ${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.firstword }}
+      - run:  |
+          echo ${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.firstword }}
+          echo "value=${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.firstword }}" >> $GITHUB_OUTPUT
 
   call-build-workflow-slack-notification:
-    needs: [fetch_all_pull_request_shas, call-build-workflow-for-each-merge-commit-sha]
-    uses: ./.github/workflows/build.yaml
-    with:
-      slack: true
-    secrets:
-      SLACK_WEBHOOK_URL_COPY: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
+    runs-on: ubuntu-latest
+    needs: [job2, job3]
+#    uses: ./.github/workflows/build.yaml
+#    with:
+#      slack: true
+#    secrets:
+#      SLACK_WEBHOOK_URL_COPY: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
+    steps:
+      - run: |
+          STATUS=echo "succeeded"
+          if [ ${{ needs.job2.outputs.value }} == "failed" ]; then
+            STATUS=echo "failed"
+          fi
+          if [ ${{ needs.job3.outputs.value }} == "failed" ]; then
+            STATUS=echo "failed"
+          fi
+          #          STATUS=$([[ ${{ needs.build.result }} == "success" ]] && echo "succeeded" || echo "failed")
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
     name: Run Slack Notification

@@ -137,10 +137,10 @@ jobs:
       - name: 'Slack Notification'
         id: step1
         run: |
-          echo "firstword=hello" >> $GITHUB_OUTPUT
-#          if [ ${{ inputs.slack == 'true' ]; then
-#                draft_status="\n*Draft*: true"
-#          fi
+#          echo "firstword=hello" >> $GITHUB_OUTPUT
+          if [ ${{ needs.build.result }} != "success" ]; then
+               echo "firstword=failed" >> $GITHUB_OUTPUT
+          fi
 #          STATUS=$([[ ${{ needs.build.result }} == "success" ]] && echo "succeeded" || echo "failed")
 #          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
         env:
