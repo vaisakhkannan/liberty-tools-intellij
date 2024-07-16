@@ -88,6 +88,18 @@ jobs:
       refLsp4ij: main
     name: Run LTI tests for Lsp4ij Main branch
 
+  job2:
+    runs-on: ubuntu-latest
+    needs: call-build-workflow-for-lsp4ij-main-branch
+    steps:
+      - run: echo ${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.firstword }}
+
+  job3:
+    runs-on: ubuntu-latest
+    needs: call-build-workflow-for-each-merge-commit-sha
+    steps:
+      - run: echo ${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.firstword }}
+
   call-build-workflow-slack-notification:
     needs: [fetch_all_pull_request_shas, call-build-workflow-for-each-merge-commit-sha]
     uses: ./.github/workflows/build.yaml

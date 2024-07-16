@@ -21,6 +21,10 @@ on:
     secrets:
       SLACK_WEBHOOK_URL_COPY:
         required: false
+    outputs:
+      firstword:
+        description: "The first output string"
+        value: ${{ jobs.slack-notification.outputs.output1 }}
   workflow_dispatch:
     inputs:
       useLocalPlugin:
@@ -125,13 +129,20 @@ jobs:
 
   slack-notification:
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.firstword }}
     needs: build
-    if: ${{ inputs.slack == 'true' }}
+#    if: ${{ inputs.slack == 'true' }}
     steps:
       - name: 'Slack Notification'
+        id: step1
         run: |
-          STATUS=$([[ ${{ needs.build.result }} == "success" ]] && echo "succeeded" || echo "failed")
-          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
+          echo "firstword=hello" >> $GITHUB_OUTPUT
+#          if [ ${{ inputs.slack == 'true' ]; then
+#                draft_status="\n*Draft*: true"
+#          fi
+#          STATUS=$([[ ${{ needs.build.result }} == "success" ]] && echo "succeeded" || echo "failed")
+#          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
         shell: bash
