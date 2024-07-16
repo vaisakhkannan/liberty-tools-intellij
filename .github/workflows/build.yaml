@@ -6,11 +6,11 @@ on:
       refLsp4ij:
         description: 'Reference/branch for Lsp4ij checkout'
         type: string
-        required: true
+        required: false
         default: main
       useLocalPlugin:
         description: 'Use lsp4ij locally'
-        required: true
+        required: false
         type: boolean
         default: false
     secrets:
@@ -20,13 +20,13 @@ on:
     inputs:
       useLocalPlugin:
         description: 'Use lsp4ij locally'
-        required: true
+        required: false
         type: boolean
         default: false
       refLsp4ij:
         description: 'Reference/branch for Lsp4ij checkout'
         type: string
-        required: true
+        required: false
         default: main
   push:
     branches: '**'
