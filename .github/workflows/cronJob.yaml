@@ -1,8 +1,5 @@
 name: Cron Job
 
-env:
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
-
 on:
   workflow_dispatch:
   schedule:
