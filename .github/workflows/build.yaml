@@ -15,7 +15,7 @@ on:
         default: false
     secrets:
       SLACK_WEBHOOK_URL_COPY:
-        required: true
+        required: false
   workflow_dispatch:
     inputs:
       useLocalPlugin:
