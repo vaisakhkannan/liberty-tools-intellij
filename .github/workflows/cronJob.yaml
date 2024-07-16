@@ -91,6 +91,8 @@ jobs:
   call-build-workflow-slack-notification:
     needs: [fetch_all_pull_request_shas, call-build-workflow-for-each-merge-commit-sha]
     uses: ./.github/workflows/build.yaml
+    with:
+      slack: true
     secrets:
       SLACK_WEBHOOK_URL_COPY: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Run Slack Notification
