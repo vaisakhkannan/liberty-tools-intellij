@@ -118,7 +118,6 @@ public class UIBotTestUtils {
             cf.click();
         } else if (currentFrame == Frame.PROJECT) {
             // From the project frame.
-            remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
             commonFixture = projectFrame;
             ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
@@ -130,23 +129,21 @@ public class UIBotTestUtils {
         // Specify the project's path. The text field is pre-populated by default.
         DialogFixture newProjectDialog = commonFixture.find(DialogFixture.class, DialogFixture.byTitle("Open File or Project"), Duration.ofSeconds(10));
         JTextFieldFixture textField = newProjectDialog.getBorderLessTextField();
-//        JTextFieldFixture textField = null;
         JButtonFixture okButton = newProjectDialog.getButton("OK");
-
-        String projectFullPath = Paths.get(projectsPath, projectName).toString();
-//        textField.setText("");
-        textField.setText(projectFullPath);
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
-                Duration.ofSeconds(1),
-                "Waiting for the text box on the Open \"File or Project\" dialog to be populated with the given value",
-                "The text box on the Open \"File or Project\" dialog was not populated with the given value",
-                () -> textField.getText().equals(projectFullPath));
 
         RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
                 Duration.ofSeconds(1),
                 "Waiting for the OK button on the open project dialog to be enabled",
                 "The OK button on the open project dialog was not enabled",
                 okButton::isEnabled);
+
+        String projectFullPath = Paths.get(projectsPath, projectName).toString();
+        textField.setText(projectFullPath);
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+                Duration.ofSeconds(1),
+                "Waiting for the text box on the Open \"File or Project\" dialog to be populated with the given value",
+                "The text box on the Open \"File or Project\" dialog was not populated with the given value",
+                () -> textField.getText().equals(projectFullPath));
 
         ComponentFixture projectTree = newProjectDialog.getTree();
         RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
@@ -648,7 +645,7 @@ public class UIBotTestUtils {
             throw new RuntimeException("Unable to open file " + fileName, error);
         }
     }
-    
+
     public static void hideTerminalWindow(RemoteRobot remoteRobot) {
         try {
             ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(2));
@@ -924,33 +921,33 @@ public class UIBotTestUtils {
         for (int i = 0; i < 10; i++) {
             error = null;
             try {
-        Keyboard keyboard = new Keyboard(remoteRobot);
-        // find the location in the file to begin the stanza insertion
-        // since we know this is a new empty file, go to position 1,1
-        goToLineAndColumn(remoteRobot, keyboard, 1, 1);
+                Keyboard keyboard = new Keyboard(remoteRobot);
+                // find the location in the file to begin the stanza insertion
+                // since we know this is a new empty file, go to position 1,1
+                goToLineAndColumn(remoteRobot, keyboard, 1, 1);
 
-        keyboard.enterText(snippetSubString);
+                keyboard.enterText(snippetSubString);
 
-        // Select the appropriate completion suggestion in the pop-up window that is automatically
-        // opened as text is typed. Avoid hitting ctrl + space as it has the side effect of selecting
-        // and entry automatically if the completion suggestion windows has one entry only.
-        ComponentFixture namePopupWindow = projectFrame.getLookupList();
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(5),
-                Duration.ofSeconds(1),
-                "Waiting for text " + snippetSubString + " to appear in the completion suggestion pop-up window",
-                "Text " + snippetSubString + " did not appear in the completion suggestion pop-up window",
-                () -> namePopupWindow.hasText(snippetSubString));
+                // Select the appropriate completion suggestion in the pop-up window that is automatically
+                // opened as text is typed. Avoid hitting ctrl + space as it has the side effect of selecting
+                // and entry automatically if the completion suggestion windows has one entry only.
+                ComponentFixture namePopupWindow = projectFrame.getLookupList();
+                RepeatUtilsKt.waitFor(Duration.ofSeconds(5),
+                        Duration.ofSeconds(1),
+                        "Waiting for text " + snippetSubString + " to appear in the completion suggestion pop-up window",
+                        "Text " + snippetSubString + " did not appear in the completion suggestion pop-up window",
+                        () -> namePopupWindow.hasText(snippetSubString));
 
-        namePopupWindow.findText(contains(snippetChooserString)).doubleClick();
+                namePopupWindow.findText(contains(snippetChooserString)).doubleClick();
 
-        // let the auto-save function of intellij save the file before testing it
-        if (remoteRobot.isMac()) {
-            keyboard.hotKey(VK_META, VK_S);
-        } else {
-            // linux + windows
-            keyboard.hotKey(VK_CONTROL, VK_S);
-        }
-        break;
+                // let the auto-save function of intellij save the file before testing it
+                if (remoteRobot.isMac()) {
+                    keyboard.hotKey(VK_META, VK_S);
+                } else {
+                    // linux + windows
+                    keyboard.hotKey(VK_CONTROL, VK_S);
+                }
+                break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
 
@@ -1319,9 +1316,9 @@ public class UIBotTestUtils {
     public static void goToLineAndColumn(RemoteRobot remoteRobot, Keyboard keyboard, int line, int column) {
         // trigger the line:col popup window to place cursor at exact location in file
         if (remoteRobot.isMac())
-            keyboard.hotKey(VK_META, VK_L);
+            keyboard.hotKey(KeyEvent.VK_META, KeyEvent.VK_L);
         else
-            keyboard.hotKey(VK_CONTROL, VK_G);
+            keyboard.hotKey(KeyEvent.VK_CONTROL, KeyEvent.VK_G);
         keyboard.enterText(line + ":" + column);
         keyboard.enter();
     }
@@ -1566,7 +1563,7 @@ public class UIBotTestUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Failed to collect UI Component Hierarchy information: " + e.getCause());
+            Assertions.fail("Failed to collect UI Component Hierarchy information: " + e.getCause());
         }
     }
 
