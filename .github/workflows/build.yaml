@@ -139,6 +139,7 @@ jobs:
           if [ ${{ needs.build.result }} != "success" ]; then
                echo "firstword=failed" >> $GITHUB_OUTPUT
           fi
+          echo "firstword=succeeded" >> $GITHUB_OUTPUT
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
         shell: bash
