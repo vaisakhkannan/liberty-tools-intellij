@@ -113,6 +113,8 @@ jobs:
     steps:
       - run: |
           STATUS="succeeded"
+           echo ${{ needs.job2.outputs.value }}
+           echo ${{ needs.job3.outputs.value }}
           if [ ${{ needs.job2.outputs.value }} == "failed" ]; then
             STATUS="failed"
           fi
