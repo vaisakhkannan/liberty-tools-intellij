@@ -106,20 +106,15 @@ jobs:
 
   call-build-workflow-slack-notification:
     runs-on: ubuntu-latest
-    needs: [job2, job3]
-#    uses: ./.github/workflows/build.yaml
-#    with:
-#      slack: true
-#    secrets:
-#      SLACK_WEBHOOK_URL_COPY: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
+    needs: [ job2, job3 ]
     steps:
       - run: |
-          STATUS=echo "succeeded"
-          if [ ${{ needs.job2.outputs.value }} == "failed" ]; then
-            STATUS=echo "failed"
+          STATUS="succeeded"
+          if [ "${{ needs.job2.outputs.value }}" == "failed" ]; then
+            STATUS="failed"
           fi
-          if [ ${{ needs.job3.outputs.value }} == "failed" ]; then
-            STATUS=echo "failed"
+          if [ "${{ needs.job3.outputs.value }}" == "failed" ]; then
+            STATUS="failed"
           fi
           curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
         env:
