@@ -121,6 +121,7 @@ jobs:
           if [ ${{ needs.job3.outputs.value }} == "failed" ]; then
             STATUS=echo "failed"
           fi
-          #          STATUS=$([[ ${{ needs.build.result }} == "success" ]] && echo "succeeded" || echo "failed")
           curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Run Slack Notification
