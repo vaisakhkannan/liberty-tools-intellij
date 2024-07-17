@@ -137,6 +137,7 @@ jobs:
       - name: 'Slack Notification'
         id: step1
         run: |
+          echo ${{ needs.build.result }}
           if [ ${{ needs.build.result }} != "success" ]; then
                echo "firstword=failed" >> $GITHUB_OUTPUT
           else
