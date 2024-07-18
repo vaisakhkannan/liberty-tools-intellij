@@ -96,6 +96,7 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: main
+      refLTITag: ${{ matrix.tag }}
     name: Run LTI tests for Lsp4ij Main branch
 
   job2:
