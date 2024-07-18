@@ -11,7 +11,7 @@ on:
       lsp4ijBranch:
         description: 'PR number or branch name for Artifact upload'
         type: string
-        required: true
+        required: false
       useLocalPlugin:
         description: 'Use lsp4ij locally'
         required: false
