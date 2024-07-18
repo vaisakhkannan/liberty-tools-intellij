@@ -81,9 +81,8 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: ${{ matrix.pr_details.sha }}
+      lsp4ijBranch: PR-${{ matrix.pr_details.number }}
       refLTITag: ${{ matrix.tag }}
-      # Specify the original repository path to fetch the branch or tag from the remote repository. By default, a forked repository cannot retrieve the branches and tags of the remote repository.
-#      specifyRepo: OpenLiberty/Liberty-tools-intellij
     name: Run PR
 
   # Run the LTI Tests against lsp4ij main branch
@@ -97,6 +96,6 @@ jobs:
     with:
       useLocalPlugin: true
       refLsp4ij: main
+      lsp4ijBranch: main
       refLTITag: ${{ matrix.tag }}
-#      specifyRepo: OpenLiberty/Liberty-tools-intellij
     name: Run Lsp4ij Main
