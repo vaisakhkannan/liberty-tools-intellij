@@ -113,14 +113,15 @@ jobs:
     steps:
       - run: |
           STATUS="succeeded"
-           echo ${{ needs.job2.outputs.value }}
-           echo ${{ needs.job3.outputs.value }}
+           echo "${{ needs.job2.outputs.value }}"
+           echo "${{ needs.job3.outputs.value }}"
           if [ ${{ needs.job2.outputs.value }} == "failed" ]; then
             STATUS="failed"
           fi
           if [ ${{ needs.job3.outputs.value }} == "failed" ]; then
             STATUS="failed"
           fi
+          echo "Final status: $STATUS"
           curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
         shell: bash
         env:
