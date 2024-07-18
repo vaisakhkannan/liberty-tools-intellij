@@ -65,7 +65,7 @@ jobs:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'latest' }}
-      REF_LTI_TAG: ${{ inputs.refLTITag || 'default' }}
+      REF_LTI_TAG: ${{ inputs.refLTITag || 'defaultvalue' }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
