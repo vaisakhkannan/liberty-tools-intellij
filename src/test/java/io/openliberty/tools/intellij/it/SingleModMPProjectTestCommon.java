@@ -894,35 +894,35 @@ public abstract class SingleModMPProjectTestCommon {
 //        }
 //    }
 //
-//    /**
-//     * Prepares the environment to run the tests.
-//     *
-//     * @param projectPath The path of the project.
-//     * @param projectName The name of the project being used.
-//     */
-//    public static void prepareEnv(String projectPath, String projectName) {
-//        TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
-//                "prepareEnv. Entry. ProjectPath: " + projectPath + ". ProjectName: " + projectName);
-//        waitForIgnoringError(Duration.ofMinutes(4), Duration.ofSeconds(5), "Wait for IDE to start", "IDE did not start", () -> remoteRobot.callJs("true"));
-//        remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(2));
-//        UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
-//        UIBotTestUtils.openProjectView(remoteRobot);
-//        UIBotTestUtils.openLibertyToolWindow(remoteRobot);
-//        UIBotTestUtils.validateImportedProjectShowsInLTW(remoteRobot, projectName);
-//        UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
-//
-//        // Close all open editors.
-//        // The expansion of the project tree in the Liberty tool window causes the editor tab for
-//        // the project's build file to open. That is the result of clicking on the project to give it
-//        // focus. The action of clicking on the project causes the build file to be opened automatically.
-//        // Closing the build file editor here prevents it from opening automatically when the project
-//        // in the Liberty tool window is clicked or right-clicked again. This is done on purpose to
-//        // prevent false negative tests related to the build file editor tab.
-//        UIBotTestUtils.closeAllEditorTabs(remoteRobot);
-//
-//        TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
-//                "prepareEnv. Exit. ProjectName: " + projectName);
-//    }
+    /**
+     * Prepares the environment to run the tests.
+     *
+     * @param projectPath The path of the project.
+     * @param projectName The name of the project being used.
+     */
+    public static void prepareEnv(String projectPath, String projectName) {
+        TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
+                "prepareEnv. Entry. ProjectPath: " + projectPath + ". ProjectName: " + projectName);
+        waitForIgnoringError(Duration.ofMinutes(4), Duration.ofSeconds(5), "Wait for IDE to start", "IDE did not start", () -> remoteRobot.callJs("true"));
+        remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(2));
+        UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
+        UIBotTestUtils.openProjectView(remoteRobot);
+        UIBotTestUtils.openLibertyToolWindow(remoteRobot);
+        UIBotTestUtils.validateImportedProjectShowsInLTW(remoteRobot, projectName);
+        UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
+
+        // Close all open editors.
+        // The expansion of the project tree in the Liberty tool window causes the editor tab for
+        // the project's build file to open. That is the result of clicking on the project to give it
+        // focus. The action of clicking on the project causes the build file to be opened automatically.
+        // Closing the build file editor here prevents it from opening automatically when the project
+        // in the Liberty tool window is clicked or right-clicked again. This is done on purpose to
+        // prevent false negative tests related to the build file editor tab.
+        UIBotTestUtils.closeAllEditorTabs(remoteRobot);
+
+        TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
+                "prepareEnv. Exit. ProjectName: " + projectName);
+    }
 //
 //    /**
 //     * Tests that when a Liberty run configuration is removed, any custom start parameters
