@@ -8,6 +8,10 @@ on:
         type: string
         required: false
         default: main
+      lsp4ijBranch:
+        description: 'PR number or branch name for Artifact upload'
+        type: string
+        required: true
       useLocalPlugin:
         description: 'Use lsp4ij locally'
         required: false
@@ -67,6 +71,8 @@ jobs:
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
+      LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'latest' }}
+      REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -79,6 +85,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: liberty-tools-intellij
+          ref: ${{ env.REF_LTI_TAG }}
       - name: 'Install required integration test software'
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/setup.sh
@@ -110,7 +117,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && !failure() }}
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: liberty-tools-intellij-${{ github.sha }}-${{ env.REF_LSP4IJ }}
+          name: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
           path: |
             ./**/*liberty-tools-intellij*.zip
             ./**/libs/*liberty-tools-intellij*.jar
