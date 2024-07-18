@@ -22,6 +22,11 @@ on:
         required: false
         type: boolean
         default: false
+      refLTITag:
+        description: 'Reference LTI Tag/Branch'
+        type: string
+        required: false
+        default: main
     secrets:
       SLACK_WEBHOOK_URL_COPY:
         required: false
@@ -46,6 +51,11 @@ on:
         required: false
         type: boolean
         default: false
+      refLTITag:
+        description: 'Reference LTI Tag/Branch'
+        type: string
+        required: false
+        default: main
   push:
     branches: '**'
   pull_request:
