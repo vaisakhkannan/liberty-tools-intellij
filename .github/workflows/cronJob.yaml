@@ -1,0 +1,153 @@
+name: Cron Job
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    # The job runs every midnight (UTC time). Ref - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onschedule
+    - cron: '10 8 * * *'
+
+jobs:
+  fetch_all_pull_request_shas:
+    runs-on: ubuntu-latest
+    outputs:
+      pr_details: ${{ steps.extract.outputs.pr_details }}
+      is_empty: ${{ steps.extract.outputs.is_empty }}
+    env:
+      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
+    name: PR Details
+    steps:
+      - name: Extract PR numbers and merge_commit_shas
+        shell: bash
+        id: extract
+        run: |
+          # Fetch PR details from the GitHub API
+          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}")
+          
+          # Extract PR numbers and merge_commit_sha values, excluding draft pull requests
+          pr_numbers=$(echo "$pr_infos" | jq -r '.[] | select(.draft == false) | {number: .number, sha: .merge_commit_sha} | @base64')          
+          
+          # Array to store PRs that are not drafts and have no merge conflicts
+          declare -a valid_prs=()
+          
+          for pr in $pr_numbers; do
+            # Decode the base64 encoded JSON string
+            pr=$(echo "$pr" | base64 --decode)
+          
+            # Extract PR number
+            number=$(echo "$pr" | jq -r '.number')
+          
+            url="${{ env.API_URL }}/$number"
+            pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
+          
+            mergeable_state=$(jq -r '.mergeable_state' <<< "$pr_detail")
+          
+            if [[ "$mergeable_state" != "dirty" ]]; then
+            pr_number=$(jq -r '.number' <<< "$pr_detail")
+            pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
+            pr_link=$(jq -r '.html_url' <<< "$pr_detail")
+            valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
+          else
+              echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
+          fi
+          done
+          
+          # Create a JSON string from the array
+          pr_details_array=$(IFS=,; echo "[${valid_prs[*]}]")
+          # Print Pr number and SHA values
+          echo "$pr_details_array" | jq '.[]'
+          # Set the output for further steps
+          echo "pr_details=$pr_details_array" >> $GITHUB_OUTPUT
+          
+          # Check if pr_details_array is empty
+          if [ $(echo "$pr_details_array" | jq length) -eq 0 ]; then
+            echo "::warning file=::There are no open PRs, or all the existing PRs are either drafts or have merge conflicts. Skipping further actions."
+            echo "is_empty=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_empty=false" >> $GITHUB_OUTPUT
+          fi
+
+  # Run the LTI Tests against each open lsp4ij PRs
+  call-build-workflow-for-each-merge-commit-sha:
+    needs: fetch_all_pull_request_shas
+    if: ${{ needs.fetch_all_pull_request_shas.outputs.is_empty == 'false' }}
+    uses: ./.github/workflows/build.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array.
+        tag: [ 'v0.0.0.1', 'v0.0.0.2', 'main' ] # Can specify tags or branches such as '24.0.6' and 'main'
+        pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
+    with:
+      useLocalPlugin: true
+      refLsp4ij: ${{ matrix.pr_details.sha }}
+      lsp4ijBranch: PR-${{ matrix.pr_details.number }}
+      refLTITag: ${{ matrix.tag }}
+    name: Run PR
+
+  # Run the LTI Tests against lsp4ij main branch
+  call-build-workflow-for-lsp4ij-main-branch:
+    uses: ./.github/workflows/build.yaml
+    strategy:
+      fail-fast: false
+      matrix:
+        # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array.
+        tag: [ 'v0.0.0.1', 'v0.0.0.2', 'main' ]
+    with:
+      useLocalPlugin: true
+      refLsp4ij: main
+      lsp4ijBranch: main
+      refLTITag: ${{ matrix.tag }}
+    name: Run LTI tests for Lsp4ij Main branch
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: call-build-workflow-for-lsp4ij-main-branch
+    outputs:
+      value: ${{ steps.value1.outputs.value }}
+    if: always()
+    steps:
+      - id: value1
+        run: |
+          echo "${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"
+          echo "value=${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}" >> $GITHUB_OUTPUT
+
+  job3:
+    runs-on: ubuntu-latest
+    needs: call-build-workflow-for-each-merge-commit-sha
+    outputs:
+      value: ${{ steps.value2.outputs.value }}
+    if: always()
+    steps:
+      - id: value2
+        run:  |
+          echo ${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}
+          echo "value=${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}" >> $GITHUB_OUTPUT
+
+  call-build-workflow-slack-notification:
+    runs-on: ubuntu-latest
+    needs: [ job2, job3 ]
+    if: always()
+    steps:
+      - run: |
+          STATUS="succeeded"
+          JOB2_STATUS="${{ needs.job2.outputs.value }}"
+          JOB3_STATUS="${{ needs.job3.outputs.value }}"
+
+          echo "Job2 status: $JOB2_STATUS"
+          echo "Job3 status: $JOB3_STATUS"
+
+          if [ "$JOB2_STATUS" == "failed" ]; then
+            STATUS="failed"
+          fi
+          if [ "$JOB3_STATUS" == "failed" ]; then
+            STATUS="failed"
+          fi
+
+          echo "Final status: $STATUS"
+
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
+    name: Run Slack Notification
+
