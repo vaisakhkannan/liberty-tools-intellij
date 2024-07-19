@@ -17,19 +17,11 @@ on:
         required: false
         type: boolean
         default: false
-      slack:
-        description: 'Check slack'
-        required: false
-        type: boolean
-        default: false
       refLTITag:
         description: 'Reference LTI Tag/Branch'
         type: string
         required: false
         default: main
-    secrets:
-      SLACK_WEBHOOK_URL_COPY:
-        required: false
     outputs:
       firstword:
         description: "The first output string"
@@ -46,11 +38,6 @@ on:
         type: string
         required: false
         default: main
-      slack:
-        description: 'Check slack'
-        required: false
-        type: boolean
-        default: false
       refLTITag:
         description: 'Reference LTI Tag/Branch'
         type: string
