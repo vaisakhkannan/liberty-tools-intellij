@@ -25,7 +25,7 @@ on:
     outputs:
       firstword:
         description: "The first output string"
-        value: ${{ jobs.slack-notification.outputs.output1 }}
+        value: ${{ steps.slack-notification.outputs.firstword }}
   workflow_dispatch:
     inputs:
       useLocalPlugin:
@@ -129,21 +129,14 @@ jobs:
           name: ${{ matrix.reportName }}
           path: |
             liberty-tools-intellij/build/reports/
-
-  slack-notification:
-    runs-on: ubuntu-latest
-    outputs:
-      output1: ${{ steps.step1.outputs.firstword }}
-    needs: build
-    if: always()
-    steps:
       - name: 'Slack Notification'
-        id: step1
+        id: slack-notification
+        if: always()
         run: |
-          echo ${{ needs.build.result }}
-          if [ ${{ needs.build.result }} != "success" ]; then
+          echo ${{ github.event_name }}
+          echo ${{ job.status }}
+          if [ ${{ job.status }} != "success" ]; then
                echo "firstword=failed" >> $GITHUB_OUTPUT
           else
                echo "firstword=succeeded" >> $GITHUB_OUTPUT
-          fi
         shell: bash
