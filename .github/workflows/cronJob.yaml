@@ -109,8 +109,8 @@ jobs:
     steps:
       - id: value1
         run: |
-          echo "${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.firstword }}"
-          echo "value=${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.firstword }}" >> $GITHUB_OUTPUT
+          echo "${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"
+          echo "value=${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}" >> $GITHUB_OUTPUT
 
   job3:
     runs-on: ubuntu-latest
@@ -121,8 +121,8 @@ jobs:
     steps:
       - id: value2
         run:  |
-          echo ${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.firstword }}
-          echo "value=${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.firstword }}" >> $GITHUB_OUTPUT
+          echo ${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}
+          echo "value=${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}" >> $GITHUB_OUTPUT
 
   call-build-workflow-slack-notification:
     runs-on: ubuntu-latest
