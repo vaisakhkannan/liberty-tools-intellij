@@ -83,7 +83,6 @@ jobs:
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'latest' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
-      ARTIFACT_NAME: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG != '' && env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -127,7 +126,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && !failure() }}
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG != '' && env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
           path: |
             ./**/*liberty-tools-intellij*.zip
             ./**/libs/*liberty-tools-intellij*.jar
