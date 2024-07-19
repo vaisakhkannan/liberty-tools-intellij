@@ -25,7 +25,7 @@ on:
     outputs:
       firstword:
         description: "The first output string"
-        value: ${{ steps.slack-notification.outputs.firstword }}
+        value: ${{ jobs.build.outputs.output1 }}
   workflow_dispatch:
     inputs:
       useLocalPlugin:
@@ -70,6 +70,8 @@ jobs:
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'latest' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
+    outputs:
+      output1: ${{ steps.slack-notification.outputs.firstword }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
