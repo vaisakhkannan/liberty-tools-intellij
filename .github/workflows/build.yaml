@@ -117,12 +117,13 @@ jobs:
         working-directory: ./lsp4ij/build/distributions
         run: |
           unzip -o '*.zip' -d .
-
       - name: 'Build Liberty-Tools-Intellij'
         working-directory: ./liberty-tools-intellij
         run: |
           echo "${{ github.event_name }}"
           bash ./gradlew buildPlugin -PuseLocal=${{ env.USE_LOCAL_PLUGIN }}
+      - name: 'Set artifact name'
+        run: |
           echo "ARTIFACT_NAME=liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG != '' && env.REF_LTI_TAG != null ? env.REF_LTI_TAG : 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}" >> $GITHUB_ENV
       - name: 'Archive artifacts'
         if: ${{ runner.os == 'Linux' && !failure() }}
