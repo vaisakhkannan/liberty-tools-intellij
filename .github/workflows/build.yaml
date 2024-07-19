@@ -83,7 +83,6 @@ jobs:
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'latest' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
-      ARTIFACT_NAME: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG != '' && env.REF_LTI_TAG != null ? env.REF_LTI_TAG :'value-not-present' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -124,6 +123,7 @@ jobs:
         run: |
           echo "${{ github.event_name }}"
           bash ./gradlew buildPlugin -PuseLocal=${{ env.USE_LOCAL_PLUGIN }}
+          echo "ARTIFACT_NAME=liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG != '' && env.REF_LTI_TAG != null ? env.REF_LTI_TAG : 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}" >> $GITHUB_ENV
       - name: 'Archive artifacts'
         if: ${{ runner.os == 'Linux' && !failure() }}
         uses: actions/upload-artifact@v4.3.4
