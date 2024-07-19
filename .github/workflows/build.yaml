@@ -25,7 +25,7 @@ on:
     outputs:
       firstword:
         description: "The first output string"
-        value: ${{ jobs.build.outputs.output1 }}
+        value: ${{ jobs.slack-notification.outputs.output1 }}
   workflow_dispatch:
     inputs:
       useLocalPlugin:
@@ -70,8 +70,6 @@ jobs:
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'latest' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
-    outputs:
-      output1: ${{ steps.slack-notification.outputs.firstword }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -131,14 +129,21 @@ jobs:
           name: ${{ matrix.reportName }}
           path: |
             liberty-tools-intellij/build/reports/
+
+  slack-notification:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.firstword }}
+    needs: build
+    if: always()
+    steps:
       - name: 'Slack Notification'
-        id: slack-notification
-        if: always()
+        id: step1
         run: |
-          echo ${{ github.event_name }}
-          echo ${{ job.status }}
-          if [ ${{ job.status }} != "success" ]; then
+          echo ${{ needs.build.result }}
+          if [ ${{ needs.build.result }} != "success" ]; then
                echo "firstword=failed" >> $GITHUB_OUTPUT
           else
                echo "firstword=succeeded" >> $GITHUB_OUTPUT
+          fi
         shell: bash
