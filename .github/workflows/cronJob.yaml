@@ -113,10 +113,7 @@ jobs:
           echo "Job2 status: $JOB2_STATUS"
           echo "Job3 status: $JOB3_STATUS"
 
-          if [ "$JOB2_STATUS" == "failed" ]; then
-            STATUS="failed"
-          fi
-          if [ "$JOB3_STATUS" == "failed" ]; then
+          if [ "$JOB2_STATUS" = "failed" ] || [ "$JOB3_STATUS" = "failed" ]; then
             STATUS="failed"
           fi
 
