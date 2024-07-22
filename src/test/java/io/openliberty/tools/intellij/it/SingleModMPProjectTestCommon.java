@@ -962,7 +962,7 @@ public abstract class SingleModMPProjectTestCommon {
         waitForIgnoringError(Duration.ofMinutes(5), Duration.ofSeconds(10), "Wait for IDE to start", "IDE did not start", () -> remoteRobot.callJs("true"));
         remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(4));
 //        remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-//        TestUtils.sleepAndIgnoreException(60);
+//        TestUtils.sleepAndIgnoreException(30);
         UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         UIBotTestUtils.openProjectView(remoteRobot);
         UIBotTestUtils.openLibertyToolWindow(remoteRobot);

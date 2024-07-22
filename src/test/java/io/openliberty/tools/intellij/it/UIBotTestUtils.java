@@ -127,15 +127,8 @@ public class UIBotTestUtils {
         }
 
         // Specify the project's path. The text field is pre-populated by default.
-        DialogFixture newProjectDialog = commonFixture.find(DialogFixture.class, DialogFixture.byTitle("Open File or Project"), Duration.ofSeconds(10));
+        DialogFixture newProjectDialog = commonFixture.find(DialogFixture.class, DialogFixture.byTitle("Open File or Project"), Duration.ofSeconds(40));
         JTextFieldFixture textField = newProjectDialog.getBorderLessTextField();
-        JButtonFixture okButton = newProjectDialog.getButton("OK");
-
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
-                Duration.ofSeconds(1),
-                "Waiting for the OK button on the open project dialog to be enabled",
-                "The OK button on the open project dialog was not enabled",
-                okButton::isEnabled);
 
         String projectFullPath = Paths.get(projectsPath, projectName).toString();
         textField.setText(projectFullPath);
@@ -144,6 +137,13 @@ public class UIBotTestUtils {
                 "Waiting for the text box on the Open \"File or Project\" dialog to be populated with the given value",
                 "The text box on the Open \"File or Project\" dialog was not populated with the given value",
                 () -> textField.getText().equals(projectFullPath));
+
+        JButtonFixture okButton = newProjectDialog.getButton("OK");
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+                Duration.ofSeconds(2),
+                "Waiting for the OK button on the open project dialog to be enabled",
+                "The OK button on the open project dialog was not enabled",
+                okButton::isEnabled);
 
         ComponentFixture projectTree = newProjectDialog.getTree();
         RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
