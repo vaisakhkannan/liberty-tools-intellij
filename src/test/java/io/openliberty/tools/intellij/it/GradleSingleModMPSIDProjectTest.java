@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Tests Liberty Tools actions using a single module MicroProfile Gradle project.
@@ -29,7 +30,7 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
      */
     private static final String SM_MP_PROJECT_NAME = "singleModGradleMP";
 
-    private static final String SM_MP_PROJECT_NAME_NEW = "singleModGradleMP";
+    private static final String SM_MP_PROJECT_NAME_NEW = "singleMod GradleMP";
 
     /**
      * The path to the folder containing the test projects.
@@ -89,6 +90,23 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
     @BeforeAll
     public static void setup() throws IOException {
         copyDirectory(PROJECTS_PATH, PROJECTS_PATH_NEW);
+        Path pathNew = Path.of(PROJECTS_PATH_NEW);
+        Path projectDirPath = pathNew.resolve(SM_MP_PROJECT_NAME);
+
+        Path originalPath = projectDirPath.resolve("settings.gradle");
+        Path originalPathCopy = projectDirPath.resolve("settings-copy.gradle");
+
+        Files.move(originalPath, originalPath.resolveSibling("settings-duplicate.gradle"));
+        Files.move(originalPathCopy, originalPathCopy.resolveSibling("settings.gradle"));
+
+        Path projectDirNewPath = pathNew.resolve(SM_MP_PROJECT_NAME_NEW);
+
+        try {
+            Files.move(projectDirPath, projectDirNewPath, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Directory renamed successfully");
+        } catch (IOException e) {
+            System.err.println("Failed to rename directory: " + e.getMessage());
+        }
         prepareEnv(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME_NEW);
     }
 
@@ -153,7 +171,7 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
      */
     @Override
     public String getSmMPProjectName() {
-        return SM_MP_PROJECT_NAME;
+        return SM_MP_PROJECT_NAME_NEW;
     }
 
     /**
