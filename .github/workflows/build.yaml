@@ -30,18 +30,18 @@ on:
     inputs:
       useLocalPlugin:
         description: 'Use lsp4ij locally'
-        required: false
+        required: true
         type: boolean
         default: false
       refLsp4ij:
         description: 'Reference/branch for Lsp4ij checkout'
         type: string
-        required: false
+        required: true
         default: main
       refLTITag:
         description: 'Reference LTI Tag/Branch'
         type: string
-        required: false
+        required: true
         default: main
   push:
     branches: '**'
