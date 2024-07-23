@@ -97,7 +97,7 @@ public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon
     public static void setup() throws IOException {
         StepWorker.registerProcessor(new StepLogger());
         copyDirectory(PROJECTS_PATH, PROJECTS_PATH_NEW);
-        prepareEnv(PROJECTS_PATH, SM_MP_PROJECT_NAME);
+        prepareEnv(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME);
     }
 
     @AfterAll
