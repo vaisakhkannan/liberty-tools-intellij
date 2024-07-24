@@ -6,21 +6,21 @@ on:
       refLsp4ij:
         description: 'Reference/branch for Lsp4ij checkout'
         type: string
-        required: false
+        required: true
         default: main
       lsp4ijBranch:
         description: 'PR number or branch name for Artifact upload'
         type: string
-        required: false
+        required: true
       useLocalPlugin:
         description: 'Use lsp4ij locally'
-        required: false
+        required: true
         type: boolean
         default: false
       refLTITag:
         description: 'Reference LTI Tag/Branch'
         type: string
-        required: false
+        required: true
         default: main
     outputs:
       status:
