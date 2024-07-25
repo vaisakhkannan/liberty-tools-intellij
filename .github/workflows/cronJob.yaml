@@ -111,7 +111,7 @@ jobs:
           mainBuildStatus="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"
           prBuildStatus="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}"
 
-          if [ "$mainBuildStatus" = "success" ] || [ "$prBuildStatus" = "success" ]; then
+          if [ "$mainBuildStatus" = "success" ] && [ "$prBuildStatus" = "success" ]; then
             status="succeeded"
           fi
 
