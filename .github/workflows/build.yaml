@@ -68,7 +68,7 @@ jobs:
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
-      LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'latest' }}
+      LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
       - name: Configure pagefile
@@ -139,4 +139,6 @@ jobs:
     steps:
       - name: Fetch Build Status
         id: status
-        run: echo "status=${{ needs.build.result }}" >> $GITHUB_OUTPUT
+        run: |
+          echo "STATUS : ${{ needs.build.result }}"
+          echo "status=${{ needs.build.result }}" >> $GITHUB_OUTPUT
