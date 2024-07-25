@@ -92,7 +92,7 @@ jobs:
         if: ${{ inputs.useLocalPlugin == true }}
         uses: actions/checkout@v3
         with:
-          repository: redhat-developer/lsp4ij
+          repository: OpenLiberty/liberty-tools-vscode
           path: lsp4ij
           ref: ${{ env.REF_LSP4IJ }}
       - name: 'Build Lsp4ij'
