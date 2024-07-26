@@ -106,30 +106,25 @@ jobs:
         run: |
           mainBuildStatuses=()
           prBuildStatuses=()
-
-          # Collect statuses for LSP4IJ main branch
-          if [ -n "${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}" ]; then
-            mainBuildStatuses=("${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}")
-          fi
-
-          # Collect statuses for PR builds
-          if [ -n "${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}" ]; then
-            prBuildStatuses=("${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}")
-          fi
-
+          
+          for status in "${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"; do
+            mainBuildStatuses+=("$status")
+          done
+          
+          for status in "${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}"; do
+            prBuildStatuses+=("$status")
+          done
+          
           echo "Main build statuses: ${mainBuildStatuses[@]}"
           echo "PR build statuses: ${prBuildStatuses[@]}"
-
-          status="succeeded"
-          for buildStatus in "${mainBuildStatuses[@]}" "${prBuildStatuses[@]}"; do
-            if [[ "$buildStatus" == "failed" ]]; then
-              status="failed"
-              break
-            fi
-          done
-
+          
+          status="failed"
+          if [[ ! " ${mainBuildStatuses[@]} " =~ " failure " ]] && [[ ! " ${prBuildStatuses[@]} " =~ " failure " ]]; then
+            status="succeeded"
+          fi
+          
           echo "Final status: $status"
-
+          
           curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch *${{ github.ref }}*. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: *$status*\"}" $SLACK_WEBHOOK_URL
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
