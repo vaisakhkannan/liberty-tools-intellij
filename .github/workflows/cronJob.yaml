@@ -41,6 +41,7 @@ jobs:
             pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
           
             mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
+            echo "Mergeable: $mergeable"
           
             if [[ "$mergeable" = "true" ]]; then
             pr_number=$(jq -r '.number' <<< "$pr_detail")
