@@ -14,7 +14,7 @@ jobs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
       is_empty: ${{ steps.extract.outputs.is_empty }}
     env:
-      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
     name: PR Details
     steps:
       - name: Extract PR numbers and merge_commit_shas
@@ -43,14 +43,10 @@ jobs:
             mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
             echo "Mergeable: $mergeable"
         
-            if [[ "$mergeable" != "false" ]]; then
-              pr_number=$(jq -r '.number' <<< "$pr_detail")
-              pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
-              pr_link=$(jq -r '.html_url' <<< "$pr_detail")
-              valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
-            else
-              echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts or mergeable status is unknown. See : $(jq -r '.html_url' <<< "$pr_detail")"
-            fi
+            pr_number=$(jq -r '.number' <<< "$pr_detail")
+            pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
+            pr_link=$(jq -r '.html_url' <<< "$pr_detail")
+            valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
           done
           
           # Create a JSON string from the array
