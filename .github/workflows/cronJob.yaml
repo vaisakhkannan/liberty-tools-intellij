@@ -42,7 +42,7 @@ jobs:
           
             mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
           
-            if [[ "$mergeable" == "true" ]]; then
+            if [[ "$mergeable" = "true" ]]; then
             pr_number=$(jq -r '.number' <<< "$pr_detail")
             pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
             pr_link=$(jq -r '.html_url' <<< "$pr_detail")
