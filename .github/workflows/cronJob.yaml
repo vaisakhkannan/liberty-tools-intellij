@@ -22,7 +22,9 @@ jobs:
         id: extract
         run: |
           # Fetch PR details from the GitHub API
-          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}" | jq -r 'sort_by(.created_at)')
+          # pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}" | jq -r 'sort_by(.created_at)')
+          
+          pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}")
           
           # Extract PR numbers and merge_commit_sha values, excluding draft pull requests
           pr_numbers=$(echo "$pr_infos" | jq -r '.[] | select(.draft == false) | {number: .number, sha: .merge_commit_sha} | @base64')          
