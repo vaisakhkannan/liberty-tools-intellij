@@ -43,10 +43,10 @@ on:
         type: string
         required: true
         default: main
-#  push:
-#    branches: '**'
-#  pull_request:
-#    branches: [ main, lsp4ij-market-0.0.2-integration ]
+  push:
+    branches: '**'
+  pull_request:
+    branches: [ main, lsp4ij-market-0.0.2-integration ]
 
 jobs:
   build:
@@ -132,6 +132,9 @@ jobs:
 
   build-status:
     runs-on: ubuntu-latest
+    env:
+      LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
+      REF_LTI_TAG: ${{ inputs.refLTITag || 'default' }}
     outputs:
       status: ${{ steps.status.outputs.status }}
     needs: build
@@ -141,4 +144,4 @@ jobs:
         id: status
         run: |
           echo "STATUS : ${{ needs.build.result }}"
-          echo "status=${{ needs.build.result }}" >> $GITHUB_OUTPUT
+          echo "${{ env.LSP4IJ_BRANCH }}-${{ env.REF_LTI_TAG }}=${{ needs.build.result }}" >> $GITHUB_OUTPUT
