@@ -115,6 +115,9 @@ jobs:
             prBuildStatuses+=("$status")
           done
           
+          echo "Main build: $mainBuildStatuses"
+          echo "PR build : $prBuildStatuses"
+          
           echo "Main build statuses: ${mainBuildStatuses[@]}"
           echo "PR build statuses: ${prBuildStatuses[@]}"
           
