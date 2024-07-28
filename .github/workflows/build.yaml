@@ -142,7 +142,7 @@ jobs:
         run: |
           STATUS="succeeded"
           echo "STATUS : ${{ needs.build.result }}"
-          if [ "${{ needs.build.result }}" = "failure" ]; then
+          if [ "$STATUS" = "failure" ] || [ "$STATUS" = "cancelled" ]; then
             STATUS="failed"
             echo "status=failed" >> $GITHUB_OUTPUT
           fi

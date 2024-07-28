@@ -40,8 +40,9 @@ jobs:
             number=$(echo "$pr" | jq -r '.number')
           
             url="${{ env.API_URL }}/$number"
+            mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
 
-          if [[ "$mergeable_state" != "dirty" ]]; then
+            if [[ "$mergeable" != "false" ]]; then
             pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
             mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
             echo "Mergeable: $mergeable"
