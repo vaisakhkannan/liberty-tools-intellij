@@ -108,10 +108,12 @@ jobs:
           prBuildStatuses=()
           
           for status in "${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"; do
+            echo "$status"
             mainBuildStatuses+=("$status")
           done
           
           for status in "${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}"; do
+            echo "$status"
             prBuildStatuses+=("$status")
           done
           
