@@ -132,9 +132,6 @@ jobs:
 
   build-status:
     runs-on: ubuntu-latest
-    env:
-      LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
-      REF_LTI_TAG: ${{ inputs.refLTITag || 'default' }}
     outputs:
       status: ${{ steps.status.outputs.status }}
     needs: build
@@ -143,5 +140,10 @@ jobs:
       - name: Fetch Build Status
         id: status
         run: |
+          STATUS="succeeded"
           echo "STATUS : ${{ needs.build.result }}"
-          echo "${{ env.LSP4IJ_BRANCH }}-${{ env.REF_LTI_TAG }}=${{ needs.build.result }}" >> $GITHUB_OUTPUT
+          if [ "${{ needs.build.result }}" = "failure" ]; then
+            STATUS="failed"
+            echo "status=failed" >> $GITHUB_OUTPUT
+          fi
+          echo "Final status: $STATUS"

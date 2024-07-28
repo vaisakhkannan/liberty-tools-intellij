@@ -99,77 +99,24 @@ jobs:
       refLTITag: ${{ matrix.tag }}
     name: Run LTI tests for Lsp4ij Main branch
 
-  # Run the LTI Tests against lsp4ij main branch
-  job2:
-    runs-on: ubuntu-latest
-    needs: call-build-workflow-for-lsp4ij-main-branch
-    strategy:
-      fail-fast: false
-      matrix:
-        # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array
-        tag: [ 'v0.0.0.3','main' ]
-    if: always()
-    steps:
-      - name: Fetch Status
-        run: |
-          STATUS="succeeded"
-          JOB2_STATUS+="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.main-${{ matrix.tag }} }}"
-          
-          echo "$JOB2_STATUS"
-
-          if [ "$JOB2_STATUS" = "failure" ]; then
-            STATUS="failed"
-          fi
-
-          echo "Final status: $STATUS"
-          echo "status1=$STATUS" >> $GITHUB_OUTPUT
-    name: Run Status for Lsp4ij Main branch
-
-  # Run the LTI Tests against lsp4ij main branch
-  job3:
-    runs-on: ubuntu-latest
-    needs: [ call-build-workflow-for-lsp4ij-main-branch, fetch_all_pull_request_shas ]
-    strategy:
-      fail-fast: false
-      matrix:
-        # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array
-        tag: [ 'v0.0.0.3','main' ]
-        pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
-    if: always()
-    steps:
-      - name: Fetch Status
-        run: |
-          STATUS="succeeded"
-          JOB3_STATUS+="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.PR-${{ matrix.pr_details.number }}-${{ matrix.tag }} }}"
-          
-          echo "$JOB2_STATUS"
-
-          if [ "$JOB3_STATUS" = "failure" ]; then
-            STATUS="failed"
-          fi
-
-          echo "Final status: $STATUS"
-          echo "status2=$STATUS" >> $GITHUB_OUTPUT
-    name: Run Status for Lsp4ij Main branch
-
   call-build-workflow-slack-notification:
     runs-on: ubuntu-latest
-    needs: [ job2, job3 ]
+    needs: [ call-build-workflow-for-lsp4ij-main-branch, call-build-workflow-for-each-merge-commit-sha ]
     if: always()
     steps:
       - name: Collect Build Statuses
         run: |
           STATUS="succeeded"
-          JOB2_STATUS="${{ needs.job2.outputs.status1 }}"
-          JOB3_STATUS="${{ needs.job3.outputs.status2 }}"
+           JOB2_STATUS="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"
+           JOB3_STATUS="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}"
           
-          if [ "$JOB3_STATUS" = "failed" ] || [ "$JOB2_STATUS" = "failed" ]; then
-            STATUS="failed"
-          fi
+           if [ "$JOB3_STATUS" = "failed" ] || [ "$JOB2_STATUS" = "failed" ]; then
+             STATUS="failed"
+           fi
           
-          echo "Final status: $STATUS"
+           echo "Final status: $STATUS"
           
-          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch *${{ github.ref }}*. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: *$status*\"}" $SLACK_WEBHOOK_URL
+           curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch *${{ github.ref }}*. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: *$STATUS*\"}" $SLACK_WEBHOOK_URL
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Run Slack Notification
