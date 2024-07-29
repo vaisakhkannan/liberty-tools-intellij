@@ -144,6 +144,6 @@ jobs:
           echo "Build STATUS : ${{ needs.build.result }}"
           if [ "${{ needs.build.result }}" = "success" ] && [ "${{ needs.build.result }}" = "success" ]; then
             STATUS="succeeded"
-            echo "status=succeeded" >> $GITHUB_OUTPUT
+            echo "status+=succeeded" >> $GITHUB_OUTPUT
           fi
           echo "Final status: $STATUS"
