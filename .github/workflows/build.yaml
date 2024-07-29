@@ -140,6 +140,28 @@ jobs:
     needs: build
     if: always()
     steps:
+      - name: Check if artifact exists
+        id: check_artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const artifactName = 'homework_pre';
+            const artifacts = await github.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            
+            const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === artifactName);
+            
+            return { artifactExists };
+
+      - name: Download artifact if it exists
+        if: steps.check_artifact.outputs.artifactExists == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: homework_pre
+
       - name: Fetch Build Status
         id: status
         run: |
