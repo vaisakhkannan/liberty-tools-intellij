@@ -102,36 +102,19 @@ jobs:
       refLTITag: ${{ matrix.tag }}
     name: Run LTI tests for Lsp4ij Main branch
 
-  call-build-workflow-slack-notification:
+  matrix-formation:
+    needs: fetch_all_pull_request_shas
+    if: ${{ needs.fetch_all_pull_request_shas.outputs.is_empty == 'false' }}
     runs-on: ubuntu-latest
-    needs: [ call-build-workflow-for-lsp4ij-main-branch, call-build-workflow-for-each-merge-commit-sha ]
-    if: always()
-    steps:
-      - name: Collect Build Statuses
-        run: |
-          JOB2_STATUS1="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status1 }}"
-          JOB2_STATUS2="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status2 }}"
-          JOB3_STATUS1="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status1 }}"
-          JOB3_STATUS2="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status2 }}"
-
-          JOB2_STATUS="failed"
-          if [ "$JOB2_STATUS1" = "succeeded" ] && [ "$JOB2_STATUS2" != "failed" ]; then
-            JOB2_STATUS="succeeded"
-          fi
-
-          JOB3_STATUS="failed"
-          if [ "$JOB3_STATUS1" = "succeeded" ] && [ "$JOB3_STATUS2" != "failed" ]; then
-            JOB3_STATUS="succeeded"
-          fi
-
-          STATUS="failed"
-          if [ "$JOB2_STATUS" = "succeeded" ] && [ "$JOB3_STATUS" = "succeeded" ]; then
-            STATUS="succeeded"
-          fi
-          
-           echo "Final status: $STATUS"
-          
-           curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch *${{ github.ref }}*. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: *$STATUS*\"}" $SLACK_WEBHOOK_URL
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
-    name: Run Slack Notification
+    strategy:
+      fail-fast: false
+      matrix:
+        # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array
+        tag: [ 'main', 'v0.0.0.3' ]
+        pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
+        steps:
+          - name: Collect names
+            run: |
+              JOB2_STATUS="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.${{ matrix.tag }}_PR-${{ matrix.pr_details.number }} }}"
+              echo "$JOB2_STATUS"
+              

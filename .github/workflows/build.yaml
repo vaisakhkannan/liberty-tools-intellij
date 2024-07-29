@@ -132,27 +132,22 @@ jobs:
 
   build-status:
     runs-on: ubuntu-latest
+    env:
+      LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
+      REF_LTI_TAG: ${{ inputs.refLTITag }}
     outputs:
-      status1: ${{ steps.status.outputs.status1 }}
-      status2: ${{ steps.status.outputs.status2 }}
+      ${{ env.REF_LTI_TAG }}_${{ env.LSP4IJ_BRANCH }}: ${{ steps.status.outputs.status }}
     needs: build
     if: always()
     steps:
       - name: Fetch Build Status
         id: status
         run: |
-          STATUS1=""
-          STATUS2=""
+          STATUS="failed"
           echo "Build STATUS : ${{ needs.build.result }}"
           if [ "${{ needs.build.result }}" = "success" ]; then
-            STATUS1="succeeded"
-            echo "status1=succeeded" >> $GITHUB_OUTPUT
+            STATUS="succeeded"
+            echo "status=succeeded" >> $GITHUB_OUTPUT
           fi
-          echo "Final status1: $STATUS1"
-          
-          echo "Build STATUS : ${{ needs.build.result }}"
-          if [ "${{ needs.build.result }}" != "success" ]; then
-            STATUS2="failed"
-            echo "status2=failed" >> $GITHUB_OUTPUT
-          fi
-          echo "Final status2: $STATUS2"
+          echo "status=failed" >> $GITHUB_OUTPUT
+          echo "Final status: $STATUS"
