@@ -109,12 +109,12 @@ jobs:
     steps:
       - name: Collect Build Statuses
         run: |
-          STATUS="succeeded"
+          STATUS="failed"
            JOB2_STATUS="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"
            JOB3_STATUS="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}"
           
-           if [ "$JOB3_STATUS" = "failed" ] || [ "$JOB2_STATUS" = "failed" ]; then
-             STATUS="failed"
+           if [ "$JOB3_STATUS" = "succeeded" ] && [ "$JOB2_STATUS" = "succeeded" ]; then
+             STATUS="succeeded"
            fi
           
            echo "Final status: $STATUS"

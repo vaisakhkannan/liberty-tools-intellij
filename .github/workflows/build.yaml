@@ -140,10 +140,10 @@ jobs:
       - name: Fetch Build Status
         id: status
         run: |
-          STATUS="succeeded"
+          STATUS="failed"
           echo "Build STATUS : ${{ needs.build.result }}"
-          if [ "${{ needs.build.result }}" = "failure" ] || [ "${{ needs.build.result }}" = "cancelled" ]; then
-            STATUS="failed"
-            echo "status=failed" >> $GITHUB_OUTPUT
+          if [ "${{ needs.build.result }}" = "success" ] && [ "${{ needs.build.result }}" = "success" ]; then
+            STATUS="succeeded"
+            echo "status=succeeded" >> $GITHUB_OUTPUT
           fi
           echo "Final status: $STATUS"
