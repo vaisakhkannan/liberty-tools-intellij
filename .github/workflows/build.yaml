@@ -140,13 +140,6 @@ jobs:
     needs: build
     if: always()
     steps:
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v4
-        with:
-          name: homework_pre
-      - shell: bash
-        run: |
-          value=`cat math-homework.txt`
       - name: Fetch Build Status
         id: status
         run: |
@@ -159,6 +152,7 @@ jobs:
                echo "status=succeeded" >> $GITHUB_OUTPUT
           fi
           echo "value : $status" > math-homework.txt
+          echo "cat math-homework.txt"
         shell: bash
       - name: Upload math result for job 1
         uses: actions/upload-artifact@v4
