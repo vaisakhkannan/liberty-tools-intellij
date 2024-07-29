@@ -78,7 +78,7 @@ jobs:
       fail-fast: false
       matrix:
         # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array.
-        tag: [ 'main', 'v0.0.0.3' ] # Can specify tags or branches such as '24.0.6' and 'main'
+        tag: [ 'v0.0.0.1', 'main', 'v0.0.0.3' ] # Can specify tags or branches such as '24.0.6' and 'main'
         pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
     with:
       useLocalPlugin: true
@@ -94,7 +94,7 @@ jobs:
       fail-fast: false
       matrix:
         # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array
-        tag: [ 'main', 'v0.0.0.3' ]
+        tag: [ 'v0.0.0.1', 'main', 'v0.0.0.3' ]
     with:
       useLocalPlugin: true
       refLsp4ij: main
@@ -109,13 +109,27 @@ jobs:
     steps:
       - name: Collect Build Statuses
         run: |
-          STATUS="failed"
-           JOB2_STATUS="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"
-           JOB3_STATUS="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}"
+           JOB2_STATUS1="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status1 }}"
+           JOB2_STATUS2="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status2 }}"
+           JOB3_STATUS1="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status1 }}"
+           JOB3_STATUS2="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status2 }}"
           
-           if [ "$JOB3_STATUS" = "succeeded" ] && [ "$JOB2_STATUS" = "succeeded" ]; then
-             STATUS="succeeded"
-           fi
+          JOB2_STATUS="failed"
+          if [ "$JOB2_STATUS1" = "succeeded" ] && [ "$JOB2_STATUS2" = "succeeded" ]; then
+            JOB2_STATUS="succeeded"
+          fi
+          
+          JOB2_STATUS="failed"
+          if [ "$JOB3_STATUS1" = "succeeded" ] && [ "$JOB2_STATUS2" = "succeeded" ]; then
+            JOB3_STATUS="succeeded"
+          fi
+          
+          STATUS="failed"
+          if [ "$JOB2_STATUS" = "succeeded" ] && [ "$JOB3_STATUS" = "succeeded" ]; then
+            STATUS="succeeded"
+          fi
+          
+          
           
            echo "Final status: $STATUS"
           

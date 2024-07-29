@@ -133,17 +133,26 @@ jobs:
   build-status:
     runs-on: ubuntu-latest
     outputs:
-      status: ${{ steps.status.outputs.status }}
+      status1: ${{ steps.status.outputs.status1 }}
+      status2: ${{ steps.status.outputs.status2 }}
     needs: build
     if: always()
     steps:
       - name: Fetch Build Status
         id: status
         run: |
-          STATUS="failed"
+          STATUS1="failed"
           echo "Build STATUS : ${{ needs.build.result }}"
           if [ "${{ needs.build.result }}" = "success" ] && [ "${{ needs.build.result }}" = "success" ]; then
-            STATUS="succeeded"
-            echo "status+=succeeded" >> $GITHUB_OUTPUT
+            STATUS1="succeeded"
+            echo "status1=succeeded" >> $GITHUB_OUTPUT
           fi
-          echo "Final status: $STATUS"
+          echo "Final status1: $STATUS1"
+          
+          STATUS2="succeeded"
+          echo "Build STATUS : ${{ needs.build.result }}"
+          if [ "${{ needs.build.result }}" = "failure" ] && [ "${{ needs.build.result }}" = "failure" ]; then
+            STATUS1="failed"
+            echo "status2=failed" >> $GITHUB_OUTPUT
+          fi
+          echo "Final status2: $STATUS2"
