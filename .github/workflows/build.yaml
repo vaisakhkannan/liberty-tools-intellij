@@ -142,6 +142,7 @@ jobs:
         id: status
         run: |
           STATUS1="failed"
+          STATUS2="succeeded"
           echo "Build STATUS : ${{ needs.build.result }}"
           if [ "${{ needs.build.result }}" = "success" ] && [ "${{ needs.build.result }}" = "success" ]; then
             STATUS1="succeeded"
@@ -149,10 +150,9 @@ jobs:
           fi
           echo "Final status1: $STATUS1"
           
-          STATUS2="succeeded"
           echo "Build STATUS : ${{ needs.build.result }}"
           if [ "${{ needs.build.result }}" = "failure" ] && [ "${{ needs.build.result }}" = "failure" ]; then
-            STATUS1="failed"
+            STATUS2="failed"
             echo "status2=failed" >> $GITHUB_OUTPUT
           fi
           echo "Final status2: $STATUS2"
