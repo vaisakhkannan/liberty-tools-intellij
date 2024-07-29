@@ -129,15 +129,16 @@ jobs:
           name: ${{ matrix.reportName }}
           path: |
             liberty-tools-intellij/build/reports/
+      - name : 'Collect values'
+        run: |
+          echo "LTI="${{ env.REF_LTI_TAG }}" >> $GITHUB_OUTPUT
+          echo "lsp4ij-branch="${{ env.LSP4IJ_BRANCH }}" >> $GITHUB_OUTPUT
 
   build-status:
     runs-on: ubuntu-latest
-    env:
-      LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
-      REF_LTI_TAG: ${{ inputs.refLTITag }}
-    outputs:
-      ${{ env.REF_LTI_TAG }}_${{ env.LSP4IJ_BRANCH }}: ${{ steps.status.outputs.status }}
     needs: build
+    outputs:
+      ${{ needs.build.outputs.LTI }}_${{ needs.build.outputs.lsp4ij-branch }}: ${{ steps.status.outputs.status }}
     if: always()
     steps:
       - name: Fetch Build Status

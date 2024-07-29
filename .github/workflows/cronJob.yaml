@@ -112,9 +112,8 @@ jobs:
         # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array
         tag: [ 'main', 'v0.0.0.3' ]
         pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
-        steps:
-          - name: Collect names
-            run: |
-              JOB2_STATUS="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.${{ matrix.tag }}_PR-${{ matrix.pr_details.number }} }}"
-              echo "$JOB2_STATUS"
-              
+    steps:
+      - name: Collect names
+        run: |
+          JOB2_STATUS="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.${{ matrix.tag }}_PR-${{ matrix.pr_details.number }} }}"
+          echo "$JOB2_STATUS"
