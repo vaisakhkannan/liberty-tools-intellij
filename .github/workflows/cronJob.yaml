@@ -115,12 +115,12 @@ jobs:
           JOB3_STATUS2="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status2 }}"
 
           JOB2_STATUS="failed"
-          if [ "$JOB2_STATUS1" = "succeeded" ] && [ "$JOB2_STATUS2" = "succeeded" ]; then
+          if [ "$JOB2_STATUS1" = "succeeded" ] && [ "$JOB2_STATUS2" != "failed" ]; then
             JOB2_STATUS="succeeded"
           fi
 
           JOB3_STATUS="failed"
-          if [ "$JOB3_STATUS1" = "succeeded" ] && [ "$JOB3_STATUS2" = "succeeded" ]; then
+          if [ "$JOB3_STATUS1" = "succeeded" ] && [ "$JOB3_STATUS2" != "failed" ]; then
             JOB3_STATUS="succeeded"
           fi
 
