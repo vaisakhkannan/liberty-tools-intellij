@@ -70,6 +70,9 @@ jobs:
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
+    outputs:
+      LTI: ${{ steps.extract.outputs.LTI }}
+      lsp4ij-branch: ${{ steps.extract.outputs.lsp4ij-branch }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
@@ -130,6 +133,7 @@ jobs:
           path: |
             liberty-tools-intellij/build/reports/
       - name : 'Collect values'
+        id: extract
         run: |
           echo "LTI="${{ env.REF_LTI_TAG }}" >> $GITHUB_OUTPUT
           echo "lsp4ij-branch="${{ env.LSP4IJ_BRANCH }}" >> $GITHUB_OUTPUT
