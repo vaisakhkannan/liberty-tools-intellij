@@ -71,7 +71,7 @@ jobs:
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     outputs:
-      lti: ${{ steps.extract.outputs.LTI }}
+      lti: ${{ steps.extract.outputs.lti }}
       lsp4ij-branch: ${{ steps.extract.outputs.lsp4ij-branch }}
     steps:
       - name: Configure pagefile
@@ -135,7 +135,7 @@ jobs:
       - name : 'Collect values'
         id: extract
         run: |
-          echo "LTI="${{ env.REF_LTI_TAG }}" >> $GITHUB_OUTPUT
+          echo "lti="${{ env.REF_LTI_TAG }}" >> $GITHUB_OUTPUT
           echo "lsp4ij-branch="${{ env.LSP4IJ_BRANCH }}" >> $GITHUB_OUTPUT
 
   build-status:
