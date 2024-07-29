@@ -109,27 +109,25 @@ jobs:
     steps:
       - name: Collect Build Statuses
         run: |
-           JOB2_STATUS1="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status1 }}"
-           JOB2_STATUS2="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status2 }}"
-           JOB3_STATUS1="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status1 }}"
-           JOB3_STATUS2="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status2 }}"
-          
+          JOB2_STATUS1="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status1 }}"
+          JOB2_STATUS2="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status2 }}"
+          JOB3_STATUS1="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status1 }}"
+          JOB3_STATUS2="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status2 }}"
+
           JOB2_STATUS="failed"
           if [ "$JOB2_STATUS1" = "succeeded" ] && [ "$JOB2_STATUS2" = "succeeded" ]; then
             JOB2_STATUS="succeeded"
           fi
-          
-          JOB2_STATUS="failed"
-          if [ "$JOB3_STATUS1" = "succeeded" ] && [ "$JOB2_STATUS2" = "succeeded" ]; then
+
+          JOB3_STATUS="failed"
+          if [ "$JOB3_STATUS1" = "succeeded" ] && [ "$JOB3_STATUS2" = "succeeded" ]; then
             JOB3_STATUS="succeeded"
           fi
-          
+
           STATUS="failed"
           if [ "$JOB2_STATUS" = "succeeded" ] && [ "$JOB3_STATUS" = "succeeded" ]; then
             STATUS="succeeded"
           fi
-          
-          
           
            echo "Final status: $STATUS"
           
