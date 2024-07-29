@@ -71,7 +71,7 @@ jobs:
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     outputs:
-      LTI: ${{ steps.extract.outputs.LTI }}
+      lti: ${{ steps.extract.outputs.LTI }}
       lsp4ij-branch: ${{ steps.extract.outputs.lsp4ij-branch }}
     steps:
       - name: Configure pagefile
@@ -142,7 +142,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     outputs:
-      ${{ needs.build.outputs.LTI }}_${{ needs.build.outputs.lsp4ij-branch }}: ${{ steps.status.outputs.status }}
+      ${{ needs.build.outputs.lti }}_${{ needs.build.outputs.lsp4ij-branch }}: ${{ steps.status.outputs.status }}
     if: always()
     steps:
       - name: Fetch Build Status
