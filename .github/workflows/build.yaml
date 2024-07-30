@@ -133,11 +133,8 @@ jobs:
           path: |
             liberty-tools-intellij/build/reports/
 
-
   build-status:
     runs-on: ubuntu-latest
-    outputs:
-      status: ${{ steps.status.outputs.status }}
     needs: build
     if: always()
     steps:
@@ -154,14 +151,13 @@ jobs:
 
             const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === artifactName);
 
-            return { artifactExists };
+            return { artifactExists: artifactExists ? 'true' : 'false' };
 
       - name: Download artifact if it exists
         if: steps.check_artifact.outputs.artifactExists == 'true'
         uses: actions/download-artifact@v3
         with:
           name: homework_pre
-          path: math-homework.txt
 
       - name: Fetch Build Status
         id: status
@@ -172,14 +168,17 @@ jobs:
           else
             status="succeeded"
           fi
-          echo "status=$status" >> $GITHUB_ENV
-          echo "value : $status" >> math-homework.txt
-          cat math-homework.txt
-        shell: bash
+          echo "status=$status" >> $GITHUB_OUTPUT
 
-      - name: Append value to file
-        run: |
-          echo "value : ${{ env.status }}" >> math-homework.txt
+          if [[ -f math-homework.txt ]]; then
+            echo "Appending to existing file"
+          else
+            echo "Creating new file"
+          fi
+
+          echo "value : $status" >> math-homework.txt  # Append the status to the file
+          cat math-homework.txt  # Display the contents of the file
+        shell: bash
 
       - name: Print file contents
         run: |
