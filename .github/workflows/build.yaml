@@ -161,6 +161,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: homework_pre
+          path: math-homework.txt
 
       - name: Fetch Build Status
         id: status
