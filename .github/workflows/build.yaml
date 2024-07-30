@@ -148,3 +148,22 @@ jobs:
 #        env:
 #          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
 #        shell: bash
+
+
+
+
+#    build-status:
+#      runs-on: ubuntu-latest
+#      outputs:
+#        status: ${{ steps.status.outputs.status }}
+#      needs: build
+#      if: always()
+#      steps:
+#        - id: status
+#          run: |
+#            if [ ${{ needs.build.result }} != "success" ]; then
+#                 echo "status=failed" >> $GITHUB_OUTPUT
+#            else
+#                 echo "status=succeeded" >> $GITHUB_OUTPUT
+#            fi
+#          shell: bash
