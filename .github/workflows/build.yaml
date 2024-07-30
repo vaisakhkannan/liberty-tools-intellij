@@ -171,7 +171,7 @@ jobs:
             status="succeeded"
           fi
           echo "status=$status" >> $GITHUB_OUTPUT
-          echo "value : $status" > math-homework.txt
+          echo "value : $status" >> math-homework.txt
           cat math-homework.txt
         shell: bash
 
