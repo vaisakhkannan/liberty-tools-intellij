@@ -26,6 +26,9 @@ on:
       status:
         description: "Build Status"
         value: ${{ jobs.build-status.outputs.status }}
+    secrets:
+      token:
+        required: true
   workflow_dispatch:
     inputs:
       useLocalPlugin:
