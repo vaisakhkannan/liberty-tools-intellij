@@ -14,7 +14,7 @@ jobs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
       is_empty: ${{ steps.extract.outputs.is_empty }}
     env:
-      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
     name: PR Details
     steps:
       - name: Extract PR numbers and merge_commit_shas
@@ -63,14 +63,14 @@ jobs:
               attempts=$((attempts + 1))
             done
           
-            if [[ "$mergeable" = "true" ]]; then
+            if [[ "$mergeable" != "null" ]]; then
             pr_number=$(jq -r '.number' <<< "$pr_detail")
             pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
             pr_link=$(jq -r '.html_url' <<< "$pr_detail")
             valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
-          else
-            echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
-          fi
+          # else
+          #  echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
+          # fi
           done
           
           # Create a JSON string from the array
@@ -121,3 +121,26 @@ jobs:
       lsp4ijBranch: main
       refLTITag: ${{ matrix.tag }}
     name: Run LTI tests for Lsp4ij Main branch
+
+  # Send slack notification for build results
+  call-build-workflow-slack-notification:
+    runs-on: ubuntu-latest
+    needs: [ call-build-workflow-for-lsp4ij-main-branch, call-build-workflow-for-each-merge-commit-sha ]
+    if: always()
+    steps:
+      - name: Send Slack Notification
+        run: |
+          STATUS="succeeded"
+          JOB2_STATUS="${{ needs.call-build-workflow-for-lsp4ij-main-branch.outputs.status }}"
+          JOB3_STATUS="${{ needs.call-build-workflow-for-each-merge-commit-sha.outputs.status }}"
+
+          if [ "$JOB3_STATUS" = "failed" ] || [ "$JOB2_STATUS" = "failed" ]; then
+            STATUS="failed"
+          fi
+
+          echo "Final status: $STATUS"
+
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
+    name: Run Slack Notification
