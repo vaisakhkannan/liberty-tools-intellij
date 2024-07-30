@@ -53,7 +53,7 @@ jobs:
               pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
               # echo "PR Detail (Attempt $((attempts+1))): $pr_detail"
               mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
-              echo "PR $number Mergeable value now : $mergeable"
+              echo "PR Number $number Mergeable value now : $mergeable"
             
               if [[ "$mergeable" == "null" ]]; then
               echo "Mergeable status is null, retrying in 5 seconds..."
