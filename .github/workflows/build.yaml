@@ -26,8 +26,6 @@ on:
       status:
         description: "Build Status"
         value: ${{ jobs.build-status.outputs.status }}
-    secrets:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
   workflow_dispatch:
     inputs:
       useLocalPlugin:

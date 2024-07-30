@@ -15,7 +15,6 @@ jobs:
       is_empty: ${{ steps.extract.outputs.is_empty }}
     env:
       API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: PR Details
     steps:
       - name: Extract PR numbers and merge_commit_shas
@@ -122,7 +121,8 @@ jobs:
       refLsp4ij: main
       lsp4ijBranch: main
       refLTITag: ${{ matrix.tag }}
-    secrets: inherit
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Run LTI tests for Lsp4ij Main branch
 
 #  # Send slack notification for build results
