@@ -133,6 +133,7 @@ jobs:
           path: |
             liberty-tools-intellij/build/reports/
 
+
   build-status:
     runs-on: ubuntu-latest
     outputs:
@@ -150,9 +151,9 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const artifacts = await github.request(`GET /repos/${owner}/${repo}/actions/runs/${run_id}/artifacts`);
-            
+
             const artifactExists = artifacts.data.artifacts.some(artifact => artifact.name === artifactName);
-            
+
             return { artifactExists };
 
       - name: Download artifact if it exists
@@ -170,9 +171,14 @@ jobs:
           else
             status="succeeded"
           fi
-          echo "status=$status" >> $GITHUB_OUTPUT
-          echo "value : $status" >> math-homework.txt  # Append instead of overwrite
+          echo "status=$status" >> $GITHUB_ENV
+          echo "value : $status" > math-homework.txt
+          cat math-homework.txt
         shell: bash
+
+      - name: Append value to file
+        run: |
+          echo "value : ${{ env.status }}" >> math-homework.txt
 
       - name: Print file contents
         run: |
@@ -184,4 +190,3 @@ jobs:
         with:
           name: homework_pre
           path: math-homework.txt
-
