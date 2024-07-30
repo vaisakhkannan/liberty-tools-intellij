@@ -51,7 +51,7 @@ jobs:
             # Retry loop for checking mergeability
             while [[ "$mergeable" == "null" && $attempts -lt $max_attempts ]]; do
               pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
-              echo "PR Detail (Attempt $((attempts+1))): $pr_detail"
+              # echo "PR Detail (Attempt $((attempts+1))): $pr_detail"
               mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
               echo "Mergeable: $mergeable"
             
