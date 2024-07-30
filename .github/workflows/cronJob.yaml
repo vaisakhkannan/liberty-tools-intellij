@@ -63,14 +63,14 @@ jobs:
               attempts=$((attempts + 1))
             done
           
-            #  if [[ "$mergeable" != "null" ]]; then
+            if [[ "$mergeable" != "null" ]]; then
             pr_number=$(jq -r '.number' <<< "$pr_detail")
             pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
             pr_link=$(jq -r '.html_url' <<< "$pr_detail")
             valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
-          # else
-          #  echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
-          # fi
+          else
+            echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
+          fi
           done
           
           # Create a JSON string from the array
@@ -98,7 +98,7 @@ jobs:
       fail-fast: false
       matrix:
         # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array.
-        tag: [ 'main', 'v0.0.0.3' ] # Can specify tags or branches such as '24.0.6' and 'main'
+        tag: [ 'main' ] # Can specify tags or branches such as '24.0.6' and 'main'
         pr_details: ${{ fromJson(needs.fetch_all_pull_request_shas.outputs.pr_details) }}
     with:
       useLocalPlugin: true
@@ -114,7 +114,7 @@ jobs:
       fail-fast: false
       matrix:
         # Existing LTI release tags and branches can be added to obtain build results.If the tag array is empty, it will default to 'main'. However, if there is at least one tag or branch in the tag array and you need to run on 'main' as well, make sure to add 'main' to the array
-        tag: [ 'main', 'v0.0.0.3' ]
+        tag: [ 'main' ]
     with:
       useLocalPlugin: true
       refLsp4ij: main
