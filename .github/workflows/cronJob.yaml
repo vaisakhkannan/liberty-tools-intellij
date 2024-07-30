@@ -38,6 +38,7 @@ jobs:
           
             # Extract PR number
             number=$(echo "$pr" | jq -r '.number')
+            echo "Number: $number"
           
             url="${{ env.API_URL }}/$number"
             # pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
