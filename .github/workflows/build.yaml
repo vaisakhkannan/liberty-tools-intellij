@@ -27,7 +27,7 @@ on:
         description: "Build Status"
         value: ${{ jobs.build-status.outputs.status }}
     secrets:
-      token:
+      SLACK_WEBHOOK_URL:
         required: true
   workflow_dispatch:
     inputs:
