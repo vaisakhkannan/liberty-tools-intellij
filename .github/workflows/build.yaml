@@ -166,15 +166,15 @@ jobs:
         run: |
           status=""
           if [ ${{ needs.build.result }} != "success" ]; then
-               status="failed"
-               echo "status=failed" >> $GITHUB_OUTPUT
+            status="failed"
           else
-               status="succeeded"
-               echo "status=succeeded" >> $GITHUB_OUTPUT
+            status="succeeded"
           fi
+          echo "status=$status" >> $GITHUB_OUTPUT
           echo "value : $status" > math-homework.txt
-          echo "cat math-homework.txt"
+          cat math-homework.txt
         shell: bash
+
       - name: Upload math result for job 1
         uses: actions/upload-artifact@v3
         with:
