@@ -14,7 +14,7 @@ jobs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
       is_empty: ${{ steps.extract.outputs.is_empty }}
     env:
-      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
     name: PR Details
     steps:
       - name: Extract PR numbers and merge_commit_shas
@@ -46,7 +46,7 @@ jobs:
           
             mergeable=null
             attempts=0
-            max_attempts=1
+            max_attempts=5
             
             # Retry loop for checking mergeability
             while [[ "$mergeable" == "null" && $attempts -lt $max_attempts ]]; do
@@ -147,7 +147,7 @@ jobs:
 
           echo "Final status: $STATUS"
 
-          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch ${{ github.ref }}. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: $STATUS\"}" $SLACK_WEBHOOK_URL
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"Workflow ${{ github.workflow }} triggered by branch *${{ github.ref }}*. Build results: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Status: *$STATUS*\"}" $SLACK_WEBHOOK_URL
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Run Slack Notification
