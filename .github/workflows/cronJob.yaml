@@ -71,7 +71,7 @@ jobs:
             pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
             pr_link=$(jq -r '.html_url' <<< "$pr_detail")
             valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
-            elif [[ "$mergeable" = "false" ]]; then
+            else
               echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
             fi
           done
