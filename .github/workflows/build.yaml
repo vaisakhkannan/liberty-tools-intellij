@@ -66,9 +66,6 @@ jobs:
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
-    outputs:
-      lti: ${{ steps.extract.outputs.lti }}
-      lsp4ij-branch: ${{ steps.extract.outputs.lsp4ij-branch }}
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')

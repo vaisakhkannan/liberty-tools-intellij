@@ -123,8 +123,6 @@ jobs:
       refLsp4ij: main
       lsp4ijBranch: main
       refLTITag: ${{ matrix.tag }}
-    secrets:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_COPY }}
     name: Run LTI tests for Lsp4ij Main branch
 
   # Send slack notification for build results
