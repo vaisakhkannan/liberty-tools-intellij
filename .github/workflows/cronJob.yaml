@@ -46,7 +46,7 @@ jobs:
           
             mergeable=null
             attempts=0
-            max_attempts=2
+            max_attempts=1
             
             # Retry loop for checking mergeability
             while [[ "$mergeable" == "null" && $attempts -lt $max_attempts ]]; do
