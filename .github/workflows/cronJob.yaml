@@ -46,7 +46,7 @@ jobs:
           
             mergeable=null
             attempts=0
-            max_attempts=2
+            max_attempts=1
             
             # Retry loop for checking mergeability
             while [[ "$mergeable" == "null" && $attempts -lt $max_attempts ]]; do
@@ -64,16 +64,16 @@ jobs:
             done
           
             if [[ "$mergeable" = "null" ]]; then
-              echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has Mergeable value 'null'. See : $(jq -r '.html_url' <<< "$pr_detail")"
+              echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") still has Mergeable value of 'null' after $max_attempts attempts."
             fi
             if [[ "$mergeable" != "false" ]]; then
             pr_number=$(jq -r '.number' <<< "$pr_detail")
             pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
             pr_link=$(jq -r '.html_url' <<< "$pr_detail")
             valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
-          else
-            echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
-          fi
+            elif [[ "$mergeable" = "false" ]]; then
+              echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
+            fi
           done
           
           # Create a JSON string from the array
