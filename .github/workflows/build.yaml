@@ -69,7 +69,7 @@ jobs:
     steps:
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
-        uses: al-cheb/configure-pagefile-action@v1.2
+        uses: al-cheb/configure-pagefile-action@v1.4
         with:
           minimum-size: 8GB
           maximum-size: 10GB
@@ -120,7 +120,7 @@ jobs:
         run: bash ./src/test/resources/ci/scripts/run.sh
       - name: 'Archive Test logs and reports'
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.4
         with:
           name: ${{ matrix.reportName }}
           path: |
