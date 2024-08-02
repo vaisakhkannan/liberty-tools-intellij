@@ -75,7 +75,7 @@ jobs:
           maximum-size: 10GB
           disk-root: "C:"
       - name: 'Checkout liberty-tools-intellij'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: liberty-tools-intellij
           ref: ${{ env.REF_LTI_TAG }}
@@ -86,7 +86,7 @@ jobs:
       # Checkout and build lsp4ij only if USE_LOCAL_PLUGIN is true
       - name: 'Checkout lsp4ij'
         if: ${{ inputs.useLocalPlugin == true }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: redhat-developer/lsp4ij
           path: lsp4ij
