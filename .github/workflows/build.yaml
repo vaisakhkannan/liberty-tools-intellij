@@ -13,16 +13,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest ]
-        iteration: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
         include:
-          - os: windows-latest
+          - os: windows-2019
             iteration: 1
             reportName: windows-test-report-1
-          - os: windows-latest
+          - os: windows-2019
             iteration: 2
             reportName: windows-test-report-2
-          - os: windows-latest
+          - os: windows-2019
             iteration: 3
             reportName: windows-test-report-3
           - os: windows-latest
