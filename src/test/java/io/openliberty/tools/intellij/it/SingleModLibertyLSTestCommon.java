@@ -355,8 +355,8 @@ public abstract class SingleModLibertyLSTestCommon {
     public void testDiagnosticInBootstrapProperties() {
         String configNameSnippet = "com.ibm.ws.logging.con";
         String configNameChooserSnippet = "format";
-        String incorrectValue = "none";
-        String expectedHoverData = "The value `none` is not valid for the property `com.ibm.ws.logging.console.format`.";
+        String incorrectValue = "NONE";
+        String expectedHoverData = "The value `NONE` is not valid for the property `com.ibm.ws.logging.console.format`.";
 
         // get focus on bootstrap.properties tab prior to copy
         UIBotTestUtils.clickOnFileTab(remoteRobot, "bootstrap.properties");
@@ -368,7 +368,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.insertConfigIntoConfigFile(remoteRobot, "bootstrap.properties", configNameSnippet, configNameChooserSnippet, incorrectValue, false);
 
             //move cursor to hover point
-            UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, "none", "bootstrap.properties", UIBotTestUtils.PopupType.DIAGNOSTIC);
+            UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, "NONE", "bootstrap.properties", UIBotTestUtils.PopupType.DIAGNOSTIC);
             String foundHoverData = UIBotTestUtils.getHoverStringData(remoteRobot, UIBotTestUtils.PopupType.DIAGNOSTIC);
             TestUtils.validateHoverData(expectedHoverData, foundHoverData);
         } finally {
