@@ -785,7 +785,7 @@ public class UIBotTestUtils {
             error = null;
             try {
                 // move the cursor to the origin of the editor
-                goToLineAndColumn(remoteRobot, keyboard, 1, 1);
+                goToLineAndColumn(remoteRobot, keyboard, 2, 1);
 
                 // Find the target text on the editor and move the move to it.
                 editorNew.findText(contains(hoverTarget)).moveMouse();
