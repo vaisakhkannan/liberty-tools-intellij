@@ -338,7 +338,7 @@ public abstract class SingleModLibertyLSTestCommon {
 //            UIBotTestUtils.closeFileEditorTab(remoteRobot, "server.env", "5");
 //            UIBotTestUtils.openFile(remoteRobot, projectName, "server.env", projectName, "src", "main", "liberty", "config");
 
-            TestUtils.sleepAndIgnoreException(5);
+            TestUtils.sleepAndIgnoreException(10);
 
             //move cursor to hover point
             UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, "NONE", "server.env", UIBotTestUtils.PopupType.DIAGNOSTIC);
