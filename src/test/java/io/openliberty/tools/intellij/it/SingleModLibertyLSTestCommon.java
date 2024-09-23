@@ -324,8 +324,8 @@ public abstract class SingleModLibertyLSTestCommon {
     public void testDiagnosticInServerEnv() {
         String envCfgSnippet = "WLP_LOGGING_CON";
         String envCfgNameChooserSnippet = "FORMAT";
-        String incorrectValue = "none";
-        String expectedHoverData = "The value `none` is not valid for the variable `WLP_LOGGING_CONSOLE_FORMAT`.";
+        String incorrectValue = "NONE";
+        String expectedHoverData = "The value `NONE` is not valid for the variable `WLP_LOGGING_CONSOLE_FORMAT`.";
 
         // get focus on server.env tab prior to copy
         UIBotTestUtils.clickOnFileTab(remoteRobot, "server.env");
@@ -335,8 +335,10 @@ public abstract class SingleModLibertyLSTestCommon {
 
         try {
             UIBotTestUtils.insertConfigIntoConfigFile(remoteRobot, "server.env", envCfgSnippet, envCfgNameChooserSnippet, incorrectValue, false);
+            UIBotTestUtils.closeFileEditorTab(remoteRobot, "server.env", "5");
+            UIBotTestUtils.openFile(remoteRobot, projectName, "server.env", projectName, "src", "main", "liberty", "config");
             //move cursor to hover point
-            UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, "none", "server.env", UIBotTestUtils.PopupType.DIAGNOSTIC);
+            UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, "NONE", "server.env", UIBotTestUtils.PopupType.DIAGNOSTIC);
             String foundHoverData = UIBotTestUtils.getHoverStringData(remoteRobot, UIBotTestUtils.PopupType.DIAGNOSTIC);
             TestUtils.validateHoverData(expectedHoverData, foundHoverData);
 
