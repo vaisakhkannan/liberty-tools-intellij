@@ -1094,15 +1094,12 @@ public class UIBotTestUtils {
 
                 // now choose the specific item based on the chooser string
                 namePopupWindow.findText(contains(configNameChooserSnippet)).doubleClick();
-                TestUtils.sleepAndIgnoreException(2);
 
                 keyboard.hotKey(VK_END);
                 keyboard.enterText("=");
-                TestUtils.sleepAndIgnoreException(2);
                 keyboard.hotKey(VK_END);
 
                 keyboard.enterText(configValueSnippet);
-                TestUtils.sleepAndIgnoreException(2);
 
                 if (completeWithPopup) {
                     // Select the appropriate value completion suggestion in the pop-up window that is automatically
@@ -1124,7 +1121,6 @@ public class UIBotTestUtils {
                     // linux + windows
                     keyboard.hotKey(VK_CONTROL, VK_S);
                 }
-                TestUtils.sleepAndIgnoreException(2);
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
