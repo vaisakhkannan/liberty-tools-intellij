@@ -1078,7 +1078,7 @@ public class UIBotTestUtils {
                 // we will put new config at the end of the config file
                 // (after the last line already in the file)
                 keyboard.hotKey(VK_CONTROL, VK_END);
-                keyboard.enter();
+//                keyboard.enter();
 
                 keyboard.enterText(configNameSnippet);
 

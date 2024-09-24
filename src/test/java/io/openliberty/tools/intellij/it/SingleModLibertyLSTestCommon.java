@@ -2,6 +2,7 @@ package io.openliberty.tools.intellij.it;
 
 import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
+import com.intellij.remoterobot.fixtures.ComponentFixture;
 import com.intellij.remoterobot.fixtures.JTreeFixture;
 import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
@@ -332,6 +333,18 @@ public abstract class SingleModLibertyLSTestCommon {
 
         // Save the current server.env content.
         UIBotTestUtils.copyWindowContent(remoteRobot);
+
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
+        ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
+        editMenuEntry.click();
+        ComponentFixture slectAllEntry = projectFrame.getActionMenuItem("Select All");
+        slectAllEntry.click();
+
+        // Copy the content.
+        editMenuEntry.click();
+        ComponentFixture copyEntry = projectFrame.getActionMenuItem("Delete");
+        copyEntry.click();
+        projectFrame.click();
 
         try {
             UIBotTestUtils.insertConfigIntoConfigFile(remoteRobot, "server.env", envCfgSnippet, envCfgNameChooserSnippet, incorrectValue, false);
