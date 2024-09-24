@@ -212,8 +212,8 @@ public abstract class SingleModLibertyLSTestCommon {
     @Test
     @Video
     public void testServerEnvCfgHover() {
-        String testHoverTarget = "LOGLEVEL";
-        String hoverExpectedOutcome = "This setting controls the granularity of messages that go to the console. The valid values are INFO, AUDIT, WARNING, ERROR, and OFF. The default is AUDIT. If using with the Eclipse developer tools this must be set to the default.";
+        String testHoverTarget = "FORMAT";
+        String hoverExpectedOutcome = "This setting specifies the required format for the console. Valid values are dev, simple, or json format. By default, consoleFormat is set to dev.";
 
         //mover cursor to hover point
         UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, testHoverTarget, "server.env", UIBotTestUtils.PopupType.DOCUMENTATION);
