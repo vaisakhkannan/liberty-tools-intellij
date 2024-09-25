@@ -13,7 +13,7 @@ The job `call-build-workflow-slack-notification` runs after the jobs `call-build
     - Retrieve the result of the **LSP4IJ main** branch build and the result of the **LSP4IJ PR** builds .
     - If all builds are successful, the build status will be `Success`. If any build fails, the build status will be `Failure`.
 * **Send Slack Notification**:
-  - The workflow uses curl to send a POST request to the `Slack webhook URL` with the build results.The message contains: the `workflow name`, the `branch` that triggered the workflow, a `link` to the workflow run on GitHub. The final status of the build.
+  - The workflow uses curl to send a POST request to the `Slack webhook URL` with the build results.The message contains: the `workflow name`, the `branch` that triggered the workflow, a `link` to the workflow run on GitHub and the `final status` of the build.
 
 By following these steps, this job ensures that a notification is sent to Slack about the status of the build process, indicating whether it succeeded or failed.
 
