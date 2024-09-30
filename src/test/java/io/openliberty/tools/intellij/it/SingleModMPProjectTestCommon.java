@@ -77,8 +77,6 @@ public abstract class SingleModMPProjectTestCommon {
         Keyboard keyboard = new Keyboard(remoteRobot);
         keyboard.enterText("mvn clean");
         keyboard.enter();
-        keyboard.enterText("gradle clean");
-        keyboard.enter();
         UIBotTestUtils.closeLibertyToolWindow(remoteRobot);
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
