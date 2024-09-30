@@ -11,6 +11,7 @@ package io.openliberty.tools.intellij.it;
 
 import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
+import com.intellij.remoterobot.utils.Keyboard;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -72,6 +73,11 @@ public abstract class SingleModMPProjectTestCommon {
      * Close project.
      */
     protected static void closeProjectView() {
+        Keyboard keyboard = new Keyboard(remoteRobot);
+        keyboard.enterText("mvn clean");
+        keyboard.enter();
+        keyboard.enterText("gradle clean");
+        keyboard.enter();
         UIBotTestUtils.closeLibertyToolWindow(remoteRobot);
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
