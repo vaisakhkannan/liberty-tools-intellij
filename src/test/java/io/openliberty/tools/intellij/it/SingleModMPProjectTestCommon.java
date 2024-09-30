@@ -73,6 +73,7 @@ public abstract class SingleModMPProjectTestCommon {
      * Close project.
      */
     protected static void closeProjectView() {
+        // clean
         Keyboard keyboard = new Keyboard(remoteRobot);
         keyboard.enterText("mvn clean");
         keyboard.enter();
