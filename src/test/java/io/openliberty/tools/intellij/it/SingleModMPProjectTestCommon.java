@@ -11,8 +11,10 @@ package io.openliberty.tools.intellij.it;
 
 import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
+import com.intellij.remoterobot.fixtures.ActionButtonFixture;
 import com.intellij.remoterobot.fixtures.ComponentFixture;
 import com.intellij.remoterobot.utils.Keyboard;
+import com.intellij.remoterobot.utils.WaitForConditionTimeoutException;
 import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.junit.jupiter.api.*;
@@ -93,10 +95,14 @@ public abstract class SingleModMPProjectTestCommon {
         terminal.rightClick();
         ComponentFixture openFixtureCopy = projectFrame.getActionMenuItem("Copy");
         openFixtureCopy.click(new Point());
+        terminal.rightClick();
+        ComponentFixture openFixtureNewTab = projectFrame.getActionMenuItem("New Tab");
+        openFixtureNewTab.click(new Point());
 
         // Windows
         if (remoteRobot.isWin()) {
 
+            TestUtils.sleepAndIgnoreException(5);
             keyboard.enterText("mkdir log");
             keyboard.enter();
             TestUtils.sleepAndIgnoreException(5);
