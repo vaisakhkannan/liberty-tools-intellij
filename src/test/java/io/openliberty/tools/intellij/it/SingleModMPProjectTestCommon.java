@@ -100,14 +100,14 @@ public abstract class SingleModMPProjectTestCommon {
             keyboard.enter();
             keyboard.enterText("cd log");
             keyboard.enter();
-            keyboard.enterText("powershell Get-Clipboard | Out-File -FilePath file.txt");
+            keyboard.enterText("powershell Get-Clipboard | Out-File -FilePath file.txt -Append");
             keyboard.enter();
 
         } else if (remoteRobot.isMac()) {
 
             keyboard.enterText("mkdir log");
             keyboard.enter();
-            keyboard.enterText("pbpaste > log/filename.txt");
+            keyboard.enterText("pbpaste >> log/filename.txt");
             keyboard.enter();
         }
 
