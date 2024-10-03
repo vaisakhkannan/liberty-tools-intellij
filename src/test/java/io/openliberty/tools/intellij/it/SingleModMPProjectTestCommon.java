@@ -94,6 +94,7 @@ public abstract class SingleModMPProjectTestCommon {
         ComponentFixture openFixtureCopy = projectFrame.getActionMenuItem("Copy");
         openFixtureCopy.click(new Point());
 
+        // Windows
         if (remoteRobot.isWin()) {
 
             keyboard.enterText("mkdir log");
