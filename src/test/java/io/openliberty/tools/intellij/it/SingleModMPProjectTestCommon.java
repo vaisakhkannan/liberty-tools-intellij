@@ -98,8 +98,7 @@ public abstract class SingleModMPProjectTestCommon {
         terminal.rightClick();
         ComponentFixture openFixtureNewTab = projectFrame.getActionMenuItem("New Tab");
         openFixtureNewTab.click(new Point());
-
-        // Windows
+        
         if (remoteRobot.isWin()) {
 
             TestUtils.sleepAndIgnoreException(5);
