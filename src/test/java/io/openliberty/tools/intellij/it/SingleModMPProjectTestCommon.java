@@ -99,10 +99,13 @@ public abstract class SingleModMPProjectTestCommon {
 
             keyboard.enterText("mkdir log");
             keyboard.enter();
+            TestUtils.sleepAndIgnoreException(5);
             keyboard.enterText("cd log");
             keyboard.enter();
+            TestUtils.sleepAndIgnoreException(5);
             keyboard.enterText("powershell Get-Clipboard | Out-File -FilePath file.txt -Append");
             keyboard.enter();
+            TestUtils.sleepAndIgnoreException(5);
 
         } else if (remoteRobot.isMac()) {
 
