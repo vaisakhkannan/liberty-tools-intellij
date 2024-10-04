@@ -31,7 +31,7 @@ on:
         default: false
       refLsp4ij:
         description: 'Reference/branch for Lsp4ij checkout'
-        type: string
+        type: choice
         required: true
         default: main
         options:
