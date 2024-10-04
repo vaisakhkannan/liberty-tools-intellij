@@ -91,7 +91,7 @@ jobs:
             while [[ "$mergeable" == "null" && $attempts -lt $max_attempts ]]; do
               pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
               mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
-              echo "PR Number $number Mergeable value now : $mergeable"
+              echo "PR Number ${{ env.REF_LSP4IJNEW }} Mergeable value now : $mergeable"
 
               if [[ "$mergeable" == "null" ]]; then
               echo "Mergeable status is null, retrying in 5 seconds..."
