@@ -35,10 +35,9 @@ on:
         required: true
         default: main
         options:
-          - Option1
-          - Option2
-          - Option3
-          - Option4
+          - branch
+          - merge-commit-sha
+          - PR-number
       refLTITag:
         description: 'Reference LTI Tag/Branch'
         type: string
