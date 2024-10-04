@@ -39,6 +39,10 @@ on:
         type: string
         required: false
         default: main
+      features:
+        description: 'Enter the features you want to include, separated by commas (e.g., Option1,Option3)'
+        required: true
+        default: 'Option1,Option2'
   push:
     branches: '**'
   pull_request:
