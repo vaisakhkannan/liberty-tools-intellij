@@ -29,15 +29,16 @@ on:
         required: true
         type: boolean
         default: false
+      feature:
+        description: 'If you checked this , then make sure to enter LSP4IJ PR number only in below'
+        required: true
+        type: boolean
+        default: false
       refLsp4ij:
         description: 'Reference/branch for Lsp4ij checkout'
-        type: choice
+        type: string
         required: true
         default: main
-        options:
-          - branch
-          - merge-commit-sha
-          - PR-number
       refLTITag:
         description: 'Reference LTI Tag/Branch'
         type: string
