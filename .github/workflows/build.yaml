@@ -34,20 +34,16 @@ on:
         type: string
         required: true
         default: main
-      refLTITag:
-        description: 'Reference LTI Tag/Branch'
-        type: string
-        required: false
-        default: main
-      features:
-        description: 'Select the features to include'
-        required: true
-        type: choice
         options:
           - Option1
           - Option2
           - Option3
           - Option4
+      refLTITag:
+        description: 'Reference LTI Tag/Branch'
+        type: string
+        required: false
+        default: main
   push:
     branches: '**'
   pull_request:
