@@ -63,6 +63,7 @@ jobs:
         shell: bash
         id: extract
         run: |
+          # just comment
           if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
             # Initialize an empty string to store merge commit SHA
             pr_details=""
