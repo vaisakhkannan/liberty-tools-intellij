@@ -130,6 +130,16 @@ jobs:
           else
             echo "is_empty=false" >> $GITHUB_OUTPUT
           fi
+      - name: Extract_value
+        if: ${{ inputs.feature == false }}
+        shell: bash
+        id: extract_value
+        run: |
+          # Create a JSON string from the array
+          pr_details_array=$(IFS=,; echo "[${valid_prs[*]}]")
+          echo "$pr_details_array" | jq '.[]'
+          # Set the output for further steps
+          echo "pr_details=${{ inputs.refLsp4ij }}" >> $GITHUB_OUTPUT
   build:
     needs: fetch_merge_commit_sha_PR
     runs-on: ${{ matrix.os }}
@@ -149,7 +159,7 @@ jobs:
             reportName: windows-test-report
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
-      REF_LSP4IJ: ${{ fromJson(needs.fetch_merge_commit_sha_PR.outputs.pr_details)[0].sha || inputs.refLsp4ij }}
+      REF_LSP4IJ: ${{ fromJson(needs.fetch_merge_commit_sha_PR.outputs.pr_details)[0].sha }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
