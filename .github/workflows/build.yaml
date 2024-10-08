@@ -106,22 +106,20 @@ jobs:
             fi
 
             if [[ "$mergeable" != "false" ]]; then
-              pr_number=$(jq -r '.number' <<< "$pr_detail")
               pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
-              pr_link=$(jq -r '.html_url' <<< "$pr_detail")
-              valid_prs+=("{\"number\": \"$pr_number\", \"sha\": \"$pr_sha\", \"link\": \"$pr_link\"}")
+              valid_prs+=("$pr_sha")
             else
               echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
             fi
           # done
 
-          # Create a JSON string from the array
+          # Create a JSON string from the array of shas
           pr_details_array=$(IFS=,; echo "[${valid_prs[*]}]")
-          echo "PRs having no merge conflicts"
+          echo "PRs having no merge conflicts (Merge Commit SHAs only)"
           echo "$pr_details_array" | jq '.[]'
+
           # Set the output for further steps
           echo "pr_details=$pr_details_array" >> $GITHUB_OUTPUT
-          # echo "pr_details_env=$pr_details_array" >> $GITHUB_ENV
 
           # Check if pr_details_array is empty
           if [ $(echo "$pr_details_array" | jq length) -eq 0 ]; then
