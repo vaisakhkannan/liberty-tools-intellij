@@ -65,7 +65,7 @@ jobs:
         run: |
           # just comment
           if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
-            echo "::set-output name=lsp4ijPrNumber::true"
+            echo "lsp4ijPrNumber=true" >> $GITHUB_ENV
             # Initialize an empty string to store merge commit SHA
             pr_details=""
 
