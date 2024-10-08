@@ -131,7 +131,7 @@ jobs:
         id: extract_value
         run: |
           # Assign input value to pr_details
-          pr_details="${{ inputs.refLsp4ij }}"
+          pr_details="${{ env.REF_LSP4IJNEW }}"
 
           # Set the output for further steps
           echo "pr_details=$pr_details" >> $GITHUB_OUTPUT
