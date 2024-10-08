@@ -95,7 +95,7 @@ jobs:
           echo "pr_details=$pr_details" >> $GITHUB_OUTPUT
 
   build:
-    needs: fetch_merge_commit_sha_PR
+    needs: fetch_merge_commit_sha_from_lsp4ij_PR
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
