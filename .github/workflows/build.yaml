@@ -70,8 +70,8 @@ jobs:
           # Extract PR numbers and merge_commit_sha values, excluding draft pull requests
           pr_numbers=$(echo "$pr_infos" | jq -r '.[] | select(.draft == false) | {number: .number, sha: .merge_commit_sha} | @base64')          
 
-          # Array to store PRs that are not drafts and have no merge conflicts
-          declare -a valid_prs=()
+          # Initialize an empty string to store merge commit SHAs
+          pr_details=""
 
           # for pr in $pr_numbers; do
             # Decode the base64 encoded JSON string
@@ -107,37 +107,34 @@ jobs:
 
             if [[ "$mergeable" != "false" ]]; then
               pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
-              valid_prs+=("$pr_sha")
+
+              # Append the merge commit SHA to pr_details string
+              pr_details="$pr_details $pr_sha"
             else
               echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
             fi
           # done
 
-          # Create a JSON string from the array of shas
-          pr_details_array=$(IFS=,; echo "[${valid_prs[*]}]")
+          # Remove leading/trailing spaces from pr_details
+          pr_details=$(echo "$pr_details" | xargs)
+
           echo "PRs having no merge conflicts (Merge Commit SHAs only)"
-          echo "$pr_details_array" | jq '.[]'
+          echo "$pr_details"
 
           # Set the output for further steps
-          echo "pr_details=$pr_details_array" >> $GITHUB_OUTPUT
+          echo "pr_details=$pr_details" >> $GITHUB_OUTPUT
+          echo "$pr_details"
 
-          # Check if pr_details_array is empty
-          if [ $(echo "$pr_details_array" | jq length) -eq 0 ]; then
-            echo "::warning file=::There are no open PRs, or all the existing PRs are either drafts or have merge conflicts. Skipping further actions."
-            echo "is_empty=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_empty=false" >> $GITHUB_OUTPUT
-          fi
       - name: Extract_value
         if: ${{ inputs.feature == false }}
         shell: bash
         id: extract_value
         run: |
-          # Create a JSON string from the array
-          pr_details_array=$(IFS=,; echo "[${valid_prs[*]}]")
-          echo "$pr_details_array" | jq '.[]'
+          pr_details=""
+          
           # Set the output for further steps
           echo "pr_details=${{ inputs.refLsp4ij }}" >> $GITHUB_OUTPUT
+          echo "$pr_details"
   build:
     needs: fetch_merge_commit_sha_PR
     runs-on: ${{ matrix.os }}
@@ -157,7 +154,7 @@ jobs:
             reportName: windows-test-report
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
-      REF_LSP4IJ: ${{ fromJson(needs.fetch_merge_commit_sha_PR.outputs.pr_details)[0].sha }}
+      REF_LSP4IJ: ${{ needs.fetch_merge_commit_sha_PR.outputs.pr_details }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
