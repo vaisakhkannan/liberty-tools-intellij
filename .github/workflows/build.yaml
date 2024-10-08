@@ -130,11 +130,13 @@ jobs:
         shell: bash
         id: extract_value
         run: |
-          pr_details=""
-          
+          # Assign input value to pr_details
+          pr_details="${{ inputs.refLsp4ij }}"
+
           # Set the output for further steps
-          echo "pr_details=${{ inputs.refLsp4ij }}" >> $GITHUB_OUTPUT
+          echo "pr_details=${pr_details}" >> $GITHUB_OUTPUT
           echo "$pr_details"
+  
   build:
     needs: fetch_merge_commit_sha_PR
     runs-on: ${{ matrix.os }}
