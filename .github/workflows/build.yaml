@@ -81,7 +81,7 @@ jobs:
             # Remove leading/trailing spaces from pr_details
             pr_details=$(echo "$pr_details" | xargs)
 
-            echo "Merge commit SHA of the entered PR ${{ env.REF_LSP4IJ }}: $pr_details"
+            # echo "Merge commit SHA of the entered PR ${{ env.REF_LSP4IJ }}: $pr_details"
 
           else
             pr_details="${{ env.REF_LSP4IJ }}"
@@ -91,6 +91,8 @@ jobs:
               echo "Merge commit SHA: $pr_details"
             fi
           fi
+          
+          echo "Merge commit SHA of the entered PR ${{ env.REF_LSP4IJ }}: $pr_details"
 
           # Set the output for further steps
           echo "pr_details=$pr_details" >> $GITHUB_OUTPUT
