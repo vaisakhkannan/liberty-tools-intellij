@@ -121,6 +121,7 @@ jobs:
           echo "$pr_details_array" | jq '.[]'
           # Set the output for further steps
           echo "pr_details=$pr_details_array" >> $GITHUB_OUTPUT
+          echo "pr_details_env=$pr_details_array" >> $GITHUB_ENV
 
           # Check if pr_details_array is empty
           if [ $(echo "$pr_details_array" | jq length) -eq 0 ]; then
@@ -147,7 +148,7 @@ jobs:
             reportName: windows-test-report
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
-      REF_LSP4IJ: ${{ inputs.refLsp4ij }}
+      REF_LSP4IJ: ${{ fromJson(needs.fetch_merge_commit_sha_PR.outputs.pr_details) }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
