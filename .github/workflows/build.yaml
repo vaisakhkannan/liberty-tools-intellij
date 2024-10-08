@@ -29,8 +29,8 @@ on:
         required: true
         type: boolean
         default: false
-      feature:
-        description: 'If you checked this , then make sure to enter LSP4IJ PR number only in below'
+      lsp4ijPrNumber:
+        description: 'If you checked this, please make sure to enter only the LSP4IJ PR number below.'
         required: true
         type: boolean
         default: false
@@ -56,14 +56,14 @@ jobs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
     env:
       API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
-      REF_LSP4IJNEW: ${{ inputs.refLsp4ij }}
+      REF_LSP4IJ: ${{ inputs.refLsp4ij }}
     name: PR Details
     steps:
       - name: Extract PR numbers and merge_commit_shas
         shell: bash
         id: extract
         run: |
-          if [ "${{ inputs.feature }}" == "true" ]; then
+          if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
             # Fetch PR details from the GitHub API
             pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}")
 
@@ -80,7 +80,7 @@ jobs:
               # Extract PR number
               number=$(echo "$pr" | jq -r '.number')
 
-              url="${{ env.API_URL }}/${{ env.REF_LSP4IJNEW }}"
+              url="${{ env.API_URL }}/${{ env.REF_LSP4IJ }}"
               echo "url : $url"
 
               mergeable=null
@@ -119,14 +119,15 @@ jobs:
             pr_details=$(echo "$pr_details" | xargs)
 
             echo "PRs having no merge conflicts (Merge Commit SHAs only)"
-            echo "$pr_details"
+            echo "Merge commit SHA of the entered PR ${{ env.REF_LSP4IJ }}: $pr_details"
 
           else
-            # Assign input value to pr_details
-            pr_details="${{ env.REF_LSP4IJNEW }}"
-
-            # Debugging output
-            echo "DEBUG: REF_LSP4IJNEW = $pr_details"
+            pr_details="${{ env.REF_LSP4IJ }}"
+            if [ -z "$pr_details" ]; then
+              echo "No LSP4IJ checkout found. Using default case."
+            else
+              echo "Merge commit SHA: $pr_details"
+            fi
           fi
 
           # Set the output for further steps
