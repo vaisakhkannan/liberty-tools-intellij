@@ -50,75 +50,36 @@ on:
     branches: [ main ]
 
 jobs:
-  fetch_merge_commit_sha_PR:
+  fetch_merge_commit_sha_from_lsp4ij_PR:
     runs-on: ubuntu-latest
     outputs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
     env:
       API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
-    name: PR Details
+    name: Fetch Commit SHA
     steps:
-      - name: Extract PR numbers and merge_commit_shas
+      - name: Extract merge_commit_sha
         shell: bash
         id: extract
         run: |
           if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
-            # Fetch PR details from the GitHub API
-            pr_infos=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "${{ env.API_URL }}")
-
-            # Extract PR numbers and merge_commit_sha values, excluding draft pull requests
-            pr_numbers=$(echo "$pr_infos" | jq -r '.[] | select(.draft == false) | {number: .number, sha: .merge_commit_sha} | @base64')          
-
-            # Initialize an empty string to store merge commit SHAs
+            # Initialize an empty string to store merge commit SHA
             pr_details=""
 
-            # for pr in $pr_numbers; do
-              # Decode the base64 encoded JSON string
-              pr=$(echo "$pr" | base64 --decode)
+            url="${{ env.API_URL }}/${{ env.REF_LSP4IJ }}"
+            echo "url : $url"
+              
+            pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
 
-              # Extract PR number
-              number=$(echo "$pr" | jq -r '.number')
+            pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
 
-              url="${{ env.API_URL }}/${{ env.REF_LSP4IJ }}"
-              echo "url : $url"
-
-              mergeable=null
-              attempts=0
-              max_attempts=5
-
-              # Retry loop for checking mergeability
-              while [[ "$mergeable" == "null" && $attempts -lt $max_attempts ]]; do
-                pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
-                mergeable=$(jq -r '.mergeable' <<< "$pr_detail")
-                echo "PR Number $number Mergeable value now : $mergeable"
-
-                if [[ "$mergeable" == "null" ]]; then
-                  echo "Mergeable status is null, retrying in 5 seconds..."
-                  sleep 5
-                fi
-
-                attempts=$((attempts + 1))
-              done
-
-              if [[ "$mergeable" == "null" ]]; then
-                echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") still has Mergeable value of 'null' after $max_attempts attempts."
-              fi
-
-              if [[ "$mergeable" != "false" ]]; then
-                pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
-
-                # Append the merge commit SHA to pr_details string
-                pr_details="$pr_details $pr_sha"
-              else
-                echo "::warning file=::PR #$(jq -r '.number' <<< "$pr_detail") has conflicts. See : $(jq -r '.html_url' <<< "$pr_detail")"
-              fi
-            # done
+            # Append the merge commit SHA to pr_details
+            pr_details="$pr_details $pr_sha"
 
             # Remove leading/trailing spaces from pr_details
             pr_details=$(echo "$pr_details" | xargs)
 
-            echo "PRs having no merge conflicts (Merge Commit SHAs only)"
             echo "Merge commit SHA of the entered PR ${{ env.REF_LSP4IJ }}: $pr_details"
 
           else
