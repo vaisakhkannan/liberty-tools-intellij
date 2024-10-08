@@ -121,7 +121,7 @@ jobs:
           echo "$pr_details_array" | jq '.[]'
           # Set the output for further steps
           echo "pr_details=$pr_details_array" >> $GITHUB_OUTPUT
-          echo "pr_details_env=$pr_details_array" >> $GITHUB_ENV
+          # echo "pr_details_env=$pr_details_array" >> $GITHUB_ENV
 
           # Check if pr_details_array is empty
           if [ $(echo "$pr_details_array" | jq length) -eq 0 ]; then
