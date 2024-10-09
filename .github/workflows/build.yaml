@@ -63,37 +63,24 @@ jobs:
         shell: bash
         id: extract
         run: |
-          # just comment
           if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
             echo "lsp4ijPrNumber=true" >> $GITHUB_ENV
-            # Initialize an empty string to store merge commit SHA
             pr_details=""
 
+            # Fetch PR details
             url="${{ env.API_URL }}/${{ env.REF_LSP4IJ }}"
-            echo "url : $url"
-              
             pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
 
-            pr_sha=$(jq -r '.merge_commit_sha' <<< "$pr_detail")
+            # Extract merge commit SHA and trim spaces
+            pr_details=$(jq -r '.merge_commit_sha' <<< "$pr_detail" | xargs)
 
-            # Append the merge commit SHA to pr_details
-            pr_details="$pr_details $pr_sha"
-
-            # Remove leading/trailing spaces from pr_details
-            pr_details=$(echo "$pr_details" | xargs)
-
-            echo "Merge commit SHA of the entered PR ${{ env.REF_LSP4IJ }}: $pr_details"
-
+            echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
           else
             pr_details="${{ env.REF_LSP4IJ }}"
-            if [ -z "$pr_details" ]; then
-              echo "No LSP4IJ checkout found. Using default case."
-            else
-              echo "Merge commit SHA: $pr_details"
-            fi
+            [ -z "$pr_details" ] && echo "No LSP4IJ checkout found. Using default case." || echo "Merge commit SHA: $pr_details"
           fi
 
-          # Set the output for further steps
+          # Set output for further steps
           echo "pr_details=$pr_details" >> $GITHUB_OUTPUT
 
   build:
