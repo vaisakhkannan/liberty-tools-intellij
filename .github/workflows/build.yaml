@@ -60,6 +60,7 @@ jobs:
     name: Fetch Commit SHA
     steps:
       - name: Extract merge_commit_sha
+        if: ${{ inputs.lsp4ijPrNumber == true }}
         shell: bash
         id: extract
         run: |
@@ -76,7 +77,7 @@ jobs:
 
             echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
           else
-            pr_details="${{ env.REF_LSP4IJ }}"
+            # pr_details="${{ env.REF_LSP4IJ }}"
             [ -z "$pr_details" ] && echo "No LSP4IJ checkout found. Using default case." || echo "Merge commit SHA: $pr_details"
           fi
 
@@ -102,7 +103,7 @@ jobs:
             reportName: windows-test-report
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
-      REF_LSP4IJ: ${{ needs.fetch_merge_commit_sha_from_lsp4ij_PR.outputs.pr_details }}
+      REF_LSP4IJ: ${{ needs.fetch_merge_commit_sha_from_lsp4ij_PR.outputs.pr_details || inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
