@@ -86,7 +86,7 @@ jobs:
           echo "pr_details=$pr_details" >> $GITHUB_OUTPUT
 
   build:
-    name: build
+    name: build- ${{ inputs.lsp4ijPrNumber == true && inputs.refLsp4ij || 'default' }}
     needs: fetch_merge_commit_sha_from_lsp4ij_PR
     runs-on: ${{ matrix.os }}
     strategy:
