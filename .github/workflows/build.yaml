@@ -61,7 +61,7 @@ jobs:
     name: Fetch Commit SHA
     steps:
       - name: Extract merge_commit_sha
-        if: ${{ inputs.lsp4ijPrNumber == true }}
+#        if: ${{ inputs.lsp4ijPrNumber == true }}
         shell: bash
         id: extract
         run: |
