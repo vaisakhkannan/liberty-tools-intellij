@@ -145,7 +145,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && !failure() }}
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH || env.REF_LSP4IJ }}
+          name: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH == '' && 'default' || env.REF_LSP4IJ }}
           path: |
             ./**/*liberty-tools-intellij*.zip
             ./**/libs/*liberty-tools-intellij*.jar
@@ -159,6 +159,6 @@ jobs:
         if: ${{ failure() && steps.run_tests.conclusion == 'failure' }}
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: ${{ matrix.reportName }}-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH || env.REF_LSP4IJ }}
+          name: ${{ matrix.reportName }}-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH == '' && 'default' || env.REF_LSP4IJ }}
           path: |
             liberty-tools-intellij/build/reports/
