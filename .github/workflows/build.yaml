@@ -78,7 +78,7 @@ jobs:
 
             echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
           else
-            # pr_details="${{ env.REF_LSP4IJ }}"
+            pr_details="${{ env.REF_LSP4IJ }}"
             [ -z "$pr_details" ] && echo "No LSP4IJ checkout found. Using default case." || echo "Merge commit SHA: $pr_details"
           fi
 
