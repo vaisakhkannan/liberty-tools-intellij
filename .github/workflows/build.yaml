@@ -52,7 +52,6 @@ on:
 jobs:
   fetch_merge_commit_sha_from_lsp4ij_PR:
     runs-on: ubuntu-latest
-    # if: ${{ inputs.lsp4ijPrNumber == true }}
     outputs:
       pr_details: ${{ steps.extract.outputs.pr_details }}
     env:
@@ -61,15 +60,13 @@ jobs:
     name: Fetch Commit SHA ${{ inputs.refLsp4ij != '' && inputs.refLsp4ij || '' }}
     steps:
       - name: Extract merge_commit_sha
-#        if: ${{ inputs.lsp4ijPrNumber == true }}
         shell: bash
         id: extract
         run: |
           if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
-            echo "lsp4ijPrNumber=true" >> $GITHUB_ENV
+            # echo "lsp4ijPrNumber=true" >> $GITHUB_ENV
             pr_details=""
 
-            # Fetch PR details
             url="${{ env.API_URL }}/${{ env.REF_LSP4IJ }}"
             pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
 
@@ -79,7 +76,7 @@ jobs:
             echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
           else
             pr_details="${{ env.REF_LSP4IJ }}"
-            [ -z "$pr_details" ] && echo "No LSP4IJ checkout found. Using default case." || echo "Merge commit SHA: $pr_details"
+            [ -z "$pr_details" ] && echo "No LSP4IJ checkout found. Using default case." || echo "Merge commit SHA/Branch Name/Tag : $pr_details"
           fi
 
           # Set output for further steps
@@ -104,7 +101,7 @@ jobs:
             reportName: windows-test-report
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
-      REF_LSP4IJ: ${{ needs.fetch_merge_commit_sha_from_lsp4ij_PR.outputs.pr_details || inputs.refLsp4ij }}
+      REF_LSP4IJ: ${{ needs.fetch_merge_commit_sha_from_lsp4ij_PR.outputs.pr_details }}
       # REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
