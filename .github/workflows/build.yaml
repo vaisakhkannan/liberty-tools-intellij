@@ -58,27 +58,22 @@ jobs:
     env:
       API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
-    name: Fetch Commit SHA ${{ inputs.refLsp4ij != '' && inputs.refLsp4ij || '' }}
+    name: Fetch Commit SHA ${{ inputs.refLsp4ij || '' }}
     steps:
-      - name: Extract merge_commit_sha
+      - name: Extract Merge Commit SHA
         shell: bash
         id: extract
         run: |
-          if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
-            pr_details=""
-            checkout_name=""
+          pr_details="${{ env.REF_LSP4IJ }}"
+          checkout_name="${{ env.LSP4IJ_BRANCH }}"
 
+          if [ "${{ inputs.lsp4ijPrNumber }}" == "true" ]; then
             url="${{ env.API_URL }}/${{ env.REF_LSP4IJ }}"
             pr_detail=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$url")
-
-            # Extract merge commit SHA and trim spaces
             pr_details=$(jq -r '.merge_commit_sha' <<< "$pr_detail" | xargs)
-
             echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
             checkout_name="${{ env.REF_LSP4IJ }}"
           else
-            pr_details="${{ env.REF_LSP4IJ }}"
-            checkout_name="${{ env.LSP4IJ_BRANCH }}"
             [ -z "$pr_details" ] && echo "No LSP4IJ checkout found. Using default case." || echo "Merge commit SHA/Branch Name/Tag : $pr_details"
           fi
 
