@@ -75,8 +75,8 @@ jobs:
             echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
             checkout_name="${{ env.REF_LSP4IJ }}"
 
-          elif [ "${{ inputs.useLocalPlugin }}" == "true" ] && [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Workflow Merge Commit SHA/Branch Name/Tag : $pr_details"
             checkout_name="${{ env.REF_LSP4IJ }}"
 
           else
