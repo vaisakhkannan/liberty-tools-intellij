@@ -30,7 +30,7 @@ on:
         type: boolean
         default: false
       lsp4ijPrNumber:
-        description: 'If you checked this, please make sure to enter only the LSP4IJ PR number below.'
+        description: 'If you checked this, please make sure to enter only the LSP4IJ PR number below'
         required: true
         type: boolean
         default: false
@@ -75,10 +75,12 @@ jobs:
             echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
             checkout_name="${{ env.REF_LSP4IJ }}"
           elif [ -z "$checkout_name" ]; then
-            echo "Workflow Merge Commit SHA/Branch Name/Tag : $pr_details"
+            echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
             checkout_name="${{ env.REF_LSP4IJ }}"
+          elif [ -z "$pr_details" ]; then
+            echo "No LSP4IJ checkout found. Using default case."
           else
-            [ -z "$pr_details" ] && echo "No LSP4IJ checkout found. Using default case." || echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
+            echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
           fi
 
           # Set output for further steps
