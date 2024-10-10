@@ -79,6 +79,8 @@ jobs:
           elif [ -z "$checkout_name" ]; then
             echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
             checkout_name="${{ env.REF_LSP4IJ }}"
+          else
+            echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
           fi
 
           # Set output for further steps
