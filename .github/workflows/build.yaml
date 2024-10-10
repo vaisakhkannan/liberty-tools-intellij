@@ -59,7 +59,7 @@ jobs:
       API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch }}
-    name: Fetch Commit SHA ${{ inputs.refLsp4ij || '' }}
+    name: Fetch Commit ${{ inputs.refLsp4ij || '' }}
     steps:
       - name: Extract Merge Commit SHA
         shell: bash
@@ -74,12 +74,16 @@ jobs:
             pr_details=$(jq -r '.merge_commit_sha' <<< "$pr_detail" | xargs)
             echo "Merge commit SHA of PR ${{ env.REF_LSP4IJ }}: $pr_details"
             checkout_name="${{ env.REF_LSP4IJ }}"
+
+          elif [ "${{ inputs.useLocalPlugin }}" == "true" ] && [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
+            checkout_name="${{ env.REF_LSP4IJ }}"
+
           else
             if [ -z "$pr_details" ]; then
               echo "No LSP4IJ checkout found. Using default case."
             else
               echo "Merge Commit SHA/Branch Name/Tag : $pr_details"
-              checkout_name="${{ env.REF_LSP4IJ }}"
             fi
           fi
 
