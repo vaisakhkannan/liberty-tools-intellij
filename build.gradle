@@ -1,20 +1,13 @@
-import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
-import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
 plugins {
-//    id 'java'
-//    id 'org.jetbrains.intellij.platform' version '2.1.0'
-//    id "org.jetbrains.kotlin.jvm" version '1.9.24'
-    id("org.jetbrains.intellij.platform") version "2.1.0"
-    id("org.jetbrains.kotlin.jvm") version "1.9.24"
-    id("java")
+    id 'java'
+    id 'org.jetbrains.intellij.platform' version '2.1.0'
+    id "org.jetbrains.kotlin.jvm" version '1.9.24'
 }
 
 group 'io.openliberty.tools'
 version '24.0.9'
-def lsp4ijVersion = '0.5.0'
-//sourceCompatibility = 21
-//targetCompatibility = 21
+def lsp4ijVersion = '0.7.0-20241014-013201@nightly'
 
 def remoteRobotVersion = "0.11.18"
 // To switch to nightly version, append "@nightly" to the version number (i.e. 0.4.1-20240828-013108@nightly)
@@ -22,16 +15,9 @@ def remoteRobotVersion = "0.11.18"
 allprojects {
     apply plugin: 'java'
     sourceCompatibility = javaVersion
-    targetCompatibility = javaTargetVersion
+    targetCompatibility = javaVersion
     tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 }
-
-//compileJava {
-//    dependsOn ':jps-shared:composedJar'
-//    dependsOn ':jps-builder:composedJar'
-//}
-
-
 repositories {
     mavenCentral()
     maven {
@@ -66,18 +52,6 @@ repositories {
     }
     mavenLocal() // TODO remove once Liberty LS is publicly available
 }
-
-apply plugin: 'idea'
-idea {
-    project {
-        jdkName = javaVersion
-        languageLevel = javaVersion
-    }
-    module {
-        generatedSourceDirs += file('gen')
-    }
-}
-
 configurations {
     lsp
     // needed to avoid ClassCastException org.apache.xerces.jaxp.DocumentBuilderFactoryImpl cannot be cast to class javax.xml.parsers.DocumentBuilderFactory
@@ -85,35 +59,33 @@ configurations {
     all*.exclude group: 'xml-apis'
 
     runtimeClasspath {
-//        exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
     //apply plugin: "kotlin"
     // Ensures that the JVM target is set to 17 for all Kotlin compilation tasks, including both main and test sources.
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
-            apiVersion = "1.7"
-            jvmTarget = "21"
-            freeCompilerArgs = ["-Xjvm-default=all"]
+            jvmTarget = javaVersion
         }
     }
 }
+
 dependencies {
 
-    implementation ('org.eclipse.lsp4mp:org.eclipse.lsp4mp.ls:0.12.0') {
+    implementation('org.eclipse.lsp4mp:org.eclipse.lsp4mp.ls:0.12.0') {
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
     }
-    implementation ('org.eclipse.lemminx:org.eclipse.lemminx:0.26.1') {
+    implementation('org.eclipse.lemminx:org.eclipse.lemminx:0.26.1') {
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
     }
     implementation 'io.openliberty.tools:liberty-langserver-lemminx:2.1.2'
-    implementation ('io.openliberty.tools:liberty-langserver:2.1.2') {
+    implementation('io.openliberty.tools:liberty-langserver:2.1.2') {
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
     }
-    implementation ('org.eclipse.lsp4jakarta:org.eclipse.lsp4jakarta.ls:0.2.0') {
+    implementation('org.eclipse.lsp4jakarta:org.eclipse.lsp4jakarta.ls:0.2.0') {
         exclude group: 'org.eclipse.lsp4mp'
         exclude group: 'org.eclipse.lsp4j'
         exclude group: 'com.google.code.gson'
@@ -131,7 +103,7 @@ dependencies {
     testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
     testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testImplementation('com.jetbrains.intellij.maven:maven-test-framework:242.20224.387') {
+    testImplementation('com.jetbrains.intellij.maven:maven-test-framework:242.23339.11') {
         transitive = false
     }
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
@@ -148,9 +120,9 @@ dependencies {
     lsp('org.eclipse.lsp4mp:org.eclipse.lsp4mp.ls:0.12.0:uber') {
         transitive = false
     }
-//    lsp('org.eclipse.lemminx:org.eclipse.lemminx:0.26.1:uber') {
-//        transitive = false
-//    }
+    lsp('org.eclipse.lemminx:org.eclipse.lemminx:0.26.1:uber') {
+        transitive = false
+    }
     lsp('io.openliberty.tools:liberty-langserver-lemminx:2.1.2:jar-with-dependencies') {
         transitive = false
     }
@@ -175,26 +147,12 @@ dependencies {
                 file("../lsp4ij/build/distributions/LSP4IJ/") :
                 'com.redhat.devtools.lsp4ij:' + lsp4ijVersion
         plugins lsp4ij
-
-
-// Create a list of bundled plugins
-        // bundledPlugins providers.gradleProperty("platformBundledPlugins").orElse("").get().split(',').toList()
-
-
-
-// Append lsp4ij to the bundled plugins list
-        // bundledPluginsList.add(lsp4ij)
-
-// Set the bundled plugins
-        //  bundledPluginsList
-
         pluginVerifier()
         zipSigner()
         instrumentationTools()
 
         testFramework TestFrameworkType.Platform.INSTANCE
-        testFramework(TestFrameworkType.Plugin.Java.INSTANCE)
-        //updateSinceUntilBuild = false
+        testFramework TestFrameworkType.Plugin.Java.INSTANCE
     }
 }
 
@@ -204,72 +162,17 @@ task copyDeps(type: Copy) {
     into new File(buildDir, 'server/server')
     rename '^(.*)(-[0-9]+[.[0-9]+]+(-SNAPSHOT)?)(.*)$', '$1$4'
 }
-
-//runIde {
-//    jvmArgs '--add-exports', 'java.base/jdk.internal.vm=ALL-UNNAMED'
-//}
-
-tasks {
-    runIde {
-        jvmArgumentProviders.add({
-            ["-Dname=value"]
-        } as CommandLineArgumentProvider)
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = providers.gradleProperty("pluginSinceBuild")
+            untilBuild = providers.gradleProperty("pluginUntilBuild")
+        }
     }
 }
-
-//intellijPlatformTesting.runIde {
-//    runIdeForUiTests {
-//        task {
-//            jvmArgumentProviders.add({
-//                [
-//                        "-Drobot-server.port=8082",
-//                        "-Dide.mac.message.dialogs.as.sheets=false",
-//                        "-Djb.privacy.policy.text=<!--999.999-->",
-//                        "-Djb.consents.confirmation.enabled=false",
-//                ]
-//            } as CommandLineArgumentProvider)
-//        }
-//        plugins {
-//            robotServerPlugin()
-//        }
-//    }
-//}
-
-//intellijPlatformTesting {
-//    runIde {
-//        register("runIdeForUiTests") {
-//            task {
-//                jvmArgumentProviders.add({
-//                    [
-//                            "-Drobot-server.port=8082",
-//                            "-Dide.mac.message.dialogs.as.sheets=false",
-//                            "-Djb.privacy.policy.text=<!--999.999-->",
-//                            "-Djb.consents.confirmation.enabled=false",
-//                    ]
-//                } as CommandLineArgumentProvider)
-//            }
-//
-//            plugins {
-//                robotServerPlugin()
-//            }
-//        }
-//    }
-//}
-
-//tasks.named("runIdeForUiTests", RunIdeTask) {
-//    jvmArgs = [
-//            "-Drobot-server.port=8082",
-//            "-Dide.mac.message.dialogs.as.sheets=false",
-//            "-Djb.privacy.policy.text=<!--999.999-->",
-//            "-Djb.consents.confirmation.enabled=false"
-//    ]
-//
-//    plugins {
-//        robotServerPlugin()
-//    }
-//}
-
-
+runIde {
+    jvmArgs '--add-exports', 'java.base/jdk.internal.vm=ALL-UNNAMED'
+}
 
 intellijPlatformTesting.runIde {
     runIdeForUiTests {
@@ -280,224 +183,37 @@ intellijPlatformTesting.runIde {
                         "-Dide.mac.message.dialogs.as.sheets=false",
                         "-Djb.privacy.policy.text=<!--999.999-->",
                         "-Djb.consents.confirmation.enabled=false",
+                        "-Didea.trust.all.projects=true",
+                        "-Dide.show.tips.on.startup.default.value=false",
+                        "-Dide.mac.file.chooser.native=false",
+                        "-DjbScreenMenuBar.enabled=false",
+                        "-Dapple.laf.useScreenMenuBar=false",
                 ]
             } as CommandLineArgumentProvider)
         }
-//        plugins {
-//            robotServerPlugin()
-//        }
+        plugins {
+            robotServerPlugin(remoteRobotVersion)
+        }
     }
 }
-
-//test {
-//    useJUnit {
-//        exclude compilationPackages
-//    }
-//    testLogging {
-//        exceptionFormat = 'full'
-//    }
-//}
-
-//intellijPlatformTesting.runIde {
-//    runIdeForUiTests {
-//        task {
-//            jvmArgumentProviders.add({
-//                [
-//                        "-Drobot-server.port=8082",
-//                        "-Dide.mac.message.dialogs.as.sheets=false",
-//                        "-Djb.privacy.policy.text=<!--999.999-->",
-//                        "-Djb.consents.confirmation.enabled=false",
-//                ]
-//            } as CommandLineArgumentProvider)
-//        }
-//        plugins {
-//            robotServerPlugin()
-//        }
-//    }
-//}
-
-
-//
-//intellijPlatform {
-//    // For a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
-//    version = '2024.2.3'
-//
-//    def lsp4ij = project.hasProperty('useLocal') && project.property('useLocal') == 'true' ?
-//            file("../lsp4ij/build/distributions/LSP4IJ/") :
-//            'com.redhat.devtools.lsp4ij:' + lsp4ijVersion
-//  //  plugins = ['java', 'maven', 'gradle-java', 'properties', 'terminal', 'org.jetbrains.idea.maven', 'com.intellij.gradle', lsp4ij]
-//    bundledPlugin 'com.intellij.java'
-//
-//    pluginVerifier()
-//    zipSigner()
-//    instrumentationTools()
-//
-//    testFramework TestFrameworkType.Platform.INSTANCE
-//    updateSinceUntilBuild = false
-//}
-//
-//downloadRobotServerPlugin {
-//    version.set(remoteRobotVersion)
-//}
-
-//runIde {
-//    systemProperty "robot-server.port", "8082"
-//    systemProperty "ide.mac.message.dialogs.as.sheets", "false"
-//    systemProperty "jb.privacy.policy.text", "<!--999.999-->"
-//    systemProperty "jb.consents.confirmation.enabled", "false"
-//    systemProperty "idea.trust.all.projects", "true"
-//    systemProperty "ide.show.tips.on.startup.default.value", "false"
-//    systemProperty "ide.mac.file.chooser.native", "false"
-//    systemProperty "jbScreenMenuBar.enabled", "false"
-//    systemProperty "apple.laf.useScreenMenuBar", "false"
-//}
-
-//intellijPlatformTesting.runIde.register("runIdeForUiTests") {
-//    task {
-//        jvmArgumentProviders.add({
-//            [
-//                    '-Drobot-server.port=8082',
-//                    '-Dide.mac.message.dialogs.as.sheets=false',
-//                    '-Djb.privacy.policy.text=<!--999.999-->',
-//                    '-Djb.consents.confirmation.enabled=false'
-//            ]
-//        } as CommandLineArgumentProvider)
-//    }
-//
-//    plugins {
-//        robotServerPlugin()
-//    }
-//}
-
-
-//intellijPlatformTesting {
-//    // Get the list of platforms from gradle.properties
-//    def platformsList = providers.gradleProperty("platformsList").get().split(",")
-//
-//    // Use providers.gradleProperty to get the 'runIdePlugins' property
-//    def runIdePluginsProperty = providers.gradleProperty("runIdePlugins").getOrElse("")
-//    def runIdePluginsList = runIdePluginsProperty.split(",")
-//
-//    platformsList.each { platform ->
-//        runIde.create("run${platform}") {
-//            type = IntelliJPlatformType."${platform}"
-//            version = providers.gradleProperty("platformVersion${platform}").get()
-//            prepareSandboxTask {
-//                sandboxDirectory = project.layout.buildDirectory.dir("${platform.toLowerCase()}-sandbox")
-//            }
-//
-//            // if runIdePluginsList is not empty, set the plugins
-//            if (runIdePluginsList.size() > 0) {
-//                plugins {
-//                    // Apply each plugin from the 'runIdePluginsList'
-//                    runIdePluginsList.each { plugin ->
-//                        plugins(plugin.trim())
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-//val runIdeForUiTests by intellijPlatformTesting.runIde.registering {
-//    task {
-//        jvmArgumentProviders.add({
-//            [
-//                    '-Drobot-server.port=8082',
-//                    '-Dide.mac.message.dialogs.as.sheets=false',
-//                    '-Djb.privacy.policy.text=<!--999.999-->',
-//                    '-Djb.consents.confirmation.enabled=false',
-//            ]
-//        } as CommandLineArgumentProvider)
-//    }
-//
-//    plugins {
-//        robotServerPlugin()
-//    }
-//}
-
-
-
-//intellijPlatformTesting {
-//    // Get the list of platforms from gradle.properties
-//    def platformsList = providers.gradleProperty("platformsList").get().split(",")
-//
-//    // Use providers.gradleProperty to get the 'runIdePlugins' property
-//    def runIdePluginsProperty = providers.gradleProperty("runIdePlugins").getOrElse("")
-//    def runIdePluginsList = runIdePluginsProperty.split(",")
-//
-//    platformsList.each { platform ->
-//        runIde.create("run${platform}") {
-//            type = IntelliJPlatformType."${platform}"
-//            version = providers.gradleProperty("platformVersion${platform}").get()
-//            prepareSandboxTask {
-//                sandboxDirectory = project.layout.buildDirectory.dir("${platform.toLowerCase()}-sandbox")
-//            }
-//
-//            // if runIdePluginsList is not empty, set the plugins
-//            if (runIdePluginsList.size() > 0) {
-//                plugins {
-//                    // Apply each plugin from the 'runIdePluginsList'
-//                    runIdePluginsList.each { plugin ->
-//                        plugins(plugin.trim())
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
-//task testCompilation(type: Test, group: 'Verification', dependsOn: [classes, testClasses]) {
-//    useJUnit {
-//        include compilationPackages
-//    }
-//    testLogging {
-//        exceptionFormat = 'full'
-//    }
-//}
-
-//runIde {
-//    systemProperty "idea.log.debug.categories", "org.elixir_lang=TRACE"
-//    // When wanting to disable EDT slow assertion..
-//    // systemProperty "ide.slow.operations.assertion", "true"
-//
-//    // -Didea.debug.mode=true:
-//    // This enables debug mode for IntelliJ IDEA. It can be useful when developing plugins to get more detailed logging and debugging information.
-//    // -Didea.is.internal=true:
-//    // This flag indicates that the plugin is running in an internal mode, which may enable additional features or logging that are typically only available to IntelliJ developers.
-//    // -Dlog4j2.debug=true:
-//    // This enables debug logging for Log4j 2, which is the logging framework used by IntelliJ IDEA. It can help in troubleshooting logging-related issues in your plugin.
-//    // -Dlogger.org=TRACE:
-//    // This sets the logging level for the "org" package to TRACE, which is the most verbose logging level. This can be useful for detailed logging of plugin activities.
-//    // -XX:+AllowEnhancedClassRedefinition:
-//    // This is a JVM flag that allows for more flexible class redefinition during runtime. It can be beneficial for hot-swapping code changes without restarting the IDE.
-//    // -Didea.ProcessCanceledException=disabled:
-//    //This disables the throwing of ProcessCanceledException, which is typically used to cancel long-running processes in IntelliJ IDEA. Disabling it can be useful in certain debugging scenarios.
-//    jvmArgs "-Didea.debug.mode=true", "-XX:+AllowEnhancedClassRedefinition", "-Didea.is.internal=true", "-Dlog4j2.debug=true", "-Dlogger.org=TRACE", "-Didea.ProcessCanceledException=disabled"
-//    maxHeapSize = "7g"
-//    // get from runIdeWorkingDirectory
-//    if (project.hasProperty("runIdeWorkingDirectory") && !project.property("runIdeWorkingDirectory").isEmpty()) {
-//        workingDir = file(project.property("runIdeWorkingDirectory"))
-//    }
-//}
-
 test {
     useJUnitPlatform()
 
     testLogging {
-//        showStandardStreams = true
+        showStandardStreams = true
         exceptionFormat = 'full'
     }
 }
-////tasks {
-//    // Disabling buildSearchableOptions, which runs as part of the buildPlugin task.
-//    // this is to buildSearchableOptions to workaround the "Only one instance of IDEA can be run at a time" problem.
-//    // Per documentation: https://plugins.jetbrains.com/docs/intellij/ide-development-instance.html#the-development-instance-sandbox-directory
-////    buildSearchableOptions {
-////        enabled = false
-////    }
-//}
+
+
+tasks {
+    // Disabling buildSearchableOptions, which runs as part of the buildPlugin task.
+    // this is to buildSearchableOptions to workaround the "Only one instance of IDEA can be run at a time" problem.
+    // Per documentation: https://plugins.jetbrains.com/docs/intellij/ide-development-instance.html#the-development-instance-sandbox-directory
+    buildSearchableOptions {
+        enabled = false
+    }
+}
 
 patchPluginXml {
     changeNotes = """
