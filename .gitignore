@@ -3,5 +3,6 @@ target
 video
 .gradle
 .idea
+*.xml
 .DS_Store
 bin/
