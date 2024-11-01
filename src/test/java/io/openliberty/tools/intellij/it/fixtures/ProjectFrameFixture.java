@@ -68,6 +68,14 @@ public class ProjectFrameFixture extends CommonContainerFixture {
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 
+    public ComponentFixture getActionMenuNew(String... xpathVars) {
+        String text = xpathVars[0];
+        String waitTime = xpathVars[1];
+        return find(ComponentFixture.class,
+                byXpath("//div[@class='ActionButton' and @text='" + text + "']"),
+                Duration.ofSeconds(Integer.parseInt(waitTime)));
+    }
+
     /**
      * Returns the ComponentFixture object associated with the ActionMenuItem class.
      *
@@ -83,6 +91,30 @@ public class ProjectFrameFixture extends CommonContainerFixture {
                 () -> !findAll(ComponentFixture.class,
                         byXpath("//div[@class='ActionMenuItem' and @text='" + text + "']")).isEmpty());
         List<ComponentFixture> list = findAll(ComponentFixture.class, byXpath("//div[@class='ActionMenuItem' and @text='" + text + "']"));
+        return list.get(0);
+    }
+
+    public ComponentFixture getActionMenuItemNew(String... xpathVars) {
+        String text = xpathVars[0];
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+                Duration.ofSeconds(1),
+                "Waiting for menu items containing the " + text + " text",
+                "Menu items containing the " + text + " text were not found",
+                () -> !findAll(ComponentFixture.class,
+                        byXpath("//div[@class='ActionItem' and @accessibleName='" + text + "']")).isEmpty());
+        List<ComponentFixture> list = findAll(ComponentFixture.class, byXpath("//div[@class='ActionItem' and @accessibleName='" + text + "']"));
+        return list.get(0);
+    }
+
+    public ComponentFixture getActionItem(String... xpathVars) {
+        String text = xpathVars[0];
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+                Duration.ofSeconds(1),
+                "Waiting for menu items containing the " + text + " text",
+                "Menu items containing the " + text + " text were not found",
+                () -> !findAll(ComponentFixture.class,
+                        byXpath("//div[@class='ActionItem' and @text='" + text + "']")).isEmpty());
+        List<ComponentFixture> list = findAll(ComponentFixture.class, byXpath("//div[@class='ActionItem' and @text='" + text + "']"));
         return list.get(0);
     }
 
@@ -185,6 +217,14 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         String waitTime = xpathVars[1];
         return find(ComponentFixture.class,
                 byXpath("//div[@class='StripeButton' and @text='" + text + "']"),
+                Duration.ofSeconds(Integer.parseInt(waitTime)));
+    }
+
+    public ComponentFixture getSquareStripeButton(String... xpathVars) {
+        String text = xpathVars[0];
+        String waitTime = xpathVars[1];
+        return find(ComponentFixture.class,
+                byXpath("//div[@class='SquareStripeButton' and @text='" + text + "']"),
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 

@@ -6,3 +6,4 @@ video
 *.xml
 .DS_Store
 bin/
+.intellijPlatform

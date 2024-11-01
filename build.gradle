@@ -7,10 +7,11 @@ plugins {
 
 group 'io.openliberty.tools'
 version '24.0.9'
-def lsp4ijVersion = '0.7.0-20241014-013201@nightly'
 
-def remoteRobotVersion = "0.11.18"
+
+def remoteRobotVersion = "0.11.23"
 // To switch to nightly version, append "@nightly" to the version number (i.e. 0.4.1-20240828-013108@nightly)
+def lsp4ijVersion = '0.7.0'
 
 allprojects {
     apply plugin: 'java'
@@ -61,7 +62,7 @@ configurations {
     runtimeClasspath {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
-    //apply plugin: "kotlin"
+
     // Ensures that the JVM target is set to 17 for all Kotlin compilation tasks, including both main and test sources.
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions {
@@ -91,9 +92,9 @@ dependencies {
         exclude group: 'com.google.code.gson'
     }
     implementation 'org.apache.maven:maven-artifact:3.6.3'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
-//    implementation 'com.vladsch.flexmark:flexmark:0.64.8'
-//    implementation 'org.jsoup:jsoup:1.15.3'
+//    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
+    implementation 'com.vladsch.flexmark:flexmark:0.64.8'
+    implementation 'org.jsoup:jsoup:1.15.3'
     //Add junit dependency back when tests are added
     //testImplementation group: 'junit', name: 'junit', version: '4.13.1'
     //required by lsp4j as the version from IJ is incompatible
@@ -103,9 +104,14 @@ dependencies {
     testImplementation 'com.intellij.remoterobot:remote-robot:' + remoteRobotVersion
     testImplementation 'com.intellij.remoterobot:remote-fixtures:' + remoteRobotVersion
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-    testImplementation('com.jetbrains.intellij.maven:maven-test-framework:242.23339.11') {
-        transitive = false
-    }
+//    testImplementation('Plugin.Maven:242.23726.103') {
+//        transitive = false
+//    }
+//    testImplementation('com.jetbrains.intellij.maven:maven-test-framework:241.15989.150') {
+//        transitive = false
+//    }
+//    testImplementation testFramework(TestFrameworkType.Platform)
+    //testRuntimeOnly 'junit:junit:4.13.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.9.2'
 
@@ -135,11 +141,8 @@ dependencies {
     implementation files(new File(buildDir, 'server')) {
         builtBy 'copyDeps'
     }
-    // implementation 'com.redhat.devtools.lsp4ij:lsp4ij:0.6.0' // Replace with the correct version
-
 
     intellijPlatform {
-        // For a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
         bundledPlugins providers.gradleProperty("platformBundledPlugins").orElse("").get().split(',').toList()
 
@@ -153,6 +156,7 @@ dependencies {
 
         testFramework TestFrameworkType.Platform.INSTANCE
         testFramework TestFrameworkType.Plugin.Java.INSTANCE
+        testFramework TestFrameworkType.Plugin.Maven.INSTANCE
     }
 }
 
@@ -162,16 +166,15 @@ task copyDeps(type: Copy) {
     into new File(buildDir, 'server/server')
     rename '^(.*)(-[0-9]+[.[0-9]+]+(-SNAPSHOT)?)(.*)$', '$1$4'
 }
-intellijPlatform {
-    pluginConfiguration {
-        ideaVersion {
-            sinceBuild = providers.gradleProperty("pluginSinceBuild")
-            untilBuild = providers.gradleProperty("pluginUntilBuild")
-        }
-    }
-}
+
+
 runIde {
-    jvmArgs '--add-exports', 'java.base/jdk.internal.vm=ALL-UNNAMED'
+    jvmArgumentProviders.add({
+        [
+                "--add-exports",
+                "java.base/jdk.internal.vm=ALL-UNNAMED",
+        ]
+    } as CommandLineArgumentProvider)
 }
 
 intellijPlatformTesting.runIde {
@@ -196,6 +199,7 @@ intellijPlatformTesting.runIde {
         }
     }
 }
+
 test {
     useJUnitPlatform()
 
@@ -205,18 +209,14 @@ test {
     }
 }
 
-
-tasks {
-    // Disabling buildSearchableOptions, which runs as part of the buildPlugin task.
-    // this is to buildSearchableOptions to workaround the "Only one instance of IDEA can be run at a time" problem.
-    // Per documentation: https://plugins.jetbrains.com/docs/intellij/ide-development-instance.html#the-development-instance-sandbox-directory
-    buildSearchableOptions {
-        enabled = false
-    }
-}
-
-patchPluginXml {
-    changeNotes = """
+intellijPlatform {
+    buildSearchableOptions = false
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = providers.gradleProperty("pluginSinceBuild")
+            untilBuild = providers.gradleProperty("pluginUntilBuild")
+        }
+        changeNotes = """
         <h2> 24.0.9 </h2>
         <p>Version 24.0.9 of Liberty Tools for IntelliJ IDEA contains enhancements and fixes. Version 24.0.9 requires IntelliJ IDEA version 2024.1.* ONLY and a minimum of Java 17.</p>
         Notable changes:
@@ -355,5 +355,6 @@ patchPluginXml {
         <li> First preview release
         </ul>
         """
-    version project.version
+        version project.version
+    }
 }
