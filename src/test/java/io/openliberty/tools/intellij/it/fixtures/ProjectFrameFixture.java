@@ -221,10 +221,10 @@ public class ProjectFrameFixture extends CommonContainerFixture {
     }
 
     public ComponentFixture getSquareStripeButton(String... xpathVars) {
-        String text = xpathVars[0];
+        String fileName = xpathVars[0];
         String waitTime = xpathVars[1];
         return find(ComponentFixture.class,
-                byXpath("//div[@class='SquareStripeButton' and @text='" + text + "']"),
+                byXpath("//div[@accessiblename='" + fileName + "' and @class='SquareStripeButton']"),
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 
@@ -296,7 +296,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
      * @return The ContainerFixture object associated with the DocumentationHintEditorPane pop-up window.
      */
     public ContainerFixture getDiagnosticPane() {
-        return find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='JEditorPane']"), Duration.ofSeconds(5));
+        return find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='JBHtmlPane']"), Duration.ofSeconds(5));
     }
 
     /**

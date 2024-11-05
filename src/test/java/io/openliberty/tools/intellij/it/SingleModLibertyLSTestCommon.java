@@ -133,7 +133,8 @@ public abstract class SingleModLibertyLSTestCommon {
         String insertedConfig = "<logging></logging>";
 
         // get focus on server.xml tab prior to copy
-        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+//        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+        UIBotTestUtils.openFile(remoteRobot, projectName, "server.xml", projectName, "src", "main", "liberty", "config");
 
         // Save the current server.xml content.
         UIBotTestUtils.copyWindowContent(remoteRobot);
