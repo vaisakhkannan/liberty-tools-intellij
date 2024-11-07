@@ -507,7 +507,7 @@ public class UIBotTestUtils {
             projectFrame.getBaseLabel("Terminal", "5");
         } catch (WaitForConditionTimeoutException e) {
             // The Liberty tool window is closed. Open it.
-            clickOnWindowPaneStripeButton(remoteRobot, "Terminal");
+            clickOnWindowPaneSquareStripeButton(remoteRobot, "Terminal");
         }
     }
 
@@ -726,6 +726,7 @@ public class UIBotTestUtils {
      */
     public static void closeAllEditorTabs(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture windowMenuEntry = projectFrame.getActionMenu("Window", "10");
         windowMenuEntry.click();
 
@@ -1314,7 +1315,7 @@ public class UIBotTestUtils {
     public static void selectAndDeleteTextInJavaPart(RemoteRobot remoteRobot, String fileName, String textToDelete) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         clickOnFileTab(remoteRobot, fileName);
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
         editorNew.click();
 
@@ -1350,7 +1351,7 @@ public class UIBotTestUtils {
      */
     public static void selectAndModifyTextInJavaPart(RemoteRobot remoteRobot, String fileName, String textToModify, String modificationText){
         clickOnFileTab(remoteRobot, fileName);
-        Locator locator = byXpath("//div[@class='EditorWindowTopComponent']//div[@class='EditorComponentImpl']");
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
         editorNew.click();
 
@@ -1500,13 +1501,16 @@ public class UIBotTestUtils {
     public static void clearWindowContent(RemoteRobot remoteRobot) {
         // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
+        clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
         editMenuEntry.click();
         ComponentFixture selectAllEntry = projectFrame.getActionMenuItem("Select All");
         selectAllEntry.click();
 
         // Delete/Clear the content.
-        editMenuEntry.click();
+        clickOnFileTabNew(remoteRobot, "Main Menu");
+        ComponentFixture editMenuEntryNew = projectFrame.getActionMenu("Edit", "10");
+        editMenuEntryNew.click();
         ComponentFixture deleteEntry = projectFrame.getActionMenuItem("Delete");
         deleteEntry.click();
     }
@@ -1663,6 +1667,7 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
+                clickOnFileTabNew(remoteRobot, "Main Menu");
                 ComponentFixture navigateMenuEntry = projectFrame.getActionMenu("Navigate", "20");
                 navigateMenuEntry.click();
 
@@ -1931,6 +1936,7 @@ public class UIBotTestUtils {
      */
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
         runMenu.click();
         ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
@@ -2218,7 +2224,7 @@ public class UIBotTestUtils {
 
         Locator locator = byXpath("//div[contains(@myaction.key, 'group.RunMenu.text')]");
         if (execMode == ExecMode.DEBUG) {
-            locator = byXpath("//div[@myicon='startDebugger.svg']");
+            locator = byXpath("//div[@myicon='debug.svg']");
         }
 
         ActionButtonFixture iconButton = projectFrame.actionButton(locator, Duration.ofSeconds(10));
@@ -2238,6 +2244,7 @@ public class UIBotTestUtils {
      */
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
         runMenu.click();
         ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
@@ -2340,11 +2347,12 @@ public class UIBotTestUtils {
             projectFrame.getBaseLabel("Debug:", "5");
         } catch (WaitForConditionTimeoutException wfcte) {
             // The debug tab is not opened for some reason. Open it.
-            ComponentFixture debugStripe = projectFrame.getStripeButton("Debug", "10");
+            ComponentFixture debugStripe = projectFrame.getSquareStripeButton("Debug", "10");
             debugStripe.click();
         }
 
-        Locator locator = byXpath("//div[contains(@myvisibleactions, 'Get')]//div[contains(@myaction.key, 'action.Stop.text')]");
+//        Locator locator = byXpath("//div[contains(@myvisibleactions, 'Get')]//div[contains(@myaction.key, 'action.Stop.text')]");
+        Locator locator = byXpath("//div[@class='Toolbar']//div[contains(@myaction.key, 'action.Stop.text')]");
         ActionButtonFixture stopButton = projectFrame.actionButton(locator, Duration.ofSeconds(5));
         stopButton.click();
     }
