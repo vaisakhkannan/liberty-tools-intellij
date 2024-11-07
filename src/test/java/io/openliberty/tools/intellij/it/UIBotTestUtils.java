@@ -798,12 +798,12 @@ public class UIBotTestUtils {
         WelcomeFrameFixture welcomePage = remoteRobot.find(WelcomeFrameFixture.class, Duration.ofSeconds(10));
 
         try {
-            String xPath = "//div[@class='JEditorPane']";
+            String xPath = "//div[@class='NotificationActionPanel']";
             ComponentFixture actionButton = welcomePage.getActionButton(xPath, "10");
             actionButton.click();
-            String xPathNew = "//div[@class='JBLabel' and @text='Welcome to IntelliJ IDEA']";
-            ComponentFixture actionButtonNew = welcomePage.getActionButton(xPathNew, "10");
-            actionButtonNew.click();
+//            String xPathNew = "//div[@class='JBLabel' and @text='Welcome to IntelliJ IDEA']";
+//            ComponentFixture actionButtonNew = welcomePage.getActionButton(xPathNew, "10");
+//            actionButtonNew.click();
 
         } catch (WaitForConditionTimeoutException e) {
             // file not open, nothing to do
