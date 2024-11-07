@@ -2191,6 +2191,7 @@ public class UIBotTestUtils {
      */
     public static void selectConfigUsingMenu(RemoteRobot remoteRobot, String cfgName, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture menuOption = projectFrame.getActionMenu("Run", "10");
         menuOption.click();
         ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run...");
@@ -2344,15 +2345,15 @@ public class UIBotTestUtils {
     public static void stopDebugger(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         try {
-            projectFrame.getBaseLabel("Debug:", "5");
+            projectFrame.getBaseLabel("Debug", "5");
         } catch (WaitForConditionTimeoutException wfcte) {
             // The debug tab is not opened for some reason. Open it.
             ComponentFixture debugStripe = projectFrame.getSquareStripeButton("Debug", "10");
             debugStripe.click();
         }
 
-//        Locator locator = byXpath("//div[contains(@myvisibleactions, 'Get')]//div[contains(@myaction.key, 'action.Stop.text')]");
-        Locator locator = byXpath("//div[@class='Toolbar']//div[contains(@myaction.key, 'action.Stop.text')]");
+//        Locator locator = byXpath("//div[contains(@myaction.key, 'action.Stop.text')]");
+        Locator locator = byXpath("//div[@class='MyNonOpaquePanel']//div[contains(@myaction.key, 'action.Stop.text')]");
         ActionButtonFixture stopButton = projectFrame.actionButton(locator, Duration.ofSeconds(5));
         stopButton.click();
     }
