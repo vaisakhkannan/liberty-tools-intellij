@@ -110,6 +110,8 @@ public class UIBotTestUtils {
             fail("Unable to identify the current window frame (i.e. welcome/project)");
         }
 
+        closeWelcomeNotification(remoteRobot);
+
         if (currentFrame == Frame.WELCOME) {
             // From the welcome dialog.
             WelcomeFrameFixture welcomePage = remoteRobot.find(WelcomeFrameFixture.class, Duration.ofSeconds(10));
@@ -786,6 +788,22 @@ public class UIBotTestUtils {
             String xPath = "//div[@accessiblename='" + fileName + "' and @class='ActionButton']";
             ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
             actionButton.click();
+
+        } catch (WaitForConditionTimeoutException e) {
+            // file not open, nothing to do
+        }
+    }
+
+    public static void closeWelcomeNotification(RemoteRobot remoteRobot) {
+        WelcomeFrameFixture welcomePage = remoteRobot.find(WelcomeFrameFixture.class, Duration.ofSeconds(10));
+
+        try {
+            String xPath = "//div[@class='JEditorPane']";
+            ComponentFixture actionButton = welcomePage.getActionButton(xPath, "10");
+            actionButton.click();
+            String xPathNew = "//div[@class='JBLabel' and @text='Welcome to IntelliJ IDEA']";
+            ComponentFixture actionButtonNew = welcomePage.getActionButton(xPathNew, "10");
+            actionButtonNew.click();
 
         } catch (WaitForConditionTimeoutException e) {
             // file not open, nothing to do
