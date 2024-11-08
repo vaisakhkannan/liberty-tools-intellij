@@ -1749,6 +1749,68 @@ public class UIBotTestUtils {
         }
     }
 
+    public static void runActionFromSearchEverywherePanelNew(RemoteRobot remoteRobot, String action, int maxRetries) {
+        // Search everywhere UI actions may fail due to UI flickering/indexing on Windows. Retry in case of a failure.
+        Exception error = null;
+        for (int i = 0; i < maxRetries; i++) {
+            try {
+                error = null;
+
+                // Click on Navigate on the Menu bar.
+                ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
+                clickOnFileTabNew(remoteRobot, "Main Menu");
+                ComponentFixture navigateMenuEntry = projectFrame.getActionMenu("Navigate", "20");
+                navigateMenuEntry.click();
+
+                // Click on Search Everywhere in the menu.
+                ComponentFixture searchFixture = projectFrame.getActionMenuItem("Search Everywhere");
+                searchFixture.click();
+
+                // Click on the Actions tab
+                ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Actions");
+                actionsTabFixture.click();
+
+                // Type the search string in the search dialog box.
+                JTextFieldFixture searchField = projectFrame.textField(JTextFieldFixture.Companion.byType(), Duration.ofSeconds(10));
+                searchField.click();
+                searchField.setText(action);
+                TestUtils.sleepAndIgnoreException(1); // allow search time to resolve
+
+                // Wait for the desired action to show in the search output frame and click on it.
+                RepeatUtilsKt.waitFor(Duration.ofSeconds(20),
+                        Duration.ofSeconds(1),
+                        "Waiting for the search to filter and show " + action + " in search output",
+                        "The search did not filter or show " + action + " in the search output",
+                        () -> findTextInListOutputPanel(projectFrame, action) != null);
+
+                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action);
+                if (foundAction != null) {
+                    foundAction.click();
+                } else {
+                    throw new RuntimeException("Search everywhere found " + action + ", but it can no longer be found after a subsequent attempt to find it.");
+                }
+
+                // If the Liberty: Start... action was selected, make sure the Edit Configuration dialog is displayed.
+                if (action.equals("Edit Configuration")) {
+                    // This call will fail if the expected dialog is not displayed.
+                    projectFrame.find(DialogFixture.class, DialogFixture.byTitle("Edit Configuration"), Duration.ofSeconds(30));
+                }
+
+                break;
+            } catch (Exception e) {
+                error = e;
+                TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
+                        "Failed to run the " + action + " action using the search everywhere option (" + e.getMessage() + "). Retrying...");
+                TestUtils.sleepAndIgnoreException(5);
+            }
+        }
+
+        // Report the last error if there is one.
+        if (error != null) {
+            throw new RuntimeException("Failed to run the " + action + " action using the search everywhere option", error);
+        }
+    }
+
     /**
      * Selects the specified project from the list of detected projects shown in the 'Add Liberty project'
      * dialog.
@@ -2264,10 +2326,12 @@ public class UIBotTestUtils {
     public static void deleteLibertyRunConfigurations(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         clickOnFileTabNew(remoteRobot, "Main Menu");
-        ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
-        runMenu.click();
-        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
-        editCfgsMenuEntry.click();
+//        ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
+//        runMenu.click();
+//        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
+//        editCfgsMenuEntry.click();
+
+        runActionFromSearchEverywherePanelNew(remoteRobot, "Edit Configurations...", 3);
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
         int maxRetries = 3;
