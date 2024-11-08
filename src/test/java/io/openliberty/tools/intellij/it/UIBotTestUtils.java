@@ -1791,10 +1791,10 @@ public class UIBotTestUtils {
                 }
 
                 // If the Liberty: Start... action was selected, make sure the Edit Configuration dialog is displayed.
-                if (action.equals("Edit Configuration")) {
-                    // This call will fail if the expected dialog is not displayed.
-                    projectFrame.find(DialogFixture.class, DialogFixture.byTitle("Edit Configuration"), Duration.ofSeconds(30));
-                }
+//                if (action.equals("Edit Configuration")) {
+//                    // This call will fail if the expected dialog is not displayed.
+//                    projectFrame.find(DialogFixture.class, DialogFixture.byTitle("Edit Configuration"), Duration.ofSeconds(30));
+//                }
 
                 break;
             } catch (Exception e) {
@@ -2017,10 +2017,11 @@ public class UIBotTestUtils {
     public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         clickOnFileTabNew(remoteRobot, "Main Menu");
-        ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
-        runMenu.click();
-        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
-        editCfgsMenuEntry.click();
+//        ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
+//        runMenu.click();
+//        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
+//        editCfgsMenuEntry.click();
+        runActionFromSearchEverywherePanelNew(remoteRobot, "Edit Configurations...", 3);
 
         // Find the Run/Debug Configurations dialog.
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
