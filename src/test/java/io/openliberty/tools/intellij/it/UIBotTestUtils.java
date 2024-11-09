@@ -96,6 +96,17 @@ public class UIBotTestUtils {
         NAME, LIBERTYPROJ, PARAMS
     }
 
+    public static void maximizeWindow(RemoteRobot remoteRobot) {
+//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
+        Keyboard keyboard = new Keyboard(remoteRobot);
+        // find the location in the file to begin the stanza insertion
+        // we will put new config at the end of the config file
+        // (after the last line already in the file)
+        keyboard.hotKey(VK_WINDOWS, VK_UP);
+        keyboard.enter();
+
+    }
+
     /**
      * Imports a project using the UI.
      *
