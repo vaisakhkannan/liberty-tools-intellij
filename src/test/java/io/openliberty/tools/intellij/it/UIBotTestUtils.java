@@ -467,6 +467,7 @@ public class UIBotTestUtils {
      * @param remoteRobot The RemoteRobot instance.
      */
     public static void openProjectView(RemoteRobot remoteRobot) {
+        maximizeWindow(remoteRobot);
         int maxRetries = 6;
         Exception error = null;
         for (int i = 0; i < maxRetries; i++) {
