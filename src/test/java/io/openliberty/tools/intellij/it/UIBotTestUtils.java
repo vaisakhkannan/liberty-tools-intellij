@@ -107,6 +107,17 @@ public class UIBotTestUtils {
 
     }
 
+    public static void minimizeWindow(RemoteRobot remoteRobot) {
+//        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
+        Keyboard keyboard = new Keyboard(remoteRobot);
+        // find the location in the file to begin the stanza insertion
+        // we will put new config at the end of the config file
+        // (after the last line already in the file)
+        keyboard.hotKey(VK_WINDOWS, VK_DOWN);
+        keyboard.enter();
+
+    }
+
     /**
      * Imports a project using the UI.
      *
@@ -230,6 +241,7 @@ public class UIBotTestUtils {
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         // Click on File on the Menu bar.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        minimizeWindow(remoteRobot);
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
         fileMenuEntry.click();
@@ -2285,14 +2297,16 @@ public class UIBotTestUtils {
     public static void selectConfigUsingMenu(RemoteRobot remoteRobot, String cfgName, ExecMode execMode) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         clickOnFileTabNew(remoteRobot, "Main Menu");
-        ComponentFixture menuOption = projectFrame.getActionMenu("Run", "10");
-        menuOption.click();
-        ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run...");
+//        ComponentFixture menuOption = projectFrame.getActionMenu("Run", "10");
+//        menuOption.click();
+//        ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run...");
+        runActionFromSearchEverywherePanelNew(remoteRobot, "Run...", 3);
         if (execMode == ExecMode.DEBUG) {
-            menuCfgExecOption = projectFrame.getActionMenuItem("Debug...");
+//            menuCfgExecOption = projectFrame.getActionMenuItem("Debug...");
+            runActionFromSearchEverywherePanelNew(remoteRobot, "Debug...", 3);
         }
 
-        menuCfgExecOption.click();
+//        menuCfgExecOption.click();
 
         // Retrieve the list of configs from the config list window.
         ComponentFixture cfgSelectWindow = projectFrame.getMyList();
