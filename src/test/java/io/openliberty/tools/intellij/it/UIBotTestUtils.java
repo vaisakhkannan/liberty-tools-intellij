@@ -805,6 +805,21 @@ public class UIBotTestUtils {
         }
     }
 
+    public static void rightClickCloseOnFileTab(RemoteRobot remoteRobot, String fileName) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+
+        try {
+            String xPath = "//div[@accessiblename='" + fileName + "' and @class='SimpleColoredComponent']";
+            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+            actionButton.rightClick();
+            ComponentFixture closeFixture = projectFrame.getActionMenuItem("Close");
+            closeFixture.click();
+
+        } catch (WaitForConditionTimeoutException e) {
+            // file not open, nothing to do
+        }
+    }
+
     public static void clickOnFileTabNew(RemoteRobot remoteRobot, String fileName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 

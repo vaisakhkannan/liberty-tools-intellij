@@ -98,7 +98,8 @@ public abstract class SingleModMPProjectTestCommon {
                 "Editor tab with the name of " + editorTabName + " could not be found.");
 
         // Close the editor tab.
-        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "10");
+//        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "10");
+        UIBotTestUtils.rightClickCloseOnFileTab(remoteRobot, editorTabName);
     }
 
     /**
