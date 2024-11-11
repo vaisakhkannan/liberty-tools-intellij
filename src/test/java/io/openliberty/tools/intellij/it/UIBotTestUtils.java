@@ -125,7 +125,8 @@ public class UIBotTestUtils {
             fail("Unable to identify the current window frame (i.e. welcome/project)");
         }
 
-        closeWelcomeNotification(remoteRobot);
+//        closeWelcomeNotification(remoteRobot);
+        maximizeWindow(remoteRobot);
 
         if (currentFrame == Frame.WELCOME) {
             // From the welcome dialog.
