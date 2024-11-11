@@ -242,6 +242,7 @@ public class UIBotTestUtils {
         closeFixture.click();
     }
 
+    // Method to click on Main Menu
     public static void clickOnFileTabNew(RemoteRobot remoteRobot, String fileName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
