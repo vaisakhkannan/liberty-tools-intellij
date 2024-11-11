@@ -126,7 +126,7 @@ public class UIBotTestUtils {
         }
 
 //        closeWelcomeNotification(remoteRobot);
-        maximizeWindow(remoteRobot);
+//        maximizeWindow(remoteRobot);
 
         if (currentFrame == Frame.WELCOME) {
             // From the welcome dialog.
