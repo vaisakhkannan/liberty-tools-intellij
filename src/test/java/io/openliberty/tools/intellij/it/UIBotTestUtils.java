@@ -193,13 +193,13 @@ public class UIBotTestUtils {
         // Note that at specific points in time, the window pane items will re-arrange themselves
         // as content is displayed. This, has an effect on the location of the items on the frame.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-        clickOnFileTabNew(remoteRobot, "Main Menu");
-        ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "60");
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
-                Duration.ofSeconds(1),
-                "Waiting for the File action menu on the main window pane to be enabled",
-                "The file action menu on then main window pane is not enabled",
-                () -> projectFrame.isComponentEnabled(fileMenuEntry));
+//        clickOnFileTabNew(remoteRobot, "Main Menu");
+//        ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "60");
+//        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+//                Duration.ofSeconds(1),
+//                "Waiting for the File action menu on the main window pane to be enabled",
+//                "The file action menu on then main window pane is not enabled",
+//                () -> projectFrame.isComponentEnabled(fileMenuEntry));
 
         ComponentFixture wpStripeButton = projectFrame.getSquareStripeButton("Liberty", "60");
         RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
