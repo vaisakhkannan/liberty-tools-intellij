@@ -237,7 +237,7 @@ public class UIBotTestUtils {
         minimizeWindow(remoteRobot);
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
-        fileMenuEntry.click();
+        fileMenuEntry.moveMouse();
 
         // Click on Close Project in the menu.
         ComponentFixture closeFixture = projectFrame.getActionMenuItem("Close Project");
@@ -1512,7 +1512,7 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
+        editMenuEntry.moveMouse();
         ComponentFixture slectAllEntry = projectFrame.getActionMenuItem("Select All");
         slectAllEntry.click();
 
@@ -1520,7 +1520,7 @@ public class UIBotTestUtils {
 //        editMenuEntry.click();
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture editMenuEntryNew = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntryNew.click();
+        editMenuEntryNew.moveMouse();
         ComponentFixture copyEntry = projectFrame.getActionMenuItem("Copy");
         copyEntry.click();
         projectFrame.click();
@@ -1536,7 +1536,7 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
+        editMenuEntry.moveMouse();
         ComponentFixture selectAllEntry = projectFrame.getActionMenuItem("Select All");
         selectAllEntry.click();
 
@@ -1544,7 +1544,7 @@ public class UIBotTestUtils {
 //        editMenuEntry.click();
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture editMenuEntryNew = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntryNew.click();
+        editMenuEntryNew.moveMouse();
         ComponentFixture deleteEntry = projectFrame.getActionMenuItem("Delete");
         deleteEntry.click();
     }
@@ -1570,14 +1570,14 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
+        editMenuEntry.moveMouse();
         ComponentFixture selectAllEntry = projectFrame.getActionMenuItem("Select All");
         selectAllEntry.click();
 
         // Paste the content.
         clickOnFileTabNew(remoteRobot, "Main Menu");
         editMenuEntry = projectFrame.getActionMenu("Edit", "10");
-        editMenuEntry.click();
+        editMenuEntry.moveMouse();
         ComponentFixture pasteFixture = projectFrame.getChildActionMenu("Edit", "Paste");
         pasteFixture.click();
         ComponentFixture pasteChildEntry = projectFrame.getChildActionMenuItem("Edit", "Paste");
@@ -1586,7 +1586,7 @@ public class UIBotTestUtils {
         // Save.
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
-        fileMenuEntry.click();
+        fileMenuEntry.moveMouse();
         ComponentFixture saveAllEntry = projectFrame.getActionMenuItem("Save All");
         saveAllEntry.click();
     }
@@ -1703,7 +1703,7 @@ public class UIBotTestUtils {
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
                 clickOnFileTabNew(remoteRobot, "Main Menu");
                 ComponentFixture navigateMenuEntry = projectFrame.getActionMenu("Navigate", "20");
-                navigateMenuEntry.click();
+                navigateMenuEntry.moveMouse();
 
                 // Click on Search Everywhere in the menu.
                 ComponentFixture searchFixture = projectFrame.getActionMenuItem("Search Everywhere");
@@ -1974,7 +1974,7 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
-        runMenu.click();
+        runMenu.moveMouse();
         ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
         editCfgsMenuEntry.click();
 
@@ -2229,7 +2229,7 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture menuOption = projectFrame.getActionMenu("Run", "10");
-        menuOption.click();
+        menuOption.moveMouse();
         ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run...");
         if (execMode == ExecMode.DEBUG) {
             menuCfgExecOption = projectFrame.getActionMenuItem("Debug...");
@@ -2283,7 +2283,7 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
-        runMenu.click();
+        runMenu.moveMouse();
         ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
         editCfgsMenuEntry.click();
 
