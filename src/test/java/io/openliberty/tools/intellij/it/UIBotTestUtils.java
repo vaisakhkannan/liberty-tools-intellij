@@ -194,6 +194,7 @@ public class UIBotTestUtils {
         // as content is displayed. This, has an effect on the location of the items on the frame.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
 //        clickOnFileTabNew(remoteRobot, "Main Menu");
+        // one more comment
 //        ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "60");
 //        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
 //                Duration.ofSeconds(1),
