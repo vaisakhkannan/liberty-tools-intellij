@@ -623,6 +623,7 @@ public class UIBotTestUtils {
                 error = null;
 
                 // Click on the Liberty tool window toolbar to give it focus.
+                TestUtils.sleepAndIgnoreException(5);
                 ComponentFixture LibertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
                 LibertyTWBar.click();
 
