@@ -1811,7 +1811,7 @@ public class UIBotTestUtils {
                 }
 
                 // If the Liberty: Start... action was selected, make sure the Edit Configuration dialog is displayed.
-//                break;
+                break;
             } catch (Exception e) {
                 error = e;
                 TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
