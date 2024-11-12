@@ -627,8 +627,8 @@ public class UIBotTestUtils {
                 LibertyTWBar.click();
 
                 // Expand the project tree to show the available actions.
-                String xPath = "//div[@class='LibertyExplorer']//div[@class='ActionButton' and contains(@myaction.key, 'action.ExpandAll.text')]";
                 TestUtils.sleepAndIgnoreException(5);
+                String xPath = "//div[@class='LibertyExplorer']//div[@class='ActionButton' and contains(@myaction.key, 'action.ExpandAll.text')]";
                 ComponentFixture actionButton = projectFrame.getActionButton(xPath, "20");
                 actionButton.click();
 
