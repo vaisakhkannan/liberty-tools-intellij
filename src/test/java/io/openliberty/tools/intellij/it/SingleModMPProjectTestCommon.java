@@ -918,9 +918,9 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.openProjectView(remoteRobot);
         // IntelliJ does not start building and indexing until the project is open in the UI
         UIBotTestUtils.waitForIndexing(remoteRobot);
-        TestUtils.sleepAndIgnoreException(5);
+        TestUtils.sleepAndIgnoreException(10);
         UIBotTestUtils.openAndValidateLibertyToolWindow(remoteRobot, projectName);
-        TestUtils.sleepAndIgnoreException(5);
+        TestUtils.sleepAndIgnoreException(10);
         UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
 
         // Close all open editors.

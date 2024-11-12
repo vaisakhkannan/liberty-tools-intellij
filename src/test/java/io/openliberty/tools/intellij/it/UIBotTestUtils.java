@@ -623,16 +623,16 @@ public class UIBotTestUtils {
                 error = null;
 
                 // Click on the Liberty tool window toolbar to give it focus.
-                TestUtils.sleepAndIgnoreException(5);
+                TestUtils.sleepAndIgnoreException(10);
                 ComponentFixture LibertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
                 LibertyTWBar.click();
 
                 // Expand the project tree to show the available actions.
-                TestUtils.sleepAndIgnoreException(5);
+                TestUtils.sleepAndIgnoreException(10);
 //                String xPath = "//div[@class='LibertyExplorer']//div[@class='ActionButton' and contains(@myaction.key, 'action.ExpandAll.text')]";
                 //div[@accessiblename='" + fileName + "' and @class='ActionButton']
                 String xPath = "//div[@class='LibertyExplorer']//div[@accessiblename='Expand All' and @class='ActionButton']";
-                ComponentFixture actionButton = projectFrame.getActionButton(xPath, "20");
+                ComponentFixture actionButton = projectFrame.getActionButton(xPath, "30");
                 actionButton.click();
 
                 // Click on the project node to give it focus. This action opens the editor tab showing
