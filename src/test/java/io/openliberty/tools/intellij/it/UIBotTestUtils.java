@@ -1949,7 +1949,7 @@ public class UIBotTestUtils {
     public static void waitForIndexing(RemoteRobot remoteRobot) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Entry");
         String xPath = "//div[@class='InlineProgressPanel']";
-        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 60);
+        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 90);
         if (needToWait) {
             waitForIndexingToStop(remoteRobot, xPath, 600);
         }
