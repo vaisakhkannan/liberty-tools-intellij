@@ -630,9 +630,9 @@ public class UIBotTestUtils {
 
                 // Expand the project tree to show the available actions.
                 TestUtils.sleepAndIgnoreException(10);
-//                String xPath = "//div[@class='LibertyExplorer']//div[@class='ActionButton' and contains(@myaction.key, 'action.ExpandAll.text')]";
+                String xPath = "//div[@class='LibertyExplorer']//div[@class='ActionButton' and contains(@myaction.key, 'action.ExpandAll.text')]";
                 //div[@accessiblename='" + fileName + "' and @class='ActionButton']
-                String xPath = "//div[@class='LibertyExplorer']//div[@accessiblename='Expand All' and @class='ActionButton']";
+//                String xPath = "//div[@class='LibertyExplorer']//div[@accessiblename='Expand All' and @class='ActionButton']";
                 ComponentFixture actionButton = projectFrame.getActionButton(xPath, "30");
                 actionButton.click();
 
