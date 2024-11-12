@@ -800,7 +800,7 @@ public class UIBotTestUtils {
     public static void closeAllEditorTabs(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         clickOnFileTabNew(remoteRobot, "Main Menu");
-        ComponentFixture windowMenuEntry = projectFrame.getActionMenu("Window", "10");
+        ComponentFixture windowMenuEntry = projectFrame.getActionMenu("Window", "20");
         windowMenuEntry.moveMouse();
 
         // Click on Editor Tabs in the menu.
