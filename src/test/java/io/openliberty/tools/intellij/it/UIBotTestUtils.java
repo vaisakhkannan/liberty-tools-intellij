@@ -266,6 +266,7 @@ public class UIBotTestUtils {
             actionButton.rightClick();
             ComponentFixture closeFixture = projectFrame.getActionMenuItem("Close");
             closeFixture.click();
+            TestUtils.sleepAndIgnoreException(5);
 
         } catch (WaitForConditionTimeoutException e) {
             // file not open, nothing to do
@@ -1810,7 +1811,7 @@ public class UIBotTestUtils {
                 }
 
                 // If the Liberty: Start... action was selected, make sure the Edit Configuration dialog is displayed.
-                break;
+//                break;
             } catch (Exception e) {
                 error = e;
                 TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
