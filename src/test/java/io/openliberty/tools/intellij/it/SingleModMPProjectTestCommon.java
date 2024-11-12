@@ -928,7 +928,8 @@ public abstract class SingleModMPProjectTestCommon {
         // Closing the build file editor here prevents it from opening automatically when the project
         // in the Liberty tool window is clicked or right-clicked again. This is done on purpose to
         // prevent false negative tests related to the build file editor tab.
-        UIBotTestUtils.closeAllEditorTabs(remoteRobot);
+//        UIBotTestUtils.closeAllEditorTabs(remoteRobot);
+        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot, "Close All Tabs", 3);
 
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Exit. ProjectName: " + projectName);
