@@ -1666,7 +1666,7 @@ public class UIBotTestUtils {
                 Thread.sleep(secondsToWait * 1000L);
             }
 
-            URL url = new URL(MavenSingleModMPTProjectTest.REMOTE_BOT_URL);
+            URL url = new URL(MavenSingleModMPProjectTest.REMOTE_BOT_URL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
