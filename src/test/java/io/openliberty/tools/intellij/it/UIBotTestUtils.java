@@ -633,7 +633,7 @@ public class UIBotTestUtils {
                 String xPath = "//div[@class='LibertyExplorer']//div[@class='ActionButton' and contains(@myaction.key, 'action.ExpandAll.text')]";
                 //div[@accessiblename='" + fileName + "' and @class='ActionButton']
 //                String xPath = "//div[@class='LibertyExplorer']//div[@accessiblename='Expand All' and @class='ActionButton']";
-                ComponentFixture actionButton = projectFrame.getActionButton(xPath, "30");
+                ComponentFixture actionButton = projectFrame.getActionButton(xPath, "90");
                 actionButton.click();
 
                 // Click on the project node to give it focus. This action opens the editor tab showing
