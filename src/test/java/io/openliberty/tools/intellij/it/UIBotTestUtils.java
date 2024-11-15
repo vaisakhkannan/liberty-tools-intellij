@@ -624,12 +624,12 @@ public class UIBotTestUtils {
                 error = null;
 
                 // Click on the Liberty tool window toolbar to give it focus.
-                TestUtils.sleepAndIgnoreException(10);
+//                TestUtils.sleepAndIgnoreException(10);
                 ComponentFixture LibertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
                 LibertyTWBar.click();
 
                 // Expand the project tree to show the available actions.
-                TestUtils.sleepAndIgnoreException(10);
+//                TestUtils.sleepAndIgnoreException(10);
                 String xPath = "//div[@class='LibertyExplorer']//div[@class='ActionButton' and contains(@myaction.key, 'action.ExpandAll.text')]";
                 //div[@accessiblename='" + fileName + "' and @class='ActionButton']
 //                String xPath = "//div[@class='LibertyExplorer']//div[@accessiblename='Expand All' and @class='ActionButton']";
@@ -1950,7 +1950,7 @@ public class UIBotTestUtils {
     public static void waitForIndexing(RemoteRobot remoteRobot) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Entry");
         String xPath = "//div[@class='InlineProgressPanel']";
-        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 90);
+        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 60);
         if (needToWait) {
             waitForIndexingToStop(remoteRobot, xPath, 600);
         }
