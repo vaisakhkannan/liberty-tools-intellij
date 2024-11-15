@@ -99,7 +99,6 @@ public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon
             StepWorker.registerProcessor(new StepLogger());
             // Copy the directory from PROJECTS_PATH to PROJECTS_PATH_NEW
             TestUtils.copyDirectory(PROJECTS_PATH, PROJECTS_PATH_NEW);
-            TestUtils.sleepAndIgnoreException(10);
             prepareEnv(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME);
         } catch (IOException e) {
             System.err.println("Setup failed: " + e.getMessage());
