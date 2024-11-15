@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 /**
  * Tests Liberty Tools actions using a single module MicroProfile Maven project.
  */
-public class MavenSingleModMPProjectTest extends SingleModMPProjectTestCommon {
+public class MavenSingleModMPTest extends SingleModMPProjectTestCommon {
 
     /**
      * Single module Microprofile project name.
