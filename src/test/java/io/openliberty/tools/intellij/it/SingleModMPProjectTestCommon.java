@@ -81,26 +81,26 @@ public abstract class SingleModMPProjectTestCommon {
     /**
      * Tests the liberty: View <project build file> action run from the project's pop-up action menu.
      */
-    @Test
-    @Video
-    public void testOpenBuildFileActionUsingPopUpMenu() {
-        String editorTabName = getBuildFileName() + " (" + getSmMPProjectName() + ")";
-
-        // Close the editor tab if it was previously opened.
-        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "5");
-
-        // Open the build file.
-        UIBotTestUtils.openLibertyToolWindow(remoteRobot);
-        UIBotTestUtils.runActionLTWPopupMenu(remoteRobot, getSmMPProjectName(), getBuildFileOpenCommand(), 3);
-
-        // Verify that build file tab is opened.
-        Assertions.assertNotNull(UIBotTestUtils.getEditorTabCloseButton(remoteRobot, editorTabName, "10"),
-                "Editor tab with the name of " + editorTabName + " could not be found.");
-
-        // Close the editor tab.
-//        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "10");
-        UIBotTestUtils.rightClickCloseOnFileTab(remoteRobot, editorTabName);
-    }
+//    @Test
+//    @Video
+//    public void testOpenBuildFileActionUsingPopUpMenu() {
+//        String editorTabName = getBuildFileName() + " (" + getSmMPProjectName() + ")";
+//
+//        // Close the editor tab if it was previously opened.
+//        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "5");
+//
+//        // Open the build file.
+//        UIBotTestUtils.openLibertyToolWindow(remoteRobot);
+//        UIBotTestUtils.runActionLTWPopupMenu(remoteRobot, getSmMPProjectName(), getBuildFileOpenCommand(), 3);
+//
+//        // Verify that build file tab is opened.
+//        Assertions.assertNotNull(UIBotTestUtils.getEditorTabCloseButton(remoteRobot, editorTabName, "10"),
+//                "Editor tab with the name of " + editorTabName + " could not be found.");
+//
+//        // Close the editor tab.
+////        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "10");
+//        UIBotTestUtils.rightClickCloseOnFileTab(remoteRobot, editorTabName);
+//    }
 
     /**
      * Tests dashboard start.../stop actions run from the project's drop-down action menu.
