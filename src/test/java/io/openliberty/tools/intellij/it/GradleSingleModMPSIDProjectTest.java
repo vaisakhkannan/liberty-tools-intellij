@@ -9,9 +9,8 @@
  *******************************************************************************/
 package io.openliberty.tools.intellij.it;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import com.automation.remarks.junit5.Video;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -92,8 +91,11 @@ public class GradleSingleModMPSIDProjectTest extends SingleModMPProjectTestCommo
     /**
      * Prepares the environment for test execution.
      */
-    @BeforeAll
-    public static void setup() {
+//    @BeforeAll
+    @Test
+    @Video
+    @Order(1)
+    public void setup() {
         try {
             // Copy the directory from PROJECTS_PATH to PROJECTS_PATH_NEW
             TestUtils.copyDirectory(PROJECTS_PATH, PROJECTS_PATH_NEW);
