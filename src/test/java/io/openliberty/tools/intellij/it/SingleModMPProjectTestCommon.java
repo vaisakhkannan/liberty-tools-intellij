@@ -923,17 +923,17 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.waitForIndexing(remoteRobot);
 //        TestUtils.sleepAndIgnoreException(10);
         UIBotTestUtils.openAndValidateLibertyToolWindow(remoteRobot, projectName);
-        new VideoRecorder() {
-            @Override
-            public void start() {
-                UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
-            }
-
-            @Override
-            public File stopAndSave(String filename) {
-                return null;
-            }
-        };
+//        new VideoRecorder() {
+//            @Override
+//            public void start() {
+        UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
+//            }
+//
+//            @Override
+//            public File stopAndSave(String filename) {
+//                return null;
+//            }
+//        };
 //        TestUtils.sleepAndIgnoreException(10);
 //        UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
 

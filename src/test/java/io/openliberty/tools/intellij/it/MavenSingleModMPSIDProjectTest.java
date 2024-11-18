@@ -14,7 +14,8 @@ import com.intellij.remoterobot.stepsProcessing.StepLogger;
 import com.intellij.remoterobot.stepsProcessing.StepWorker;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -94,9 +95,12 @@ public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon
     /**
      * Prepares the environment for test execution.
      */
-    @BeforeAll
+//    @BeforeAll
+//    @Video
+    @Test
     @Video
-    public static void setup() {
+    @Order(1)
+    public void setup() {
         try {
             StepWorker.registerProcessor(new StepLogger());
             // Copy the directory from PROJECTS_PATH to PROJECTS_PATH_NEW
