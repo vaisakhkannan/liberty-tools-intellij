@@ -75,6 +75,7 @@ public abstract class SingleModMPProjectTestCommon {
      */
     @Video
     protected static void closeProjectView() {
+        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot, "Close All Tabs", 3);
         UIBotTestUtils.closeLibertyToolWindow(remoteRobot);
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
