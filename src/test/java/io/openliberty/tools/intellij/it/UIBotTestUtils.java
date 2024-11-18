@@ -464,6 +464,7 @@ public class UIBotTestUtils {
     /**
      * Open and validate the Liberty tool window is open
      */
+    @Video
     public static void openAndValidateLibertyToolWindow(RemoteRobot remoteRobot, String treeItem) {
         // Try multiple times in case the O/S is displaying a modal dialog that blocks the button.
         for (int i = 1; i <=3; i++) {
