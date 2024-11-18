@@ -10,6 +10,7 @@
 package io.openliberty.tools.intellij.it;
 
 import com.automation.remarks.junit5.Video;
+import com.automation.remarks.video.recorder.VideoRecorder;
 import com.intellij.remoterobot.RemoteRobot;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.junit.jupiter.api.*;
@@ -922,8 +923,19 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.waitForIndexing(remoteRobot);
 //        TestUtils.sleepAndIgnoreException(10);
         UIBotTestUtils.openAndValidateLibertyToolWindow(remoteRobot, projectName);
+        new VideoRecorder() {
+            @Override
+            public void start() {
+                UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
+            }
+
+            @Override
+            public File stopAndSave(String filename) {
+                return null;
+            }
+        };
 //        TestUtils.sleepAndIgnoreException(10);
-        UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
+//        UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
 
         // Close all open editors.
         // The expansion of the project tree in the Liberty tool window causes the editor tab for
