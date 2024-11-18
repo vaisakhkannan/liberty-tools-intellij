@@ -927,6 +927,7 @@ public abstract class SingleModMPProjectTestCommon {
 //        new VideoRecorder() {
 //            @Override
 //            public void start() {
+        UIBotTestUtils.refreshLibertyToolWindow(remoteRobot);
         UIBotTestUtils.expandLibertyToolWindowProjectTree(remoteRobot, projectName);
 //            }
 //
