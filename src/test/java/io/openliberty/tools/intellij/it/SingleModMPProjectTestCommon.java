@@ -71,6 +71,7 @@ public abstract class SingleModMPProjectTestCommon {
     /**
      * Close project.
      */
+    @Video
     protected static void closeProjectView() {
         UIBotTestUtils.closeLibertyToolWindow(remoteRobot);
         UIBotTestUtils.closeProjectView(remoteRobot);

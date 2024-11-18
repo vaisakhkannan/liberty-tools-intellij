@@ -231,6 +231,7 @@ public class UIBotTestUtils {
      *
      * @param remoteRobot The RemoteRobot instance.
      */
+    @Video
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         // Click on File on the Menu bar.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
@@ -457,6 +458,7 @@ public class UIBotTestUtils {
      *
      * @param remoteRobot The RemoteRobot instance.
      */
+    @Video
     public static void validateProjectFrameClosed(RemoteRobot remoteRobot) {
         remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(2));
     }
@@ -486,6 +488,7 @@ public class UIBotTestUtils {
      *
      * @param remoteRobot The RemoteRobot instance.
      */
+    @Video
     public static void openLibertyToolWindow(RemoteRobot remoteRobot) {
         int maxRetries = 6;
         Exception error = null;
@@ -570,6 +573,7 @@ public class UIBotTestUtils {
      *
      * @param remoteRobot The RemoteRobot instance.
      */
+    @Video
     public static void closeProjectView(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         try {
