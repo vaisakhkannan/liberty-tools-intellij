@@ -9,6 +9,7 @@
  *******************************************************************************/
 package io.openliberty.tools.intellij.it;
 
+import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.*;
 import com.intellij.remoterobot.fixtures.dataExtractor.RemoteText;
@@ -615,6 +616,7 @@ public class UIBotTestUtils {
      *
      * @param remoteRobot The RemoteRobot instance.
      */
+    @Video
     public static void expandLibertyToolWindowProjectTree(RemoteRobot remoteRobot, String projectName) {
         int maxRetries = 6;
         Exception error = null;
@@ -1768,6 +1770,7 @@ public class UIBotTestUtils {
         }
     }
 
+    @Video
     public static void closeAllTabsUsingSearchEverywherePanel(RemoteRobot remoteRobot, String action, int maxRetries) {
         // Search everywhere UI actions may fail due to UI flickering/indexing on Windows. Retry in case of a failure.
         Exception error = null;
