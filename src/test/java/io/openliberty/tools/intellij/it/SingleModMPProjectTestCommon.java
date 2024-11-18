@@ -909,6 +909,7 @@ public abstract class SingleModMPProjectTestCommon {
      * @param projectPath The path of the project.
      * @param projectName The name of the project being used.
      */
+    @Video
     public static void prepareEnv(String projectPath, String projectName) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Entry. ProjectPath: " + projectPath + ". ProjectName: " + projectName);
