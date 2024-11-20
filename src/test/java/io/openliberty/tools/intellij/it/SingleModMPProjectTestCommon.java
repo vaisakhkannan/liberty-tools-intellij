@@ -75,7 +75,8 @@ public abstract class SingleModMPProjectTestCommon {
      */
     @Video
     protected static void closeProjectView() {
-        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot, "Close All Tabs", 3);
+        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot);
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         UIBotTestUtils.closeLibertyToolWindow(remoteRobot);
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
@@ -923,6 +924,7 @@ public abstract class SingleModMPProjectTestCommon {
         //        added comment
         UIBotTestUtils.openProjectView(remoteRobot);
         // IntelliJ does not start building and indexing until the project is open in the UI
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         UIBotTestUtils.waitForIndexing(remoteRobot);
 //        TestUtils.sleepAndIgnoreException(10);
         UIBotTestUtils.openAndValidateLibertyToolWindow(remoteRobot, projectName);
@@ -950,7 +952,7 @@ public abstract class SingleModMPProjectTestCommon {
         // prevent false negative tests related to the build file editor tab.
 //        UIBotTestUtils.closeAllEditorTabs(remoteRobot);
 //        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Close All Tabs", 3);
-        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot, "Close All Tabs", 3);
+        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot);
 
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Exit. ProjectName: " + projectName);
