@@ -197,7 +197,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
     public ComponentFixture getSETabLabel(String... xpathVars) {
         String text = xpathVars[0];
         return find(ComponentFixture.class,
-                byXpath("//div[@class='SETabLabel' and @text='" + text + "']"),
+                byXpath("//div[@class='JLabel' and @text='" + text + "']"),
                 Duration.ofSeconds(10));
     }
 
@@ -241,6 +241,14 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         return find(ComponentFixture.class, byXpath("//div[@class='EditorComponentImpl' and contains(@visible_text, '" + visibleText + "')]"), Duration.ofMinutes(1));
     }
 
+    public ComponentFixture getSquareStripeButton(String... xpathVars) {
+        String fileName = xpathVars[0];
+        String waitTime = xpathVars[1];
+        return find(ComponentFixture.class,
+                byXpath("//div[@accessiblename='" + fileName + "' and @class='SquareStripeButton']"),
+                Duration.ofSeconds(Integer.parseInt(waitTime)));
+    }
+
     /**
      * Returns the ContainerFixture object associated with the DocumentationHintEditorPane pop-up window.
      *
@@ -256,7 +264,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
      * @return The ContainerFixture object associated with the DocumentationHintEditorPane pop-up window.
      */
     public ContainerFixture getDiagnosticPane() {
-        return find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='JEditorPane']"), Duration.ofSeconds(5));
+        return find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='JBHtmlPane']"), Duration.ofSeconds(5));
     }
 
     /**
@@ -324,7 +332,7 @@ public class ProjectFrameFixture extends CommonContainerFixture {
      * @return The ContainerFixture object associated with the RunConfigurationsComboBoxButton class.
      */
     public ComponentFixture getRunConfigurationsComboBoxButton() {
-        return find(ContainerFixture.class, byXpath("//div[@class='RunConfigurationsComboBoxButton']"), Duration.ofSeconds(5));
+        return find(ContainerFixture.class, byXpath("//div[@class='ActionButtonWithText']"), Duration.ofSeconds(5));
     }
 
     /**

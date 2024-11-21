@@ -64,6 +64,7 @@ public abstract class SingleModNLTRestProjectTestCommon {
      */
     @AfterAll
     public static void cleanup() {
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         UIBotTestUtils.closeLibertyToolWindow(remoteRobot);
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
@@ -226,6 +227,7 @@ public abstract class SingleModNLTRestProjectTestCommon {
         remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(2));
         UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         UIBotTestUtils.openProjectView(remoteRobot);
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         // IntelliJ does not start building and indexing until the project is open in the UI
         UIBotTestUtils.waitForIndexing(remoteRobot);
         UIBotTestUtils.openLibertyToolWindow(remoteRobot);

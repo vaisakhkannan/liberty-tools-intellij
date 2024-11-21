@@ -56,6 +56,7 @@ public abstract class SingleModJakartaLSTestCommon {
         UIBotTestUtils.closeFileEditorTab(remoteRobot, "SystemResource.java", "5");
         UIBotTestUtils.closeFileEditorTab(remoteRobot, "SystemResource2.java", "5");
 
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
         UIBotTestUtils.validateProjectFrameClosed(remoteRobot);
@@ -179,6 +180,7 @@ public abstract class SingleModJakartaLSTestCommon {
 
         UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         UIBotTestUtils.openProjectView(remoteRobot);
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         // IntelliJ does not start building and indexing until the project is open in the UI
         UIBotTestUtils.waitForIndexing(remoteRobot);
         UIBotTestUtils.openAndValidateLibertyToolWindow(remoteRobot, projectName);

@@ -72,6 +72,8 @@ public abstract class SingleModMPProjectTestCommon {
      * Close project.
      */
     protected static void closeProjectView() {
+        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot);
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         UIBotTestUtils.closeLibertyToolWindow(remoteRobot);
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
@@ -98,7 +100,8 @@ public abstract class SingleModMPProjectTestCommon {
                 "Editor tab with the name of " + editorTabName + " could not be found.");
 
         // Close the editor tab.
-        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "10");
+//        UIBotTestUtils.closeFileEditorTab(remoteRobot, editorTabName, "10");
+        UIBotTestUtils.rightClickCloseOnFileTab(remoteRobot, editorTabName);
     }
 
     /**
@@ -915,6 +918,7 @@ public abstract class SingleModMPProjectTestCommon {
         remoteRobot.find(WelcomeFrameFixture.class, Duration.ofMinutes(2));
         UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         UIBotTestUtils.openProjectView(remoteRobot);
+        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         // IntelliJ does not start building and indexing until the project is open in the UI
         UIBotTestUtils.waitForIndexing(remoteRobot);
         UIBotTestUtils.openAndValidateLibertyToolWindow(remoteRobot, projectName);
@@ -927,7 +931,8 @@ public abstract class SingleModMPProjectTestCommon {
         // Closing the build file editor here prevents it from opening automatically when the project
         // in the Liberty tool window is clicked or right-clicked again. This is done on purpose to
         // prevent false negative tests related to the build file editor tab.
-        UIBotTestUtils.closeAllEditorTabs(remoteRobot);
+//        UIBotTestUtils.closeAllEditorTabs(remoteRobot);
+        UIBotTestUtils.closeAllTabsUsingSearchEverywherePanel(remoteRobot);
 
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Exit. ProjectName: " + projectName);
