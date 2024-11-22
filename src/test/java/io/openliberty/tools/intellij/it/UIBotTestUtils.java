@@ -2566,6 +2566,9 @@ public class UIBotTestUtils {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
         try {
+            String xPathnew = "//div[@accessiblename='Left Toolbar' and @class='ToolWindowLeftToolbar']";
+            ComponentFixture actionButtonnew = projectFrame.getActionButton(xPathnew, "10");
+            actionButtonnew.click();
             String xPath = "//div[@accessiblename='" + fileName + "' and @class='ActionButton']";
             ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
             actionButton.click();
