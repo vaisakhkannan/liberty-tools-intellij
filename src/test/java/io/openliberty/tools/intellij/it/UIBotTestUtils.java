@@ -1898,7 +1898,7 @@ public class UIBotTestUtils {
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
         runMenu.moveMouse();
-        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
+        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations…");
         editCfgsMenuEntry.click();
 
         // Find the Run/Debug Configurations dialog.
@@ -2207,7 +2207,7 @@ public class UIBotTestUtils {
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
         runMenu.moveMouse();
-        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations...");
+        ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations…");
         editCfgsMenuEntry.click();
 
         // The Run/Debug configurations dialog could resize and reposition icons. Retry in case of a failure.
