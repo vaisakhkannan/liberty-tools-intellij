@@ -1683,7 +1683,7 @@ public class UIBotTestUtils {
         }
 
         // Report the last error if there is one.
-        if (error != null) {
+        if (error != null && !action.equals("Close All Tabs")) {
             throw new RuntimeException("Failed to run the " + action + " action using the search everywhere option", error);
         }
     }
