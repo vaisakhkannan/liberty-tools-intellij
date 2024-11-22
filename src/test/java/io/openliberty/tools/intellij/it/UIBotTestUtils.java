@@ -2153,7 +2153,7 @@ public class UIBotTestUtils {
         clickOnFileTabNew(remoteRobot, "Main Menu");
         ComponentFixture menuOption = projectFrame.getActionMenu("Run", "10");
         menuOption.moveMouse();
-        ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run...");
+        ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run…");
         if (execMode == ExecMode.DEBUG) {
             menuCfgExecOption = projectFrame.getActionMenuItem("Debug...");
         }
