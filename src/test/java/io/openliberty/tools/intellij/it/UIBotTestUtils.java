@@ -2155,7 +2155,7 @@ public class UIBotTestUtils {
         menuOption.moveMouse();
         ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run…");
         if (execMode == ExecMode.DEBUG) {
-            menuCfgExecOption = projectFrame.getActionMenuItem("Debug...");
+            menuCfgExecOption = projectFrame.getActionMenuItem("Debug…");
         }
 
         menuCfgExecOption.click();
