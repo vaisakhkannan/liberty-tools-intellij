@@ -2517,6 +2517,7 @@ public class UIBotTestUtils {
         }
     }
 
+    //this won't needed
     public static void closeAllTabsUsingSearchEverywherePanel(RemoteRobot remoteRobot) {
         String action = "Close All Tabs";
         try {
