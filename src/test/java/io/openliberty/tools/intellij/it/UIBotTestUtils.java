@@ -2129,6 +2129,7 @@ public class UIBotTestUtils {
     public static void selectConfigUsingToolbar(RemoteRobot remoteRobot, String cfgName) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         ComponentFixture cfgSelectBox = projectFrame.getRunConfigurationsComboBoxButton();
+        TestUtils.sleepAndIgnoreException(3);
         cfgSelectBox.click();
         ComponentFixture cfgSelectPaneList = projectFrame.getMyList();
         List<RemoteText> configs = cfgSelectPaneList.getData().getAll();
