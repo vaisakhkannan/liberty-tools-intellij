@@ -63,6 +63,11 @@ configurations {
             jvmTarget = "17"
         }
     }
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        options.fork = true
+        options.forkOptions.memoryMaximumSize = '2g' // Allocate 2GB of heap space; adjust as needed
+    }
 }
 
 dependencies {
