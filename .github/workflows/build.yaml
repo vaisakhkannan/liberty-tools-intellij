@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ linux, mac, mac1, mac2, windows, linux1, windows1, linux2, windows2 ]
+        runtime: [ linux, mac, mac1, mac2, windows ]
         include:
           - runtime: linux
             os: ubuntu-latest
@@ -67,18 +67,6 @@ jobs:
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
-          - runtime: linux1
-            os: ubuntu-latest
-            reportName: linux-test-report1
-          - runtime: windows1
-            os: windows-latest
-            reportName: windows-test-report1
-          - runtime: linux2
-            os: ubuntu-latest
-            reportName: linux-test-report2
-          - runtime: windows2
-            os: windows-latest
-            reportName: windows-test-report2
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}

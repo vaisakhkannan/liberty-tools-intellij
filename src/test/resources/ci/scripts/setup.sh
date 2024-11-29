@@ -121,6 +121,15 @@ installJDK() {
         echo "${SEMERU_ARCHIVE_LINUX_SHA256}  /tmp/liberty-dev-tool-semeru-jdk.tar.gz" | sha256sum -c -
         tar -xzf /tmp/liberty-dev-tool-semeru-jdk.tar.gz -C "$SOFTWARE_INSTALL_DIR"
     elif [[ $OS == "Darwin" ]]; then
+        arch=$(uname -m)
+        echo "Architecture: $arch"
+        if [[ "$arch" == "x86_64" ]]; then
+            echo "The architecture is 64-bit."
+        elif [[ "$arch" == "arm64" || "$arch" == "aarch64" ]]; then
+            echo "The architecture is ARM 64-bit."
+        else
+            echo "Unknown architecture: $arch"
+        fi
        javaHome="$javaHome"/Contents/Home
        local url="https://github.com/ibmruntimes/semeru${SEMERU_OPEN_JDK_MAJOR}-binaries/releases/download/jdk-${SEMERU_OPEN_JDK_VERSION}%2B${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}/ibm-semeru-open-jdk_aarch64_mac_${SEMERU_OPEN_JDK_VERSION}_${SEMERU_OPEN_JDK_BUILD}_openj9-${SEMERU_OPENJ9_VERSION}.tar.gz"
        curl -fsSL -o /tmp/liberty-dev-tool-semeru-jdk.tar.gz "$url"
