@@ -1579,8 +1579,10 @@ public class UIBotTestUtils {
 
                 // Click on Navigate on the Menu bar.
                 ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
+                clickOnMainMenu(remoteRobot);
+                // Click on Navigate on the Menu bar.
                 ComponentFixture navigateMenuEntry = projectFrame.getActionMenu("Navigate", "20");
-                navigateMenuEntry.click();
+                navigateMenuEntry.moveMouse();
 
                 // Click on Search Everywhere in the menu.
                 ComponentFixture searchFixture = projectFrame.getActionMenuItem("Search Everywhere");
