@@ -11,11 +11,13 @@ package io.openliberty.tools.intellij.it.fixtures;
 
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.data.RemoteComponent;
-import com.intellij.remoterobot.fixtures.CommonContainerFixture;
-import com.intellij.remoterobot.fixtures.ComponentFixture;
-import com.intellij.remoterobot.fixtures.DefaultXpath;
-import com.intellij.remoterobot.fixtures.FixtureName;
+import com.intellij.remoterobot.fixtures.*;
+import com.intellij.remoterobot.search.locators.Locator;
+import com.intellij.remoterobot.utils.RepeatUtilsKt;
 import org.jetbrains.annotations.NotNull;
+
+import java.time.Duration;
+import java.util.List;
 
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
 import static com.intellij.remoterobot.utils.UtilsKt.hasAnyComponent;
@@ -43,5 +45,25 @@ public class WelcomeFrameFixture extends CommonContainerFixture {
             cf = find(ComponentFixture.class, byXpath("//div[@class='JButton' and @defaulticon='open.svg']"));
         }
         return cf;
+    }
+
+    public ComponentFixture getActionButton(String... vars) {
+        String xPath = vars[0];
+        int waitTime = Integer.parseInt(vars[1]);
+
+        Locator locator = byXpath(xPath);
+        return find(ComponentFixture.class, locator, Duration.ofSeconds(waitTime));
+    }
+
+    public void getActionMenuItem(String... xpathVars) {
+        String text = xpathVars[0];
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(16),
+                Duration.ofSeconds(1),
+                "Waiting for menu items containing the " + text + " text",
+                "Menu items containing the " + text + " text were not found",
+                () -> !findAll(ContainerFixture.class,
+                        byXpath("//div[@class='HeavyWeightWindow']")).isEmpty());
+        List<ContainerFixture> list = findAll(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+        list.get(0).findText(text).click();
     }
 }
