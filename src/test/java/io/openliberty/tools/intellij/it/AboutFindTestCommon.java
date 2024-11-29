@@ -86,6 +86,7 @@ public abstract class AboutFindTestCommon {
 //                            byXpath("//div[@class='ActionMenuItem' and @text='" + text + "']")).isEmpty());
 
             welcomePage.getActionMenuItem("About");
+            TestUtils.sleepAndIgnoreException(3);
             Assertions.fail("Failed");
         } catch (Exception e) {
             throw new RuntimeException(e);
