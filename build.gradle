@@ -183,6 +183,7 @@ test {
     }
 }
 
+// Just comment
 intellijPlatformTesting.runIde {
     runIdeForUiTests {
         version = providers.gradleProperty("ideTargetVersion")
