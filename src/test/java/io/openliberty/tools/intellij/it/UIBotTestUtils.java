@@ -131,7 +131,8 @@ public class UIBotTestUtils {
                 clickOnMainMenu(remoteRobot);
                 ComponentFixture fileMenuEntry = projectFrame.getActionMenu("File", "10");
                 fileMenuEntry.moveMouse();
-                ComponentFixture openFixture = projectFrame.getActionMenuItem("Open...");
+                String value = handleMenuBasedOnVersionNonMacOS(remoteRobot, "Open...", "Open…");
+                ComponentFixture openFixture = projectFrame.getActionMenuItem(value);
                 openFixture.click(new Point());
             }
         }
@@ -1945,7 +1946,8 @@ public class UIBotTestUtils {
             clickOnMainMenu(remoteRobot);
             ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
             runMenu.moveMouse();
-            ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations…");
+            String value = handleMenuBasedOnVersionNonMacOS(remoteRobot, "Edit Configurations...", "Edit Configurations…");
+            ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem(value);
             editCfgsMenuEntry.click();
         }
 
@@ -2219,9 +2221,11 @@ public class UIBotTestUtils {
             clickOnMainMenu(remoteRobot);
             ComponentFixture menuOption = projectFrame.getActionMenu("Run", "10");
             menuOption.moveMouse();
-            ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem("Run…");
+            String value = handleMenuBasedOnVersionNonMacOS(remoteRobot, "Run...", "Run…");
+            ComponentFixture menuCfgExecOption = projectFrame.getActionMenuItem(value);
             if (execMode == ExecMode.DEBUG) {
-                menuCfgExecOption = projectFrame.getActionMenuItem("Debug…");
+                String value1 = handleMenuBasedOnVersionNonMacOS(remoteRobot, "Debug...", "Debug…");
+                menuCfgExecOption = projectFrame.getActionMenuItem(value1);
             }
 
             menuCfgExecOption.click();
@@ -2278,7 +2282,8 @@ public class UIBotTestUtils {
             clickOnMainMenu(remoteRobot);
             ComponentFixture runMenu = projectFrame.getActionMenu("Run", "10");
             runMenu.moveMouse();
-            ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem("Edit Configurations…");
+            String value = handleMenuBasedOnVersionNonMacOS(remoteRobot, "Edit Configurations...", "Edit Configurations…");
+            ComponentFixture editCfgsMenuEntry = projectFrame.getActionMenuItem(value);
             editCfgsMenuEntry.click();
         }
 
@@ -2724,6 +2729,23 @@ public class UIBotTestUtils {
         // Perform the menu navigation ny locating project frame using the determined submenu option.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         projectFrame.clickOnMainMenuWithActions(remoteRobot, menuAction1, menuAction2);
+    }
+
+    public static String handleMenuBasedOnVersionNonMacOS(RemoteRobot remoteRobot, String menuAction2024_2, String menuAction2024_3) {
+        // Using Remote robot's javascript API Retrieve the IntelliJ version
+        String intellijVersion = remoteRobot.callJs("com.intellij.openapi.application.ApplicationInfo.getInstance().getFullVersion();");
+
+        String menuAction2;
+        if (intellijVersion.startsWith("2024.2")) {
+            menuAction2 = menuAction2024_2;
+        } else if (intellijVersion.startsWith("2024.3")) {
+            menuAction2 = menuAction2024_3;
+        } else {
+            // If the version is unsupported, throw an exception to indicate the issue.
+            throw new UnsupportedOperationException("Unsupported IntelliJ version: " + intellijVersion);
+        }
+
+        return menuAction2;
     }
 
 }
