@@ -22,8 +22,6 @@ import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.assertj.swing.core.MouseButton;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -48,8 +46,6 @@ import static org.junit.jupiter.api.Assertions.fail;
  * UI helper function.
  */
 public class UIBotTestUtils {
-
-    private static final Logger log = LoggerFactory.getLogger(UIBotTestUtils.class);
 
     /**
      * Print destination types.
@@ -218,12 +214,12 @@ public class UIBotTestUtils {
      */
     public static void closeProjectFrame(RemoteRobot remoteRobot) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        // minimize windows os intellij ide to default state
         if (remoteRobot.isMac()) {
             projectFrame.clickOnMainMenuWithActions(remoteRobot, "File", "Close Project");
         }
         else {
             if (remoteRobot.isWin()) {
+                // minimize windows os intellij ide to default state
                 minimizeWindow(remoteRobot);
             }
             clickOnMainMenu(remoteRobot);
@@ -1448,10 +1444,10 @@ public class UIBotTestUtils {
      * @param remoteRobot The RemoteRobot instance.
      */
     public static void copyWindowContent(RemoteRobot remoteRobot) {
-        // Select the content.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
         if (remoteRobot.isMac()) {
             projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Select All");
+            projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Copy");
         }
         else {
             clickOnMainMenu(remoteRobot);
@@ -1459,13 +1455,6 @@ public class UIBotTestUtils {
             editMenuEntry.moveMouse();
             ComponentFixture slectAllEntry = projectFrame.getActionMenuItem("Select All");
             slectAllEntry.click();
-        }
-
-        // Copy the content.
-        if (remoteRobot.isMac()) {
-            projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Copy");
-        }
-        else {
             clickOnMainMenu(remoteRobot);
             ComponentFixture editMenuEntryNew = projectFrame.getActionMenu("Edit", "10");
             editMenuEntryNew.moveMouse();
@@ -2623,12 +2612,12 @@ public class UIBotTestUtils {
         } catch (WaitForConditionTimeoutException e) {
             // If the welcome frame is not found then there is a project loaded.
             // Close the editor files and close the project to get back to the welcome frame.
-            if (remoteRobot.isMac()) {
-                UIBotTestUtils.closeAllEditorTabs(remoteRobot);
-            }
-            else {
+//            if (remoteRobot.isMac()) {
+//                UIBotTestUtils.closeAllEditorTabs(remoteRobot);
+//            }
+//            else {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Close All Tabs", 3);
-            }
+//            }
             UIBotTestUtils.closeProjectView(remoteRobot);
             UIBotTestUtils.closeProjectFrame(remoteRobot);
             TestUtils.sleepAndIgnoreException(30); // takes about 15s to render the whole Welcome page including the Open button on Mac.
