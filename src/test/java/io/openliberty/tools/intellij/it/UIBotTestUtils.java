@@ -223,7 +223,7 @@ public class UIBotTestUtils {
         else {
             // minimize windows os intellij ide to default state
             if (remoteRobot.isWin()) {
-                minimizeWindow(remoteRobot);
+//                minimizeWindow(remoteRobot);
             }
             clickOnMainMenu(remoteRobot);
             // Click on File on the Menu bar.
