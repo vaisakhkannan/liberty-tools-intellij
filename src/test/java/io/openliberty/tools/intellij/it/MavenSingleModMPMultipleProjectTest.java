@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,7 +23,7 @@ import java.nio.file.Paths;
 /**
  * Tests Liberty Tools actions using a single module MicroProfile Maven project with space in directory name.
  */
-public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon {
+public class MavenSingleModMPMultipleProjectTest extends SingleModMPProjectTestCommon {
 
     /**
      * Single module Microprofile project name.
@@ -30,26 +31,33 @@ public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon
     private static final String SM_MP_PROJECT_NAME = "singleModMavenMP";
 
     /**
-     * The path to the folder containing the test projects.
+     * The path to the folder containing the test projects, including directories with spaces.
      */
     private static final String PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "maven").toAbsolutePath().toString();
 
     /**
-     * The path to the folder containing the test projects, including directories with spaces.
-     */
-    private static final String PROJECTS_PATH_NEW = Paths.get("src", "test", "resources", "projects", "maven sample").toAbsolutePath().toString();
-
-    /**
      * The paths to the integration test reports. The first is used when maven-surefire-report-plugin 3.4 is used and the second when version 3.5 is used.
      */
-    private final Path pathToITReport34 = Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "target", "site", "failsafe-report.html");
-    private final Path pathToITReport35 = Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "target", "reports", "failsafe.html");
+    private final Path pathToITReport34 = Paths.get(PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "site", "failsafe-report.html");
+    private final Path pathToITReport35 = Paths.get(PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "reports", "failsafe.html");
 
     /**
      * The paths to the unit test reports. The first is used when maven-surefire-report-plugin 3.4 is used and the second when version 3.5 is used.
      */
-    private final Path pathToUTReport34 = Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "target", "site", "surefire-report.html");
-    private final Path pathToUTReport35 = Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "target", "reports", "surefire.html");
+    private final Path pathToUTReport34 = Paths.get(PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "site", "surefire-report.html");
+    private final Path pathToUTReport35 = Paths.get(PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "reports", "surefire.html");
+
+
+    private static final String MAVEN_MULTIPLE_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "multiple-project", "maven-project").toAbsolutePath().toString();
+
+    private static final String MULTIPLE_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "multiple-project").toAbsolutePath().toString();
+    private static final String MULTIPLE_PROJECTS_PATH_PARENT = Paths.get("src", "test", "resources", "projects").toAbsolutePath().toString();
+
+    private static final String GRADLE_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "gradle", "singleModGradleMP").toAbsolutePath().toString();
+
+    private static final String MAVEN_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "maven", "singleModMavenMP").toAbsolutePath().toString();
+
+    private static final String GRADLE_MULTIPLE_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "multiple-project", "gradle-project").toAbsolutePath().toString();
 
     /**
      * Prepares the environment for test execution.
@@ -59,8 +67,19 @@ public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon
         try {
             StepWorker.registerProcessor(new StepLogger());
             // Copy the directory from PROJECTS_PATH to PROJECTS_PATH_NEW
-            TestUtils.copyDirectory(PROJECTS_PATH, PROJECTS_PATH_NEW);
-            prepareEnv(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, false);
+            File theDir = new File(MULTIPLE_PROJECTS_PATH);
+            if (!theDir.exists()){
+                theDir.mkdirs();
+            }
+            System.out.println("---------------"+theDir);
+
+            // Copy the directory to allow renaming.
+            TestUtils.copyDirectory(GRADLE_PROJECTS_PATH, GRADLE_MULTIPLE_PROJECTS_PATH);
+            TestUtils.copyDirectory(MAVEN_PROJECTS_PATH, MAVEN_MULTIPLE_PROJECTS_PATH);
+
+            // Prepare the environment with the new project path and name
+            prepareEnv(MULTIPLE_PROJECTS_PATH_PARENT, SM_MP_PROJECT_NAME, true);
+
         } catch (IOException e) {
             System.err.println("Setup failed: " + e.getMessage());
             e.printStackTrace();
@@ -76,14 +95,14 @@ public class MavenSingleModMPSIDProjectTest extends SingleModMPProjectTestCommon
         try {
             closeProjectView();
         } finally {
-            deleteDirectoryIfExists(PROJECTS_PATH_NEW);
+            deleteDirectoryIfExists(MULTIPLE_PROJECTS_PATH);
         }
     }
 
-    MavenSingleModMPSIDProjectTest() {
+    MavenSingleModMPMultipleProjectTest() {
         // set the new locations for the test, not the original locations
-        setProjectsDirPath(PROJECTS_PATH_NEW);
-        setTestReportPath(Paths.get(PROJECTS_PATH_NEW, SM_MP_PROJECT_NAME, "build", "reports", "tests", "test", "index.html"));
+        setProjectsDirPath(MAVEN_MULTIPLE_PROJECTS_PATH);
+        setTestReportPath(Paths.get(MAVEN_MULTIPLE_PROJECTS_PATH, SM_MP_PROJECT_NAME, "build", "reports", "tests", "test", "index.html"));
         setSmMPProjectName(SM_MP_PROJECT_NAME);
         setBuildCategory(BuildType.MAVEN_TYPE);
         setSmMpProjPort(9080);

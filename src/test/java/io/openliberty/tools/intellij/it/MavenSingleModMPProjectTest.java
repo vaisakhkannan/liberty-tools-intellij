@@ -50,7 +50,7 @@ public class MavenSingleModMPProjectTest extends SingleModMPProjectTestCommon {
     @BeforeAll
     public static void setup() {
         StepWorker.registerProcessor(new StepLogger());
-        prepareEnv(PROJECTS_PATH, SM_MP_PROJECT_NAME);
+        prepareEnv(PROJECTS_PATH, SM_MP_PROJECT_NAME, false);
     }
 
     MavenSingleModMPProjectTest() {

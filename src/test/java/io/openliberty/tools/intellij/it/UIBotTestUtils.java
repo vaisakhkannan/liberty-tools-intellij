@@ -2696,6 +2696,21 @@ public class UIBotTestUtils {
         }
     }
 
+    public static void clickOnLoad(RemoteRobot remoteRobot) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+
+        try {
+            // Clicking on the left toolbar ensures that the Main Menu button is active.
+            String xPath = "//div[@accessiblename='Load all' and @class='JButton']";
+            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+            actionButton.click();
+            TestUtils.sleepAndIgnoreException(5);
+
+        } catch (WaitForConditionTimeoutException e) {
+            // Main Menu button is not clicked, nothing to do
+        }
+    }
+
     /**
      * Right-clicks on a file tab and selects "Close" to close the file.
      *

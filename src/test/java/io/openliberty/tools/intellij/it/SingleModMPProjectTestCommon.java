@@ -67,6 +67,8 @@ public abstract class SingleModMPProjectTestCommon {
      */
     private String projectsPath = null;
 
+    private boolean project = false;
+
     /**
      * Project port.
      */
@@ -1131,12 +1133,18 @@ public abstract class SingleModMPProjectTestCommon {
      * @param projectPath The path of the project.
      * @param projectName The name of the project being used.
      */
-    public static void prepareEnv(String projectPath, String projectName) {
+    public static void prepareEnv(String projectPath, String projectName, Boolean status) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Entry. ProjectPath: " + projectPath + ". ProjectName: " + projectName);
         waitForIgnoringError(Duration.ofMinutes(4), Duration.ofSeconds(5), "Wait for IDE to start", "IDE did not start", () -> remoteRobot.callJs("true"));
         UIBotTestUtils.findWelcomeFrame(remoteRobot);
-        UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
+        if (status) {
+            UIBotTestUtils.importProject(remoteRobot, projectPath, "multiple-project");
+            UIBotTestUtils.clickOnLoad(remoteRobot);
+        }
+        else {
+            UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
+        }
         UIBotTestUtils.openProjectView(remoteRobot);
         if (!remoteRobot.isMac()) {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
