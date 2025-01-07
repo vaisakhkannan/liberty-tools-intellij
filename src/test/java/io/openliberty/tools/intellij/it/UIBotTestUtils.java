@@ -301,6 +301,70 @@ public class UIBotTestUtils {
         }
     }
 
+    public static void runLibertyActionFromLTWDropDownMenuNew(RemoteRobot remoteRobot, String action, String projectName, boolean usePlayButton, int maxRetries) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+
+        // Click on the Liberty toolbar to give it focus.
+        ComponentFixture libertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
+        libertyTWBar.click();
+
+        // Process the action.
+        Exception error = null;
+        for (int i = 0; i < maxRetries; i++) {
+            try {
+                error = null;
+                ComponentFixture treeFixture = projectFrame.getTree("LibertyTree", action, "60");
+                RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+                        Duration.ofSeconds(2),
+                        "Waiting for " + action + " in tree fixture to show and come into focus",
+                        "Action " + action + " in tree fixture is not showing or not in focus",
+                        treeFixture::isShowing);
+
+                List<RemoteText> rts = treeFixture.findAllText();
+                boolean flag = false;
+                for (RemoteText rt : rts) {
+
+                    if (projectName.equals(rt.getText())) {
+                        flag = true;
+                    }
+
+                    if (action.equals(rt.getText()) && flag) {
+                        if (usePlayButton) {
+                            rt.click();
+                            clickOnLibertyTWToolbarPlayButton(remoteRobot);
+                        } else {
+                            rt.doubleClick();
+                        }
+                        break;
+                    }
+                }
+
+                // If the Start... action was selected, make sure the Edit Configuration dialog is displayed.
+                if (action.equals("Start...")) {
+                    // Finding the dialog may take a quite some time on Windows.
+                    // This call will fail if the expected dialog is not displayed.
+                    projectFrame.find(DialogFixture.class, DialogFixture.byTitle("Edit Configuration"), Duration.ofSeconds(30));
+                }
+
+                break;
+            } catch (Exception e) {
+                // Catch indexing related issues that make the Liberty tool window content disappear,
+                // or invalidate the tree fixture that was previously obtained.
+                // For example, this may cause errors stating:
+                // "component must be showing on the screen to determine its location"
+                error = e;
+                TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
+                        "Failed to process the " + action + " action using Liberty tool window drop down (" + e.getMessage() + "). Retrying...");
+                TestUtils.sleepAndIgnoreException(5);
+            }
+        }
+
+        // Report the last error if there is one.
+        if (error != null) {
+            throw new RuntimeException("Unable to run the " + action + " action from Liberty Tool window project dropdown.", error);
+        }
+    }
+
     /**
      * Runs a Liberty tool window action using the pop-up action menu.
      *
@@ -2503,6 +2567,41 @@ public class UIBotTestUtils {
         }
     }
 
+    public static void runStopActionNew(RemoteRobot remoteRobot, String testName, ActionExecType execType, String absoluteWLPPath, String smMPProjName, int maxRetries) {
+        for (int i = 0; i < maxRetries; i++) {
+            // Stop dev mode. Any failures during command processing are retried. If there are any
+            // failures, this method will exit.
+            switch (execType) {
+                case LTWPLAY:
+                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Stop", smMPProjName, true, maxRetries);
+                    break;
+                case LTWDROPDOWN:
+                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Stop", smMPProjName, false, maxRetries);
+                    break;
+                case LTWPOPUP:
+                    UIBotTestUtils.runActionLTWPopupMenu(remoteRobot, smMPProjName, "Liberty: Stop", maxRetries);
+                    break;
+                case SEARCH:
+                    UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", maxRetries);
+                    break;
+                default:
+                    fail("An invalid execution type of " + execType + " was requested.");
+            }
+
+            // Validate that the server stopped. Fail the test if the last iteration fails.
+            try {
+                boolean failOnError = (i == (maxRetries - 1));
+                TestUtils.validateLibertyServerStopped(testName, absoluteWLPPath, 12, failOnError);
+                break;
+            } catch (Exception e) {
+                // The Liberty tool window may flicker due to sudden indexing, which may cause an error.
+                // Retry the action command and validation.
+                TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "Retrying server stop. Cause: " + e.getMessage());
+                TestUtils.sleepAndIgnoreException(5);
+            }
+        }
+    }
+
     /**
      * Refreshed the Liberty tool window using the refresh icon.
      *
@@ -2762,6 +2861,21 @@ public class UIBotTestUtils {
         }
 
         return menuAction2;
+    }
+
+    public static void clickOnLoad(RemoteRobot remoteRobot) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+
+        try {
+            // Clicking on the left toolbar ensures that the Main Menu button is active.
+            String xPath = "//div[@accessiblename='Load all' and @class='JButton']";
+            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+            actionButton.click();
+            TestUtils.sleepAndIgnoreException(5);
+
+        } catch (WaitForConditionTimeoutException e) {
+            // Main Menu button is not clicked, nothing to do
+        }
     }
 
 }
