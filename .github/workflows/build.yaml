@@ -70,6 +70,16 @@ jobs:
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
+      # Skip macOS and Windows if refLTITag is 24.0.9
+      - name: Skip macOS/Windows for 24.0.9
+        if: ${{ !matrix.refLTITagCheck }}
+        run: echo "Skipping build for runtime ${{ matrix.runtime }} with refLTITag 24.0.9"
+        continue-on-error: true
+
+      # Execute build steps for valid configurations
+      - name: Build Steps
+        if: ${{ matrix.refLTITagCheck }}
+        run: echo "Running build on OS ${{ matrix.os }} with runtime ${{ matrix.runtime }}"
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
         uses: al-cheb/configure-pagefile-action@v1.4
