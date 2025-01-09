@@ -59,26 +59,25 @@ jobs:
           - runtime: mac
             os: macOS-latest
             reportName: mac-test-report
-            refLTITagCheck: ${{ inputs.refLTITag != '24.0.9' }}
+            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
-            refLTITagCheck: ${{ inputs.refLTITag != '24.0.9' }}
+            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
-      # Skip macOS and Windows if refLTITag is 24.0.9
-      - name: Skip macOS/Windows for 24.0.9
-        if: ${{ !matrix.refLTITagCheck }}
+      - name: Skip step
+        if: ${{ matrix.excludeFromBuild }}
         run: echo "Skipping build for runtime ${{ matrix.runtime }} with refLTITag 24.0.9"
         continue-on-error: true
 
-      # Execute build steps for valid configurations
-      - name: Build Steps
-        if: ${{ matrix.refLTITagCheck }}
+      # Run build steps for valid configurations
+      - name: Run build
+        if: ${{ !matrix.excludeFromBuild }}
         run: echo "Running build on OS ${{ matrix.os }} with runtime ${{ matrix.runtime }}"
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
