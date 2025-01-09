@@ -50,7 +50,7 @@ jobs:
     if: >
       !(
         inputs.refLTITag == '24.0.9' && 
-        (${{ matrix.runtime }} == 'mac' || ${{ matrix.runtime }} == 'windows')
+        (${{ matrix.runtime  == 'mac' || matrix.runtime == 'windows' }})
       )
     strategy:
       fail-fast: false
