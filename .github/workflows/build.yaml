@@ -51,8 +51,6 @@ jobs:
       fail-fast: false
       matrix:
         runtime: [ linux, mac, windows ]
-        tag: [ 'main', '24.0.9', '24.0.12' ]
-#        os: [ 'macOS-latest', 'windows-latest', 'ubuntu-latest' ]
         include:
           - runtime: linux
             os: ubuntu-latest
@@ -63,13 +61,6 @@ jobs:
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
-        exclude:
-          - runtime: mac
-            tag: 24.0.9
-            os: macOS-latest
-          - runtime: windows
-            tag: 24.0.9
-            os: windows-latest
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
