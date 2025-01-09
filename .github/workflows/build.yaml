@@ -47,11 +47,6 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    if: >
-      !(
-        inputs.refLTITag == '24.0.9' && 
-        (${{ matrix.runtime  == 'mac' || matrix.runtime == 'windows' }})
-      )
     strategy:
       fail-fast: false
       matrix:
@@ -66,6 +61,14 @@ jobs:
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
+        exclude:
+          # Exclude mac and windows builds for LTI version 24.0.9
+          - runtime: mac
+            os: macOS-latest
+            refLTITag: 24.0.9
+          - runtime: windows
+            os: windows-latest
+            refLTITag: 24.0.9
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
