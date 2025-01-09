@@ -47,6 +47,11 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    if: >
+      !(
+        inputs.refLTITag == '24.0.9' && 
+        (${{ matrix.runtime }} == 'mac' || ${{ matrix.runtime }} == 'windows')
+      )
     strategy:
       fail-fast: false
       matrix:
@@ -61,12 +66,6 @@ jobs:
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
-    # Exclude logic for dynamic inputs
-    if: >
-      !(
-        inputs.refLTITag == '24.0.9' && 
-        (${{ matrix.runtime }} == 'mac' || ${{ matrix.runtime }} == 'windows')
-      )
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
