@@ -52,6 +52,7 @@ jobs:
       matrix:
         runtime: [ linux, mac, windows ]
         tag: [ 'main', '24.0.9', '24.0.12' ]
+        os: [ 'macOS-latest', 'windows-latest', 'ubuntu-latest' ]
         include:
           - runtime: linux
             os: ubuntu-latest
