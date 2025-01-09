@@ -60,12 +60,15 @@ jobs:
           - runtime: linux
             os: ubuntu-latest
             reportName: linux-test-report
+              # Include macOS and Windows only if refLTITag is not 24.0.9
           - runtime: mac
             os: macOS-latest
             reportName: mac-test-report
+            refLTITagCheck: ${{ inputs.refLTITag != '24.0.9' }}
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
+            refLTITagCheck: ${{ inputs.refLTITag != '24.0.9' }}
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
