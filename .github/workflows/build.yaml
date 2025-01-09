@@ -47,11 +47,6 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    if: >
-      !(
-        inputs.refLTITag == '24.0.9' && 
-        (matrix.runtime == 'mac' || matrix.runtime == 'windows')
-      )
     strategy:
       fail-fast: false
       matrix:
