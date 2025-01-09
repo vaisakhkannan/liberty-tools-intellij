@@ -72,7 +72,9 @@ jobs:
     steps:
       - name: Skip step
         if: ${{ matrix.excludeFromBuild }}
-        run: echo "Skipping build for runtime ${{ matrix.runtime }} with refLTITag 24.0.9"
+        run: |
+          echo "Skipping build for refLTITag: 24.0.9 on ${{ matrix.runtime }}"
+          exit 0
         continue-on-error: true
 
       # Run build steps for valid configurations
