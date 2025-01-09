@@ -51,8 +51,8 @@ jobs:
       fail-fast: false
       matrix:
         runtime: [ linux, mac, windows ]
-        tag: [ 'main', '24.0.9', '24.0.12' ]
-        os: [ 'macOS-latest', 'windows-latest', 'ubuntu-latest' ]
+#        tag: [ 'main', '24.0.9', '24.0.12' ]
+#        os: [ 'macOS-latest', 'windows-latest', 'ubuntu-latest' ]
         include:
           - runtime: linux
             os: ubuntu-latest
@@ -64,9 +64,11 @@ jobs:
             os: windows-latest
             reportName: windows-test-report
         exclude:
-          - tag: 24.0.9
+          - runtime: mac
+            tag: 24.0.9
             os: macOS-latest
-          - tag: 24.0.9
+          - runtime: windows
+            tag: 24.0.9
             os: windows-latest
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
