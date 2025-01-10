@@ -75,6 +75,7 @@ jobs:
         run: |
           echo "Skipping build for refLTITag: 24.0.9 on ${{ matrix.runtime }}"
           exit 0
+        continue-on-error: true
 
       # Run build steps for valid configurations
       - name: Run build
