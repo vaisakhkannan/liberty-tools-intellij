@@ -53,11 +53,11 @@ jobs:
       matrix:
         flavor: [ ubuntu-latest, macOS-latest, windows-latest ]
         isMaster:
-          - ${{ contains(github.ref, 'main') }}
+          - ${{ inputs.refLTITag }}
         exclude:
           - isMaster: true
-            flavor: ubuntu-latest
-          - isMaster: false
+            flavor: windows-latest
+          - isMaster: true
             flavor: macOS-latest
 
     env:
