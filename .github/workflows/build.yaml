@@ -50,38 +50,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macOS-latest, windows-latest ]
-        excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
-#        include:
-#          - runtime: linux
-#            os: ubuntu-latest
-#            reportName: linux-test-report
-#              # Include macOS and Windows only if refLTITag is not 24.0.9
-#          - runtime: mac
-#            os: macOS-latest
-#            reportName: mac-test-report
-#            excludeFromBuild: ${{ inputs.refLTITag != '24.0.9' }}
-#          - runtime: windows
-#            os: windows-latest
-#            reportName: windows-test-report
-#            excludeFromBuild: ${{ inputs.refLTITag != '24.0.9' }}
-
-        exclude:
-          - os: macOS-latest
-            excludeFromBuild: true
-          - os: windows-latest
-            excludeFromBuild: true
+        runtime: [ linux, mac, windows ]
+        include:
+          - runtime: linux
+            os: ubuntu-latest
+            reportName: linux-test-report
+          - runtime: mac
+            os: macOS-latest
+            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
+            reportName: mac-test-report
+          - runtime: windows
+            os: windows-latest
+            reportName: windows-test-report
+            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
-      - name: Skip step
+      - name: Check Build Condition and Exit Early
         run: |
-          echo "Skipping build for refLTITag: 24.0.9 on ${{ matrix.runtime }}"
-      - name: Run build
-        run: echo "Running build on OS ${{ matrix.os }} with runtime ${{ matrix.runtime }}"
+          if [[ "${{ matrix.excludeFromBuild }}" == "true" ]]; then
+            echo "Skipping remaining steps due to excludeFromBuild=true."
+            exit 0
+          fi
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
         uses: al-cheb/configure-pagefile-action@v1.4
@@ -120,7 +113,7 @@ jobs:
         working-directory: ./liberty-tools-intellij
         run: bash ./gradlew buildPlugin -PuseLocal=${{ env.USE_LOCAL_PLUGIN }}
       - name: 'Archive artifacts'
-        if: ${{ (runner.os == 'Linux' && !failure()) }}
+        if: ${{ runner.os == 'Linux' && !failure() }}
         uses: actions/upload-artifact@v4.3.4
         with:
           name: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
@@ -134,7 +127,7 @@ jobs:
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/run.sh
       - name: 'Archive Test logs and reports'
-        if: ${{ (failure() && steps.run_tests.conclusion == 'failure') }}
+        if: ${{ failure() && steps.run_tests.conclusion == 'failure' }}
         uses: actions/upload-artifact@v4.3.4
         with:
           name: ${{ matrix.reportName }}-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
