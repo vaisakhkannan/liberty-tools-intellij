@@ -46,7 +46,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.flavor }}
     strategy:
       fail-fast: false
 
