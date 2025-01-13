@@ -50,24 +50,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ linux, mac, windows ]
+        os: [ linux, mac, windows ]
         excludeFromBuild: [ 24.0.9 ]
         include:
-          - runtime: linux
-            os: ubuntu-latest
+          - os: ubuntu-latest
             reportName: linux-test-report
-          - runtime: mac
-            os: macOS-latest
+          - os: macOS-latest
             excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
             reportName: mac-test-report
-          - runtime: windows
-            os: windows-latest
+          - os: windows-latest
             reportName: windows-test-report
             excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
         exclude:
-          - runtime: mac
+          - os: macOS-latest
             excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
-          - runtime: windows
+          - os: windows-latest
             excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
 
     env:
