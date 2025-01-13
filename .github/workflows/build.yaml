@@ -61,8 +61,6 @@ jobs:
             flavor: ubuntu-latest
           - shouldRelease: false
             flavor: macOS-latest
-          - shouldRelease: false
-            flavor: windows-latest
 
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
