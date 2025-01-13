@@ -57,25 +57,26 @@ jobs:
             reportName: linux-test-report
           - runtime: mac
             os: macOS-latest
-            exclude: ${{ inputs.refLTITag == '24.0.9' }}
+            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
             reportName: mac-test-report
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
-            exclude: ${{ inputs.refLTITag == '24.0.9' }}
+            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
-#      - name: Check Build Condition and Exit Early
-#        shell: bash  # Specify bash as the shell
-#        run: |
-#          if [ "${{ matrix.excludeFromBuild }}" == "true" ]; then
-#            echo "Skipping remaining steps due to excludeFromBuild=true."
-#            exit 0
-#          fi
+      - name: Check Build Condition
+        shell: bash
+        run: |
+          if [ "${{ matrix.excludeFromBuild }}" == "true" ]; then
+            echo "Skipping remaining steps due to excludeFromBuild=true."
+            echo "::error::Exiting job early due to condition."
+            exit 0
+          fi
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
         uses: al-cheb/configure-pagefile-action@v1.4
