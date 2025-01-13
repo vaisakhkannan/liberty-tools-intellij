@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ linux, mac, windows ]
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
         excludeFromBuild: [ 24.0.9 ]
         include:
           - os: ubuntu-latest
