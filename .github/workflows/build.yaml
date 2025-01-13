@@ -52,14 +52,12 @@ jobs:
 
       matrix:
         flavor: [ ubuntu-latest, macOS-latest, windows-latest ]
-        shouldRelease:
-          - ${{ contains(github.ref, 'stable') || startsWith(github.ref, 'refs/heads/v') }}
         isMaster:
-          - ${{ contains(github.ref, 'master') }}
+          - ${{ contains(github.ref, 'main') }}
         exclude:
-          - shouldRelease: false
+          - isMaster: true
             flavor: ubuntu-latest
-          - shouldRelease: false
+          - isMaster: false
             flavor: macOS-latest
 
     env:
