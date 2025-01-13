@@ -71,7 +71,7 @@ jobs:
     steps:
       - name: Check Build Condition and Exit Early
         run: |
-          if [[ "${{ matrix.excludeFromBuild }}" == "true" ]]; then
+          if [ "${{ matrix.excludeFromBuild }}" == "true" ]; then
             echo "Skipping remaining steps due to excludeFromBuild=true."
             exit 0
           fi
