@@ -51,7 +51,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
-        excludeFromBuild: [ 24.0.9 ]
+        excludeFromBuild: ${{ inputs.refLTITag }}
         include:
           - os: ubuntu-latest
             reportName: linux-test-report
