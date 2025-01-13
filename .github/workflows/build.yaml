@@ -51,13 +51,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
-        include:
-          - os: ubuntu-latest
-            reportName: linux-test-report
-          - os: macOS-latest
-            reportName: mac-test-report
-          - os: windows-latest
-            reportName: windows-test-report
         exclude:
           - os: macOS-latest
             excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
