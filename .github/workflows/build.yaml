@@ -55,13 +55,16 @@ jobs:
           - runtime: linux
             os: ubuntu-latest
             reportName: linux-test-report
+            excludeFromBuild: ${{ inputs.refLTITag != '24.0.9' }}
               # Include macOS and Windows only if refLTITag is not 24.0.9
           - runtime: mac
             os: macOS-latest
             reportName: mac-test-report
+            excludeFromBuild: ${{ inputs.refLTITag != '24.0.9' }}
           - runtime: windows
             os: windows-latest
             reportName: windows-test-report
+            excludeFromBuild: ${{ inputs.refLTITag != '24.0.9' }}
 
         exclude:
           - runtime: mac
