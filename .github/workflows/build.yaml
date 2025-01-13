@@ -51,6 +51,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
 #        include:
 #          - runtime: linux
 #            os: ubuntu-latest
@@ -67,9 +68,9 @@ jobs:
 
         exclude:
           - os: macOS-latest
-            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
+            excludeFromBuild: true
           - os: windows-latest
-            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
+            excludeFromBuild: true
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
