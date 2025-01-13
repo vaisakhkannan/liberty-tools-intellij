@@ -70,6 +70,7 @@ jobs:
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
       - name: Check Build Condition and Exit Early.
+        shell: bash  # Specify bash as the shell
         run: |
           if [ "${{ matrix.excludeFromBuild }}" == "true" ]; then
             echo "Skipping remaining steps due to excludeFromBuild=true."
