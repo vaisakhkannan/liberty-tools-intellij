@@ -56,11 +56,9 @@ jobs:
           - os: ubuntu-latest
             reportName: linux-test-report
           - os: macOS-latest
-            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
             reportName: mac-test-report
           - os: windows-latest
             reportName: windows-test-report
-            excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
         exclude:
           - os: macOS-latest
             excludeFromBuild: ${{ inputs.refLTITag == '24.0.9' }}
