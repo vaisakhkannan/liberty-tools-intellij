@@ -66,14 +66,6 @@ jobs:
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
-      - name: Check Build Condition
-        shell: bash
-        run: |
-          if [ "${{ matrix.excludeFromBuild }}" == "true" ]; then
-            echo "Skipping remaining steps due to excludeFromBuild=true."
-            echo "::error::Exiting job early due to condition."
-            exit 0
-          fi
       - name: Configure pagefile
         if: contains(matrix.os, 'windows')
         uses: al-cheb/configure-pagefile-action@v1.4
