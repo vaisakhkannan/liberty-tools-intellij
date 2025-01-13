@@ -53,7 +53,7 @@ jobs:
       matrix:
         flavor: [ ubuntu-latest, macOS-latest, windows-latest ]
         isMaster:
-          - ${{ inputs.refLTITag }}
+          - ${{ inputs.refLTITag == '24.0.9' }}
         exclude:
           - isMaster: true
             flavor: windows-latest
