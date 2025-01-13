@@ -69,7 +69,7 @@ jobs:
       LSP4IJ_BRANCH: ${{ inputs.lsp4ijBranch || 'default' }}
       REF_LTI_TAG: ${{ inputs.refLTITag }}
     steps:
-      - name: Check Build Condition and Exit Early
+      - name: Check Build Condition and Exit Early.
         run: |
           if [ "${{ matrix.excludeFromBuild }}" == "true" ]; then
             echo "Skipping remaining steps due to excludeFromBuild=true."
