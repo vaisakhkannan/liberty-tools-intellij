@@ -50,11 +50,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ linux, mac, windows ]
+        runtime: [ linux, mac, windows ]
         # Adding a check to verify if 'refLTITag' is equal to '24.0.9'.
         # This code can be removed once the '24.0.9' version is removed from the 'tag' array in the cron job build, and the previous code can be added back.
         is24.0.9:
           - ${{ inputs.refLTITag == '24.0.9' }}
+        os:
+          - [ ubuntu-latest, macOS-latest, windows-latest ]
         # Adding a check on macOS and Windows to verify if 'is24.0.9' is equal to 'true'. The value of 'is24.0.9' is used to determine whether the job need to be executed.
         exclude:
           - runtime: windows
