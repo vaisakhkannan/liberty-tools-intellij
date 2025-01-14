@@ -46,7 +46,7 @@ on:
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}
+    name: Build on ${{ matrix.os == 'macOS-latest' && 'Mac' || matrix.os == 'ubuntu-latest' && 'Ubuntu' || matrix.os == 'windows-latest' && 'Windows' }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
