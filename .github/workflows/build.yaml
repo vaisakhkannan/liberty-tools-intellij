@@ -52,7 +52,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, macOS-latest, windows-latest ]
-        # Adding a check to verify if 'refLTITag' is equal to '24.0.9'.
+        # Adding a check to verify if 'refLTITag' is equal to '24.0.9'..
         # This code can be removed once the '24.0.9' version is removed from the 'tag' array in the cron job build, and the previous code can be added back.
         excludeLTITag:
           - ${{ inputs.refLTITag == '24.0.9' }}
