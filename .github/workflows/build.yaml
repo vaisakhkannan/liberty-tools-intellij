@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ linux, mac, windows ]
+        os: [ linux, mac, windows ]
         # Adding a check to verify if 'refLTITag' is equal to '24.0.9'.
         # This code can be removed once the '24.0.9' version is removed from the 'tag' array in the cron job build, and the previous code can be added back.
         is24.0.9:
