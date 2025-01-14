@@ -46,6 +46,7 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
