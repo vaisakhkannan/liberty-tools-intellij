@@ -515,7 +515,15 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
         // Trigger the start with parameters configuration dialog.
-        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, false);
+//        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, false);
+        if (getProjectTypeIsMutliple()) {
+            System.out.println("Inside If loop////////");
+            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, true);
+            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+        }
+        else {
+            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, false);
+        }
 
         // Run the configuration dialog.
         UIBotTestUtils.runStartParamsConfigDialog(remoteRobot, getStartParams());
@@ -688,7 +696,15 @@ public abstract class SingleModMPProjectTestCommon {
         deleteTestReports();
 
         // Start dev mode.
-        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, false);
+//        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, false);
+        if (getProjectTypeIsMutliple()) {
+            System.out.println("Inside If loop////////");
+            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, true);
+            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+        }
+        else {
+            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, false);
+        }
 
         try {
             // Validate that the application started.
@@ -1136,7 +1152,15 @@ public abstract class SingleModMPProjectTestCommon {
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
 
         // Start dev mode in a container.
-        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, false);
+//        UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, false);
+        if (getProjectTypeIsMutliple()) {
+            System.out.println("Inside If loop////////");
+            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, true);
+            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+        }
+        else {
+            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, false);
+        }
 
         try {
             // Validate that the project started.
@@ -1144,7 +1168,15 @@ public abstract class SingleModMPProjectTestCommon {
         } finally {
             if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                 // Stop dev mode.
-                UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, false);
+//                UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, false);
+                if (getProjectTypeIsMutliple()) {
+                    System.out.println("Inside If loop////////");
+                    UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, true);
+                    UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                }
+                else {
+                    UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, false);
+                }
 
                 // Validate that the server stopped.
                 TestUtils.validateLibertyServerStopped(testName, absoluteWLPPath);
