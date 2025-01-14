@@ -848,6 +848,8 @@ public abstract class SingleModMPProjectTestCommon {
         String testName = "testStartWithConfigInRunModeUsingToolbar";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
 
+        System.out.println("------"+absoluteWLPPath+"-----------");
+
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
@@ -867,6 +869,7 @@ public abstract class SingleModMPProjectTestCommon {
         } finally {
             try {
                 if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
+                    System.out.println("------"+absoluteWLPPath+"-----------");
                     UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
                 }
             } finally {
@@ -950,6 +953,8 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
             Map<String, String> cfgEntries1 = UIBotTestUtils.getOpenedLibertyConfigDataAndCloseOnExit(remoteRobot);
             String activeCfgName1 = cfgEntries1.get(UIBotTestUtils.ConfigEntries.NAME.toString());
+            System.out.println("--------"+activeCfgName1+"-------");
+            System.out.println("--------"+configName1+"-------");
             Assertions.assertEquals(configName1, activeCfgName1, "The active config name " + activeCfgName1 + " does not match expected name of " + configName1);
             String activeCfgProjBldPath1 = cfgEntries1.get(UIBotTestUtils.ConfigEntries.LIBERTYPROJ.toString());
             activeCfgProjBldPath1 = (activeCfgProjBldPath1.endsWith("...")) ? activeCfgProjBldPath1.replace("...", "") : activeCfgProjBldPath1;
