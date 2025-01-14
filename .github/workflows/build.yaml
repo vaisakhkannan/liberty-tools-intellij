@@ -62,11 +62,11 @@ jobs:
             os: ubuntu-latest
             reportName: linux-test-report
           - runtime: mac
-            is24.0.9: false
+            is24.0.9: true
             os: macOS-latest
             reportName: mac-test-report
           - runtime: windows
-            is24.0.9: false
+            is24.0.9: true
             os: windows-latest
             reportName: windows-test-report
     env:
