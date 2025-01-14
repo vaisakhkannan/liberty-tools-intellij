@@ -56,13 +56,6 @@ jobs:
         is24.0.9:
           - ${{ inputs.refLTITag == '24.0.9' }}
         # Adding a check on macOS and Windows to verify if 'is24.0.9' is equal to 'true'. The value of 'is24.0.9' is used to determine whether the job need to be executed.
-        exclude:
-          - runtime: windows
-            is24.0.9: true
-            os: windows-latest
-          - runtime: mac
-            is24.0.9: true
-            os: macOS-latest
         include:
           - runtime: linux
             is24.0.9: false
