@@ -12,6 +12,7 @@ package io.openliberty.tools.intellij.it;
 import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.ComponentFixture;
+import com.intellij.remoterobot.fixtures.JTreeFixture;
 import com.intellij.remoterobot.utils.Keyboard;
 import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import org.junit.jupiter.api.*;
@@ -905,6 +906,7 @@ public abstract class SingleModMPProjectTestCommon {
     public void testStartWithConfigInRunModeUsingMenu() {
         String testName = "testStartWithConfigInRunModeUsingMenu";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
+        System.out.println("-----"+ absoluteWLPPath +"-----");
 
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
@@ -922,6 +924,7 @@ public abstract class SingleModMPProjectTestCommon {
         } finally {
             try {
                 if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
+                    System.out.println("-----inside if loop-----");
                     UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
                 }
             } finally {
@@ -1203,6 +1206,15 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         }
         UIBotTestUtils.openProjectView(remoteRobot);
+        if (isMultiple) {
+            // pre-open project tree before attempting to open files needed by testcases
+            ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
+            JTreeFixture projTree = projectFrame.getProjectViewJTree(projectName);
+
+            // expand project directories that are specific to this test app being used by these testcases
+            // must be expanded here before trying to open specific files
+            projTree.expand("multiple-project", projectName);
+        }
         if (!remoteRobot.isMac()) {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3, false);
         }
