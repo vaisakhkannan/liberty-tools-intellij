@@ -78,13 +78,17 @@ jobs:
         # Adding a check on macOS and Windows to verify if 'is24.0.9' is equal to 'true'. The value of 'is24.0.9' is used to determine whether the job need to be executed.
         exclude:
           - excludeLTITag: true
-            name: mac-1
+            os:
+              name: mac-1
           - excludeLTITag: true
-            name: windows-1
+            os:
+              name: mac-2
           - excludeLTITag: true
-            name: mac-2
+            os:
+              name: windows-1
           - excludeLTITag: true
-            name: windows-2
+            os:
+              name: windows-2
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ inputs.refLsp4ij }}
