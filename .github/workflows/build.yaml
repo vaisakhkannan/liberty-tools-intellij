@@ -46,11 +46,25 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os.value }}
     strategy:
       fail-fast: false
+#      matrix:
+#        os: [ ubuntu-latest, macOS-latest, windows-latest, ubuntu-latest, macOS-latest, windows-latest ]
       matrix:
-        os: [ ubuntu-latest, macOS-latest, windows-latest, ubuntu-latest, macOS-latest, windows-latest ]
+        os:
+          - name: ubuntu-latest-1
+            value: ubuntu-latest
+          - name: macOS-latest-1
+            value: macOS-latest
+          - name: windows-latest-1
+            value: windows-latest
+          - name: ubuntu-latest-2
+            value: ubuntu-latest
+          - name: macOS-latest-2
+            value: macOS-latest
+          - name: windows-latest-2
+            value: windows-latest
         # Adding a check to verify if 'refLTITag' is equal to '24.0.9'..
         # This code can be removed once the '24.0.9' version is removed from the 'tag' array in the cron job build, and the previous code can be added back.
         excludeLTITag:
@@ -108,7 +122,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && !failure() }}
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
+          name: artifacts-${{ matrix.os.name }}-liberty-tools-intellij-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
           path: |
             ./**/*liberty-tools-intellij*.zip
             ./**/libs/*liberty-tools-intellij*.jar
@@ -122,6 +136,6 @@ jobs:
         if: ${{ failure() && steps.run_tests.conclusion == 'failure' }}
         uses: actions/upload-artifact@v4.3.4
         with:
-          name: ${{ matrix.os }}-test-report-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
+          name: ${{ matrix.os.name }}-test-report-LTI-${{ env.REF_LTI_TAG || 'default' }}-LSP4IJ-${{ env.LSP4IJ_BRANCH }}
           path: |
             liberty-tools-intellij/build/reports/
