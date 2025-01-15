@@ -46,12 +46,11 @@ on:
 
 jobs:
   build:
-    name: Build on ${{ matrix.os == 'macOS-latest' && 'Mac' || matrix.os == 'ubuntu-latest' && 'Ubuntu' || matrix.os == 'windows-latest' && 'Windows' }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        os: [ ubuntu-latest, macOS-latest, windows-latest, ubuntu-latest, macOS-latest, windows-latest ]
         # Adding a check to verify if 'refLTITag' is equal to '24.0.9'..
         # This code can be removed once the '24.0.9' version is removed from the 'tag' array in the cron job build, and the previous code can be added back.
         excludeLTITag:
