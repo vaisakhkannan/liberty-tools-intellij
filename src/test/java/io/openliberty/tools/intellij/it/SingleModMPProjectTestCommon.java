@@ -12,7 +12,6 @@ package io.openliberty.tools.intellij.it;
 import com.automation.remarks.junit5.Video;
 import com.intellij.remoterobot.RemoteRobot;
 import com.intellij.remoterobot.fixtures.ComponentFixture;
-import com.intellij.remoterobot.fixtures.JTreeFixture;
 import com.intellij.remoterobot.utils.Keyboard;
 import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import org.junit.jupiter.api.*;
@@ -255,10 +254,10 @@ public abstract class SingleModMPProjectTestCommon {
      */
     public BuildType getBuildCategory() {
         return buildCategory;
-    }
+    };
     public void setBuildCategory(BuildType type) {
         buildCategory = type;
-    }
+    };
 
     public boolean getProjectTypeIsMutliple() {
         return isMultiple;
@@ -353,7 +352,7 @@ public abstract class SingleModMPProjectTestCommon {
         deleteTestReports();
 
         // Trigger the start with parameters configuration dialog.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
 
         // Run the configuration dialog.
         UIBotTestUtils.runStartParamsConfigDialog(remoteRobot, getStartParams());
@@ -379,7 +378,7 @@ public abstract class SingleModMPProjectTestCommon {
 
         // Validate that the start with params action brings up the configuration previously used.
         try {
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
             Map<String, String> cfgEntries = UIBotTestUtils.getOpenedLibertyConfigDataAndCloseOnExit(remoteRobot);
             String activeCfgName = cfgEntries.get(UIBotTestUtils.ConfigEntries.NAME.toString());
             Assertions.assertEquals(getSmMPProjectName(), activeCfgName, "The active config name " + activeCfgName + " does not match expected name of " + getSmMPProjectName());
@@ -408,7 +407,7 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
         // Trigger the start with parameters configuration dialog.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), true, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), true, 3);
 
         // Run the configuration dialog.
         UIBotTestUtils.runStartParamsConfigDialog(remoteRobot, getStartParams());
@@ -434,7 +433,7 @@ public abstract class SingleModMPProjectTestCommon {
 
         // Validate that the start with params action brings up the configuration previously used.
         try {
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), true, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), true, 3);
             Map<String, String> cfgEntries = UIBotTestUtils.getOpenedLibertyConfigDataAndCloseOnExit(remoteRobot);
             String activeCfgName = cfgEntries.get(UIBotTestUtils.ConfigEntries.NAME.toString());
             Assertions.assertEquals(getSmMPProjectName(), activeCfgName, "The active config name " + activeCfgName + " does not match expected name of " + getSmMPProjectName());
@@ -582,14 +581,14 @@ public abstract class SingleModMPProjectTestCommon {
         deleteTestReports();
 
         // Start dev mode.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start", getSmMPProjectName(), false, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start", getSmMPProjectName(), false, 3);
 
         // Validate that the project started.
         TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, false);
 
         try {
             // Run the project's tests.
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Run tests", getSmMPProjectName(), false, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Run tests", getSmMPProjectName(), false, 3);
 
             // Validate that the report was generated.
             validateTestReportsExist();
@@ -621,14 +620,14 @@ public abstract class SingleModMPProjectTestCommon {
         deleteTestReports();
 
         // Start dev mode.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start", getSmMPProjectName(), true, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start", getSmMPProjectName(), true, 3);
 
         try {
             // Validate that the application started.
             TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, false);
 
             // Run the application's tests.
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Run tests", getSmMPProjectName(), true, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Run tests", getSmMPProjectName(), true, 3);
 
             // Validate that the report was generated.
             validateTestReportsExist();
@@ -972,7 +971,7 @@ public abstract class SingleModMPProjectTestCommon {
             // Note that depending on the size of the dialog, the project config file path shown in the Liberty project
             // combo box, may be truncated. Therefore, this check is just a best effort approach to make sure that
             // there is a value in the box, and that it approximates the expected value.
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
             Map<String, String> cfgEntries1 = UIBotTestUtils.getOpenedLibertyConfigDataAndCloseOnExit(remoteRobot);
             String activeCfgName1 = cfgEntries1.get(UIBotTestUtils.ConfigEntries.NAME.toString());
             System.out.println("--------"+activeCfgName1+"-------");
@@ -988,7 +987,7 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, configName2);
 
             // Validate that selected configuration 2 shows the expected data. The dialog is opened using the start... action.
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
             Map<String, String> cfgEntries2 = UIBotTestUtils.getOpenedLibertyConfigDataAndCloseOnExit(remoteRobot);
             String activeCfgName2 = cfgEntries2.get(UIBotTestUtils.ConfigEntries.NAME.toString());
             Assertions.assertEquals(configName2, activeCfgName2, "The active config name " + activeCfgName2 + " does not match expected name of " + configName2);
@@ -1018,7 +1017,7 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, newCfgName1);
 
             // Validate that selected configuration 1 shows the expected data. The dialog is opened using the start... action.
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
             Map<String, String> newCfgEntries1 = UIBotTestUtils.getOpenedLibertyConfigDataAndCloseOnExit(remoteRobot);
             String newActiveCfgName1 = newCfgEntries1.get(UIBotTestUtils.ConfigEntries.NAME.toString());
             Assertions.assertEquals(newCfgName1, newActiveCfgName1, "The active config name " + newActiveCfgName1 + " does not match expected name of " + newCfgName1);
@@ -1032,7 +1031,7 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, newCfgName2);
 
             // Validate that selected configuration 2 shows the expected data. The dialog is opened using the start... action.
-            UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
+            UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), false, 3);
             Map<String, String> newCfgEntries2 = UIBotTestUtils.getOpenedLibertyConfigDataAndCloseOnExit(remoteRobot);
             String newActiveCfgName2 = newCfgEntries2.get(UIBotTestUtils.ConfigEntries.NAME.toString());
             Assertions.assertEquals(newCfgName2, newActiveCfgName2, "The active config name " + newActiveCfgName2 + " does not match expected name of " + newCfgName2);
@@ -1063,14 +1062,14 @@ public abstract class SingleModMPProjectTestCommon {
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
 
         // Start dev mode in a container.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start in container", getSmMPProjectName(), false, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start in container", getSmMPProjectName(), false, 3);
         try {
             // Validate that the project started.
             TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, true);
         } finally {
             if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                 // Stop dev mode.
-                UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Stop", getSmMPProjectName(), false, 3);
+                UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", getSmMPProjectName(), false, 3);
 
                 // Validate that the server stopped.
                 TestUtils.validateLibertyServerStopped(testName, absoluteWLPPath);
@@ -1095,14 +1094,14 @@ public abstract class SingleModMPProjectTestCommon {
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
 
         // Start dev mode in a container.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start in container", getSmMPProjectName(), true, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start in container", getSmMPProjectName(), true, 3);
         try {
             // Validate that the project started.
             TestUtils.validateProjectStarted(testName, getSmMpProjResURI(), getSmMpProjPort(), getSmMPProjOutput(), absoluteWLPPath, true);
         } finally {
             if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                 // Stop dev mode.
-                UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Stop", getSmMPProjectName(), true, 3);
+                UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", getSmMPProjectName(), true, 3);
 
                 // Validate that the server stopped.
                 TestUtils.validateLibertyServerStopped(testName, absoluteWLPPath);
@@ -1209,16 +1208,6 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         }
         UIBotTestUtils.openProjectView(remoteRobot);
-//        if (isMultiple) {
-//            // pre-open project tree before attempting to open files needed by testcases
-//            System.out.println("////////Inside IsMUltiple //////////");
-//            ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-//            JTreeFixture projTree = projectFrame.getProjectViewJTree(projectName);
-//
-//            // expand project directories that are specific to this test app being used by these testcases
-//            // must be expanded here before trying to open specific files
-//            projTree.expand("multiple-project", projectName);
-//        }
         if (!remoteRobot.isMac()) {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3, false);
         }
@@ -1259,7 +1248,7 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
         // Trigger the start with parameters configuration dialog.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", getSmMPProjectName(), true, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", getSmMPProjectName(), true, 3);
 
         // Run the configuration dialog.
         UIBotTestUtils.runStartParamsConfigDialog(remoteRobot, getStartParamsDebugPort());
@@ -1286,7 +1275,7 @@ public abstract class SingleModMPProjectTestCommon {
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
         // Start dev mode.
-        UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start", getSmMPProjectName(), true, 3);
+        UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start", getSmMPProjectName(), true, 3);
 
         try {
             // Validate that the project started.
@@ -1333,22 +1322,17 @@ public abstract class SingleModMPProjectTestCommon {
         openFixtureNewTab.click(new Point());
 
         // Perform Stop Action
-        if (getProjectsDirPath().contains("multiple-project")) {
-            keyboard.enterText("cd singleModMavenMP");
-            keyboard.enter();
-            keyboard.enterText("./mvnw liberty:stop");
-            System.out.println("-------inside stopTerminal if loop------");
-        }
-        else {
-            System.out.println("-------inside stopTerminal else loop------");
-            if (getBuildCategory() == BuildType.MAVEN_TYPE) {
-                keyboard.enterText("./mvnw liberty:stop");
-            } else if (getBuildCategory() == BuildType.GRADLE_TYPE) {
-                keyboard.enterText("./gradlew libertyStop");
-            } else {
-                TestUtils.printTrace(TestUtils.TraceSevLevel.ERROR,  "Invalid build type specified");
-                return;
+        if (getBuildCategory() == BuildType.MAVEN_TYPE) {
+            if (getProjectsDirPath().contains("multiple-project")) {
+                keyboard.enterText("cd singleModMavenMP");
+                keyboard.enter();
             }
+            keyboard.enterText("./mvnw liberty:stop");
+        } else if (getBuildCategory() == BuildType.GRADLE_TYPE) {
+            keyboard.enterText("./gradlew libertyStop");
+        } else {
+            TestUtils.printTrace(TestUtils.TraceSevLevel.ERROR,  "Invalid build type specified");
+            return;
         }
         keyboard.enter();
         TestUtils.sleepAndIgnoreException(10);
@@ -1361,22 +1345,17 @@ public abstract class SingleModMPProjectTestCommon {
 
         Keyboard keyboard = new Keyboard(remoteRobot);
         // Perform clean
-        if (getProjectsDirPath().contains("multiple-project")) {
-            keyboard.enterText("cd singleModMavenMP");
-            keyboard.enter();
-            keyboard.enterText("./mvnw clean");
-            System.out.println("-------inside cleanTerminal if loop------");
-        }
-        else {
-            System.out.println("-------inside cleanTerminal else loop------");
-            if (getBuildCategory() == BuildType.MAVEN_TYPE) {
-                keyboard.enterText("./mvnw clean");
-            } else if (getBuildCategory() == BuildType.GRADLE_TYPE) {
-                keyboard.enterText("./gradlew clean");
-            } else {
-                TestUtils.printTrace(TestUtils.TraceSevLevel.ERROR,  "Invalid build type specified");
-                return;
+        if (getBuildCategory() == BuildType.MAVEN_TYPE) {
+            if (getProjectsDirPath().contains("multiple-project")) {
+                keyboard.enterText("cd singleModMavenMP");
+                keyboard.enter();
             }
+            keyboard.enterText("./mvnw clean");
+        } else if (getBuildCategory() == BuildType.GRADLE_TYPE) {
+            keyboard.enterText("./gradlew clean");
+        } else {
+            TestUtils.printTrace(TestUtils.TraceSevLevel.ERROR,  "Invalid build type specified");
+            return;
         }
         keyboard.enter();
         TestUtils.sleepAndIgnoreException(10);

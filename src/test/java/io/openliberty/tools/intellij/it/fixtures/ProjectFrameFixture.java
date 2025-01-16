@@ -88,18 +88,6 @@ public class ProjectFrameFixture extends CommonContainerFixture {
         return list.get(0);
     }
 
-    public ComponentFixture getActionMenuItemNew(String... xpathVars) {
-        String text = xpathVars[0];
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(16),
-                Duration.ofSeconds(1),
-                "Waiting for menu items containing the " + text + " text",
-                "Menu items containing the " + text + " text were not found",
-                () -> !findAll(ComponentFixture.class,
-                        byXpath("//div[@class='ActionMenuItem' and @text='" + text + "']")).isEmpty());
-        List<ComponentFixture> list = findAll(ComponentFixture.class, byXpath("//div[@class='ActionMenuItem' and @text='" + text + "']"));
-        return list.get(0);
-    }
-
     /**
      * Returns the ComponentFixture object associated with the ActionMenu class.
      *

@@ -244,72 +244,7 @@ public class UIBotTestUtils {
      * @param action        The action to run
      * @param usePlayButton The indicator that specifies if play button should be used to run the action or not.
      */
-    public static void runLibertyActionFromLTWDropDownMenu(RemoteRobot remoteRobot, String action, boolean usePlayButton, int maxRetries) {
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-
-        // Click on the Liberty toolbar to give it focus.
-        ComponentFixture libertyTWBar = projectFrame.getBaseLabel("Liberty", "10");
-        libertyTWBar.click();
-
-        // Process the action.
-        Exception error = null;
-        for (int i = 0; i < maxRetries; i++) {
-            try {
-                error = null;
-                ComponentFixture treeFixture = projectFrame.getTree("LibertyTree", action, "60");
-                RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
-                        Duration.ofSeconds(2),
-                        "Waiting for " + action + " in tree fixture to show and come into focus",
-                        "Action " + action + " in tree fixture is not showing or not in focus",
-                        treeFixture::isShowing);
-
-                List<RemoteText> rts = treeFixture.findAllText();
-                for (RemoteText rt : rts) {
-                    if (action.equals(rt.getText())) {
-                        if (usePlayButton) {
-                            rt.click();
-                            clickOnLibertyTWToolbarPlayButton(remoteRobot);
-                        } else {
-                            rt.doubleClick();
-                        }
-                        break;
-                    }
-                }
-
-                // If the Start... action was selected, make sure the Edit Configuration dialog is displayed.
-                if (action.equals("Start...")) {
-                    // Finding the dialog may take a quite some time on Windows.
-                    // This call will fail if the expected dialog is not displayed.
-                    projectFrame.find(DialogFixture.class, DialogFixture.byTitle("Edit Configuration"), Duration.ofSeconds(30));
-                }
-
-                break;
-            } catch (Exception e) {
-                // Catch indexing related issues that make the Liberty tool window content disappear,
-                // or invalidate the tree fixture that was previously obtained.
-                // For example, this may cause errors stating:
-                // "component must be showing on the screen to determine its location"
-                error = e;
-                TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
-                        "Failed to process the " + action + " action using Liberty tool window drop down (" + e.getMessage() + "). Retrying...");
-                TestUtils.sleepAndIgnoreException(5);
-            }
-        }
-
-        // Report the last error if there is one.
-        if (error != null) {
-            throw new RuntimeException("Unable to run the " + action + " action from Liberty Tool window project dropdown.", error);
-        }
-    }
-
-    /**
-     * Runs a Liberty tool window action using the drop-down tree view.
-     *
-     * @param remoteRobot   The RemoteRobot instance.
-     * @param action        The action to run
-     * @param usePlayButton The indicator that specifies if play button should be used to run the action or not.
-     */
-    public static void runLibertyActionFromLTWDropDownMenuNew(RemoteRobot remoteRobot, String action, String projectName, boolean usePlayButton, int maxRetries) {
+    public static void runLibertyActionFromLTWDropDownMenu(RemoteRobot remoteRobot, String action, String projectName, boolean usePlayButton, int maxRetries) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
 
         // Click on the Liberty toolbar to give it focus.
@@ -1773,9 +1708,9 @@ public class UIBotTestUtils {
                         Duration.ofSeconds(1),
                         "Waiting for the search to filter and show " + action + " in search output",
                         "The search did not filter or show " + action + " in the search output",
-                        () -> findTextInListOutputPanel(projectFrame, action) != null);
+                        () -> findTextInListOutputPanel(projectFrame, action, true) != null);
 
-                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action);
+                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action, true);
                 if (foundAction != null) {
                     foundAction.click();
                 } else {
@@ -1838,11 +1773,7 @@ public class UIBotTestUtils {
         jbf.click();
 
         RemoteText remoteProject;
-        if (isMultple) {
-            remoteProject = findTextInListOutputPanelNew(addProjectDialog, projectName);
-        } else {
-            remoteProject = findTextInListOutputPanel(addProjectDialog, projectName);
-        }
+            remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, !isMultple);
         if (remoteProject != null) {
             remoteProject.click();
         } else {
@@ -1867,7 +1798,7 @@ public class UIBotTestUtils {
                 Duration.ofSeconds(10));
         removeProjectDialog.getBasicArrowButton().click();
 
-        RemoteText remoteProject = findTextInListOutputPanel(removeProjectDialog, projectName);
+        RemoteText remoteProject = findTextInListOutputPanel(removeProjectDialog, projectName, true);
         if (remoteProject != null) {
             remoteProject.click();
         } else {
@@ -2144,7 +2075,7 @@ public class UIBotTestUtils {
      */
     public static void editLibertyConfigUsingEditConfigDialog(RemoteRobot remoteRobot, String projectName, String cfgName, String startParams) {
         // Display the Liberty Edit Configuration dialog.
-        runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Start...", projectName, false, 3);
+        runLibertyActionFromLTWDropDownMenu(remoteRobot, "Start...", projectName, false, 3);
 
         // Get a hold of the Liberty Edit Configurations dialog.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
@@ -2527,7 +2458,8 @@ public class UIBotTestUtils {
      * @return The RemoteText object representing the text found in the list panel, or
      * null if the text was not found.
      */
-    public static RemoteText findTextInListOutputPanel(CommonContainerFixture fixture, String text) {
+    public static RemoteText findTextInListOutputPanel(
+            CommonContainerFixture fixture, String text, boolean exactMatch) {
         RemoteText foundText = null;
 
         List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
@@ -2536,7 +2468,7 @@ public class UIBotTestUtils {
             try {
                 List<RemoteText> entries = searchList.findAllText();
                 for (RemoteText entry : entries) {
-                    if (entry.getText().equals(text)) {
+                    if ((exactMatch && entry.getText().equals(text)) || (!exactMatch && entry.getText().contains(text))) {
                         foundText = entry;
                     }
                 }
@@ -2548,6 +2480,7 @@ public class UIBotTestUtils {
 
         return foundText;
     }
+
 
     /**
      * Stops the Liberty server by running the action from the Liberty tool window dropdown action list.
@@ -2563,10 +2496,10 @@ public class UIBotTestUtils {
             // failures, this method will exit.
             switch (execType) {
                 case LTWPLAY:
-                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Stop", projectName, true, maxRetries);
+                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", projectName, true, maxRetries);
                     break;
                 case LTWDROPDOWN:
-                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenuNew(remoteRobot, "Stop", projectName, false, maxRetries);
+                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", projectName, false, maxRetries);
                     break;
                 case LTWPOPUP:
                     UIBotTestUtils.runActionLTWPopupMenu(remoteRobot, smMPProjName, "Liberty: Stop", maxRetries);
