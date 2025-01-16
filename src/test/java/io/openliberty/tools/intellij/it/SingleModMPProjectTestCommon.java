@@ -693,6 +693,8 @@ public abstract class SingleModMPProjectTestCommon {
         String testName = "testRunTestsActionUsingSearch";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
 
+        System.out.println("////////// "+absoluteWLPPath+" /////////");
+
         // Delete any existing test report files.
         deleteTestReports();
 
@@ -724,6 +726,7 @@ public abstract class SingleModMPProjectTestCommon {
             validateTestReportsExist();
         } finally {
             if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
+                System.out.println("//////////Inside stop /////////");
                 // Sleep for a few seconds to allow dev mode to finish running the tests. Specially
                 // for those times when the tests are run twice. Not waiting, opens up a window
                 // that leads to false negative results, and the Liberty server being left active.

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -37,6 +38,19 @@ public class GradleSingleModMPMultipleProjectTest extends SingleModMPProjectTest
     private static final String MAVEN_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "maven", "singleModMavenMP").toAbsolutePath().toString();
 
     private static final String GRADLE_MULTIPLE_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "multiple-project", "singleModGradleMP").toAbsolutePath().toString();
+
+    /**
+     * The paths to the integration test reports. The first is used when maven-surefire-report-plugin 3.4 is used and the second when version 3.5 is used.
+     */
+    private final Path pathToITReport34 = Paths.get(MULTIPLE_PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "site", "failsafe-report.html");
+    private final Path pathToITReport35 = Paths.get(MULTIPLE_PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "reports", "failsafe.html");
+
+    /**
+     * The paths to the unit test reports. The first is used when maven-surefire-report-plugin 3.4 is used and the second when version 3.5 is used.
+     */
+    private final Path pathToUTReport34 = Paths.get(MULTIPLE_PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "site", "surefire-report.html");
+    private final Path pathToUTReport35 = Paths.get(MULTIPLE_PROJECTS_PATH, SM_MP_PROJECT_NAME, "target", "reports", "surefire.html");
+
 
 
     /**
@@ -95,5 +109,30 @@ public class GradleSingleModMPMultipleProjectTest extends SingleModMPProjectTest
         setStartParams("-DhotTests=true");
         setStartParamsDebugPort("-DdebugPort=9876");
         setProjectTypeIsMultiple(true);
+    }
+
+    /**
+     * Deletes test reports.
+     */
+    @Override
+    public void deleteTestReports() {
+        boolean itReportDeleted = TestUtils.deleteFile(pathToITReport34);
+        Assertions.assertTrue(itReportDeleted, () -> "Test report file: " + pathToITReport34 + " was not be deleted.");
+        itReportDeleted = TestUtils.deleteFile(pathToITReport35);
+        Assertions.assertTrue(itReportDeleted, () -> "Test report file: " + pathToITReport35 + " was not be deleted.");
+
+        boolean utReportDeleted = TestUtils.deleteFile(pathToUTReport34);
+        Assertions.assertTrue(utReportDeleted, () -> "Test report file: " + pathToUTReport34 + " was not be deleted.");
+        utReportDeleted = TestUtils.deleteFile(pathToUTReport35);
+        Assertions.assertTrue(utReportDeleted, () -> "Test report file: " + pathToUTReport35 + " was not be deleted.");
+    }
+
+    /**
+     * Validates that test reports were generated.
+     */
+    @Override
+    public void validateTestReportsExist() {
+        TestUtils.validateTestReportExists(pathToITReport34, pathToITReport35);
+        TestUtils.validateTestReportExists(pathToUTReport34, pathToUTReport35);
     }
 }
