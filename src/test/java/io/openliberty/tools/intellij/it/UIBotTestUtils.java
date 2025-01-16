@@ -2841,27 +2841,5 @@ public class UIBotTestUtils {
             // Main Menu button is not clicked, nothing to do
         }
     }
-
-    public static RemoteText findTextInListOutputPanelNew(CommonContainerFixture fixture, String text) {
-        RemoteText foundText = null;
-
-        List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
-        if (!searchLists.isEmpty()) {
-            JListFixture searchList = searchLists.get(0);
-            try {
-                List<RemoteText> entries = searchList.findAllText();
-                for (RemoteText entry : entries) {
-                    if (entry.getText().contains(text)) {
-                        foundText = entry;
-                    }
-                }
-            } catch (NoSuchElementException nsee) {
-                // The list is empty.
-                return null;
-            }
-        }
-
-        return foundText;
-    }
-
+    
 }
