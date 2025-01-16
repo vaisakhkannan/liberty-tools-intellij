@@ -25,7 +25,7 @@ public class GradleSingleModMPMultipleProjectTest extends SingleModMPProjectTest
     /**
      * Single module Microprofile project name.
      */
-    private static final String SM_MP_PROJECT_NAME = "singleModGradleMP";
+    private static final String SM_MP_PROJECT_NAME = "singleModMavenMP";
 
     private static final String MAVEN_MULTIPLE_PROJECTS_PATH = Paths.get("src", "test", "resources", "projects", "multiple-project", "singleModMavenMP").toAbsolutePath().toString();
 
@@ -85,15 +85,15 @@ public class GradleSingleModMPMultipleProjectTest extends SingleModMPProjectTest
         setProjectsDirPath(MULTIPLE_PROJECTS_PATH);
         setTestReportPath(Paths.get(MULTIPLE_PROJECTS_PATH, SM_MP_PROJECT_NAME, "build", "reports", "tests", "test", "index.html"));
         setSmMPProjectName(SM_MP_PROJECT_NAME);
-        setBuildCategory(BuildType.GRADLE_TYPE);
+        setBuildCategory(BuildType.MAVEN_TYPE);
         setSmMpProjPort(9080);
         setSmMpProjResURI("api/resource");
         setSmMPProjOutput("Hello! Welcome to Open Liberty");
-        setWLPInstallPath("build");
-        setBuildFileName("build.gradle");
-        setBuildFileOpenCommand("Liberty: View Gradle config");
-        setStartParams("--hotTests");
-        setStartParamsDebugPort("--libertyDebugPort=9876");
+        setWLPInstallPath(Paths.get("target", "liberty").toString());
+        setBuildFileName("pom.xml");
+        setBuildFileOpenCommand("Liberty: View pom.xml");
+        setStartParams("-DhotTests=true");
+        setStartParamsDebugPort("-DdebugPort=9876");
         setProjectTypeIsMultiple(true);
     }
 }

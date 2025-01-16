@@ -1206,15 +1206,16 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         }
         UIBotTestUtils.openProjectView(remoteRobot);
-        if (isMultiple) {
-            // pre-open project tree before attempting to open files needed by testcases
-            ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
-            JTreeFixture projTree = projectFrame.getProjectViewJTree(projectName);
-
-            // expand project directories that are specific to this test app being used by these testcases
-            // must be expanded here before trying to open specific files
-            projTree.expand("multiple-project", projectName);
-        }
+//        if (isMultiple) {
+//            // pre-open project tree before attempting to open files needed by testcases
+//            System.out.println("////////Inside IsMUltiple //////////");
+//            ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
+//            JTreeFixture projTree = projectFrame.getProjectViewJTree(projectName);
+//
+//            // expand project directories that are specific to this test app being used by these testcases
+//            // must be expanded here before trying to open specific files
+//            projTree.expand("multiple-project", projectName);
+//        }
         if (!remoteRobot.isMac()) {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3, false);
         }
@@ -1330,9 +1331,9 @@ public abstract class SingleModMPProjectTestCommon {
 
         // Perform Stop Action
         if (getProjectsDirPath().contains("multiple-project")) {
-            keyboard.enterText("cd singleModGradleMP");
+            keyboard.enterText("cd singleModMavenMP");
             keyboard.enter();
-            keyboard.enterText("./gradlew libertyStop");
+            keyboard.enterText("./mvnw liberty:stop");
             System.out.println("-------inside stopTerminal if loop------");
         }
         else {
@@ -1358,9 +1359,9 @@ public abstract class SingleModMPProjectTestCommon {
         Keyboard keyboard = new Keyboard(remoteRobot);
         // Perform clean
         if (getProjectsDirPath().contains("multiple-project")) {
-            keyboard.enterText("cd singleModGradleMP");
+            keyboard.enterText("cd singleModMavenMP");
             keyboard.enter();
-            keyboard.enterText("./gradlew clean");
+            keyboard.enterText("./mvnw clean");
             System.out.println("-------inside cleanTerminal if loop------");
         }
         else {
