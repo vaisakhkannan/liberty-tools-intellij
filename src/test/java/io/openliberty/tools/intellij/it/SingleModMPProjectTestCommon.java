@@ -794,6 +794,7 @@ public abstract class SingleModMPProjectTestCommon {
                         if (TestUtils.isServerStopNeeded(absoluteWLPPathGradle)) {
                             UIBotTestUtils.runStopAction(remoteRobot,  testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPathGradle, "singleModGradleMP", 3, getProjectTypeIsMutliple());
                         }
+                        TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
                     } finally {
                         // Cleanup configurations.
                         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
@@ -933,6 +934,7 @@ public abstract class SingleModMPProjectTestCommon {
                 if (TestUtils.isServerStopNeeded(absoluteWLPPathGradle)) {
                     UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPathGradle, "singleModGradleMP", 3, getProjectTypeIsMutliple());
                 }
+                TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
             } finally {
                 // Cleanup configurations.
                 UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
