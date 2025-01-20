@@ -24,6 +24,7 @@ import org.assertj.swing.core.MouseButton;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -1774,6 +1775,7 @@ public class UIBotTestUtils {
 
         RemoteText remoteProject;
             remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, !isMultple);
+            System.out.println("//////// "+remoteProject +" /////////");
         if (remoteProject != null) {
             remoteProject.click();
         } else {
@@ -1782,6 +1784,110 @@ public class UIBotTestUtils {
 
         JButtonFixture okButton = addProjectDialog.getButton("OK");
         okButton.click();
+    }
+
+    public static void selectProjectFromAddLibertyProjectDialogNew(RemoteRobot remoteRobot, String projectName, String dialogTitle, Boolean isMultple) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
+                DialogFixture.byTitle(dialogTitle),
+                Duration.ofSeconds(10));
+
+
+        // Resize the dialog using JavaScript
+//        addProjectDialog.callJs("component.setSize(new java.awt.Dimension(1840, 800)); component.validate();");
+
+//        String result = addProjectDialog.callJs("""
+//    component.setSize(new java.awt.Dimension(800, 600));
+//    component.revalidate();
+//    component.repaint();
+//    Array.from(component.getComponents()).forEach(child => {
+//        child.revalidate();
+//        child.repaint();
+//    });
+//    "Resized successfully"; // Return the value directly (no `return` keyword)
+//""");
+
+        // Resize the dialog
+//        addProjectDialog.runJs("""
+//        const dialog = component;
+//        dialog.setSize(1440, 700); // Adjust width and height
+//        dialog.revalidate();
+//        dialog.repaint();
+//    """);
+        // Resize the dialog
+//        java.awt.Component dialogComponent = addProjectDialog.getTarget();
+//
+//        // Check if the dialog is a JRootPane or JDialog, which is typical for dialogs
+//        if (dialogComponent instanceof JRootPane) {
+//            JRootPane rootPane = (JRootPane) dialogComponent;
+//
+//            // Resize the dialog window
+//            rootPane.setSize(1200, 800);  // Set to your desired size
+//
+//            // Revalidate and repaint the dialog to adjust its layout
+//            rootPane.revalidate();
+//            rootPane.repaint();
+//
+//            // Resize the components inside the dialog
+//            java.awt.Component[] components = rootPane.getComponents();
+//            for (java.awt.Component component : components) {
+//                if (component instanceof JComponent) {
+//                    ((JComponent) component).revalidate();
+//                    component.repaint();
+//                }
+//            }
+//        }
+//        addProjectDialog.dragMouse(200, 200);
+////        System.out.println(result); // Output: Resized successfully
+
+//        Point location = addProjectDialog.getLocationOnScreen();  // Get the dialog's screen position
+//        int sizeWidth = addProjectDialog.getRemoteComponent().getWidth();  // Get the current width of the dialog
+//        int sizeHeight = addProjectDialog.getRemoteComponent().getHeight();  // Get the current height of the dialog
+//
+//// Calculate the bottom-right corner (resize handle is typically at this corner)
+//        int startX = location.x + sizeWidth - 10;  // 10 pixels from the right edge
+//        int startY = location.y + sizeHeight - 10;  // 10 pixels from the bottom edge
+
+// Simulate the mouse click at the resize handle (bottom-right corner)
+//        MouseFixture mouse = remoteRobot.find(MouseFixture.class);
+//
+//        // Simulate mouse click on the resize handle (bottom-right corner)
+//        mouse.click(startX, startY);  // Click at the bottom-right resize handle
+//
+//        // Drag the mouse to the new size (adjust these values to resize)
+//        mouse.move(startX + 200, startY + 200);  // Move to a new position to resize the dialog
+//        mouse.release();
+
+        // Example of interacting with a button inside the dialog to resize or trigger another event
+//        ButtonFixture resizeButton = addProjectDialog.find(ButtonFixture.class, "Resize Button");
+//
+//        // If the dialog has a button for resizing or a similar action, simulate clicking it
+//        resizeButton.click();  // Simulate a button click (if available for resizing the dialog)
+//
+//        // Alternatively, simulate keyboard events if resizing is tied to a keyboard shortcut
+//        addProjectDialog.pressKeys("Ctrl+Up");
+
+//        addProjectDialog.pressKeys("Ctrl+Up");
+
+//        String layout = addProjectDialog.callJs("return component.getLayout().getClass().getName();");
+//        System.out.println("Layout Manager: " + layout);
+
+
+
+
+        JButtonFixture jbf = addProjectDialog.getBasicArrowButton();
+        jbf.click();
+
+        RemoteText remoteProject;
+        remoteProject = findTextInListOutputPanelNew(addProjectDialog, projectName, !isMultple);
+        System.out.println("//////// "+remoteProject +" /////////");
+        if (remoteProject != null) {
+            remoteProject.click();
+        } else {
+            fail("Unable to find " + projectName + " in the output list of the " + dialogTitle + " dialog.");
+        }
+        projectFrame.clickOnMainMenuWithActionsNew(remoteRobot, projectName);
+
     }
 
     /**
@@ -1881,9 +1987,9 @@ public class UIBotTestUtils {
     public static void waitForIndexing(RemoteRobot remoteRobot) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Entry");
         String xPath = "//div[@class='InlineProgressPanel']";
-        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 60);
+        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 10);
         if (needToWait) {
-            waitForIndexingToStop(remoteRobot, xPath, 600);
+            waitForIndexingToStop(remoteRobot, xPath, 60);
         }
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Exit");
     }
@@ -2043,6 +2149,10 @@ public class UIBotTestUtils {
                     "Waiting for the name of the config to appear in the text box",
                     "The name of the config did not appear in the text box ",
                     () -> newNameTextField.getText().equals(cfgName));
+
+//            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true);
+
+//            UIBotTestUtils.selectProjectFromAddLibertyProjectDialogNew(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true);
 
             // Save the new configuration by clicking on the Apply button.
             JButtonFixture applyButton = addProjectDialog.getButton("Apply");
@@ -2461,16 +2571,64 @@ public class UIBotTestUtils {
     public static RemoteText findTextInListOutputPanel(
             CommonContainerFixture fixture, String text, boolean exactMatch) {
         RemoteText foundText = null;
+        System.out.println("//////// "+text +" /////////");
 
         List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
         if (!searchLists.isEmpty()) {
-            JListFixture searchList = searchLists.get(0);
+            JListFixture searchList = searchLists.get(1);
             try {
                 List<RemoteText> entries = searchList.findAllText();
+                System.out.println("////////// "+ entries +"//////////");
+                ContainerFixture component= searchList.getRemoteRobot().find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+                System.out.println(component.hasText("Documents"));
                 for (RemoteText entry : entries) {
+                    boolean valueee= entry.getText().contains("Documents");
+                    System.out.println(valueee);
+                    System.out.println(entry.getText().contains("Documents"));
                     if ((exactMatch && entry.getText().equals(text)) || (!exactMatch && entry.getText().contains(text))) {
                         foundText = entry;
+                        System.out.println("//////// Inside if exact match /////////");
                     }
+                    System.out.println("//////// "+entry.getText() +" /////////");
+                }
+            } catch (NoSuchElementException nsee) {
+                // The list is empty.
+                return null;
+            }
+        }
+
+        return foundText;
+    }
+
+    public static RemoteText findTextInListOutputPanelNew(
+            CommonContainerFixture fixture, String text, boolean exactMatch) {
+        RemoteText foundText = null;
+        System.out.println("//////// "+text +" /////////");
+
+        List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
+        if (!searchLists.isEmpty()) {
+            JListFixture searchList = searchLists.get(1);
+            try {
+                List<RemoteText> entries = searchList.findAllText();
+                System.out.println("////////// "+ entries +"//////////");
+//                searchList.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='DocumentationHintEditorPane']" ));
+                ContainerFixture component= searchList.getRemoteRobot().find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
+                System.out.println(component.hasText("Documents"));
+//                System.out.println(component.findText("singleModMavenMP"));
+//                List<RemoteText> entries1 = component.findAllText("singleModMavenMP");
+//                String value= entries1.get(0).getText();
+//                System.out.println(value);
+//                boolean valuee= entries1.get(0).getText().contains("Documents");
+//                System.out.println(valuee);
+                for (RemoteText entry : entries) {
+                    boolean valueee= entry.getText().contains("Documents");
+                    System.out.println(valueee);
+                    System.out.println(entry.getText().contains("Documents"));
+                    if ((exactMatch && entry.getText().equals(text)) || (!exactMatch && entry.getText().contains(text))) {
+                        foundText = entry;
+                        System.out.println("//////// Inside if exact match /////////");
+                    }
+                    System.out.println("//////// "+entry.getText() +" /////////");
                 }
             } catch (NoSuchElementException nsee) {
                 // The list is empty.
