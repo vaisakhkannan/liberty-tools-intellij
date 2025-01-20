@@ -2575,7 +2575,7 @@ public class UIBotTestUtils {
 
         List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
         if (!searchLists.isEmpty()) {
-            JListFixture searchList = searchLists.get(1);
+            JListFixture searchList = searchLists.get(0);
             try {
                 List<RemoteText> entries = searchList.findAllText();
                 System.out.println("////////// "+ entries +"//////////");
