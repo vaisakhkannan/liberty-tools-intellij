@@ -1215,7 +1215,7 @@ public abstract class SingleModMPProjectTestCommon {
      * @param projectPath The path of the project.
      * @param projectName The name of the project being used.
      */
-    public static void prepareEnv(String projectPath, String projectName, Boolean isMultiple) {
+    public static void prepareEnv(String projectPath, String projectName, boolean isMultiple) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO,
                 "prepareEnv. Entry. ProjectPath: " + projectPath + ". ProjectName: " + projectName);
         waitForIgnoringError(Duration.ofMinutes(4), Duration.ofSeconds(5), "Wait for IDE to start", "IDE did not start", () -> remoteRobot.callJs("true"));
