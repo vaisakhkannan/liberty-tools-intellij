@@ -1770,8 +1770,9 @@ public class UIBotTestUtils {
      */
     public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        Dimension size = new Dimension(1640, 600);
+        Dimension size = new Dimension(1740, 800);
 
+        Dimension size1 = new Dimension(1640, 700);
         DialogFixture addProjectDialog = null;
         for (int i = 0; i < 2; i++) {
             addProjectDialog = projectFrame.find(DialogFixture.class,
@@ -1782,7 +1783,7 @@ public class UIBotTestUtils {
                 if (i == 0) {
                     UIBotTestUtils.resizeBottomRight(addProjectDialog, size);
                 } else {
-                    UIBotTestUtils.resizeTopLeft(addProjectDialog, size);
+                    UIBotTestUtils.resizeTopLeft(addProjectDialog, size1);
                 }
             }
         }
