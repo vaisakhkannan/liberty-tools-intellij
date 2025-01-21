@@ -1780,9 +1780,9 @@ public class UIBotTestUtils {
 
             if (isMultple && isResizeRequired) {
                 if (i == 0) {
-                    UIBotTestUtils.resizeTopLeft(addProjectDialog, size);
-                } else {
                     UIBotTestUtils.resizeBottomRight(addProjectDialog, size);
+                } else {
+                    UIBotTestUtils.resizeTopLeft(addProjectDialog, size);
                 }
             }
         }
