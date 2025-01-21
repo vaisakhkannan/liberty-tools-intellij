@@ -191,8 +191,8 @@ public class UIBotTestUtils {
         // as content is displayed. This, has an effect on the location of the items on the frame.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
 
-        ComponentFixture wpStripeButton = projectFrame.getStripeButton("Liberty", "10");
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+        ComponentFixture wpStripeButton = projectFrame.getStripeButton("Liberty", "60");
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
                 Duration.ofSeconds(1),
                 "Waiting for the Liberty button on the main window pane stripe to be enabled",
                 "The Liberty button on then main window pane stripe is not enabled",
@@ -1923,9 +1923,9 @@ public class UIBotTestUtils {
     public static void waitForIndexing(RemoteRobot remoteRobot) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Entry");
         String xPath = "//div[@class='InlineProgressPanel']";
-        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 3);
+        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 60);
         if (needToWait) {
-            waitForIndexingToStop(remoteRobot, xPath, 10);
+            waitForIndexingToStop(remoteRobot, xPath, 600);
         }
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Exit");
     }
