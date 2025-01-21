@@ -60,13 +60,10 @@ public class GradleSingleModMPMultipleProjectTest extends SingleModMPProjectTest
     public static void setup() {
         try {
             File theDir = new File(MULTIPLE_PROJECTS_PATH);
-            System.out.println("---------------"+theDir);
             if (theDir.exists()){
                 TestUtils.deleteDirectory(theDir);
-                System.out.println("---------------Inside If loop--------------");
             }
             theDir.mkdirs();
-            System.out.println("---------------"+theDir);
 
             // Copy the directory to allow renaming.
             TestUtils.copyDirectory(GRADLE_PROJECTS_PATH, GRADLE_MULTIPLE_PROJECTS_PATH);

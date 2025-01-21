@@ -2578,16 +2578,16 @@ public class UIBotTestUtils {
      * @param absoluteWLPPath The absolute path of the Liberty installation.
      * @param maxRetries      The maximum amount of attempts to try to stop the server.
      */
-    public static void runStopAction(RemoteRobot remoteRobot, String projectName, String testName, ActionExecType execType, String absoluteWLPPath, String smMPProjName, int maxRetries, Boolean isMultiple) {
+    public static void runStopAction(RemoteRobot remoteRobot, String testName, ActionExecType execType, String absoluteWLPPath, String smMPProjName, int maxRetries, Boolean isMultiple) {
         for (int i = 0; i < maxRetries; i++) {
             // Stop dev mode. Any failures during command processing are retried. If there are any
             // failures, this method will exit.
             switch (execType) {
                 case LTWPLAY:
-                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", projectName, true, maxRetries);
+                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", smMPProjName, true, maxRetries);
                     break;
                 case LTWDROPDOWN:
-                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", projectName, false, maxRetries);
+                    UIBotTestUtils.runLibertyActionFromLTWDropDownMenu(remoteRobot, "Stop", smMPProjName, false, maxRetries);
                     break;
                 case LTWPOPUP:
                     UIBotTestUtils.runActionLTWPopupMenu(remoteRobot, smMPProjName, "Liberty: Stop", maxRetries);
@@ -2595,7 +2595,7 @@ public class UIBotTestUtils {
                 case SEARCH:
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", maxRetries, false);
                     if (isMultiple) {
-                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, projectName, "Liberty project", true, false);
+                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, smMPProjName, "Liberty project", true, false);
                     }
                     break;
                 default:

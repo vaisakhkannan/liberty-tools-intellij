@@ -372,7 +372,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
 
@@ -429,7 +429,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWPLAY, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWPLAY, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
 
@@ -483,7 +483,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWPOPUP, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWPOPUP, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
 
@@ -548,7 +548,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.SEARCH, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.SEARCH, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
 
@@ -606,7 +606,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
     }
@@ -645,7 +645,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
     }
@@ -683,7 +683,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWPOPUP, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWPOPUP, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
     }
@@ -741,7 +741,7 @@ public abstract class SingleModMPProjectTestCommon {
                 TestUtils.sleepAndIgnoreException(60);
 
                 // Stop Liberty dev mode and validates that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.SEARCH, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.SEARCH, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
     }
@@ -803,7 +803,7 @@ public abstract class SingleModMPProjectTestCommon {
                     try {
                         // Stop the server.
                         if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
-                            UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                            UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
                         }
 //                        TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
                     } finally {
@@ -861,7 +861,7 @@ public abstract class SingleModMPProjectTestCommon {
                     try {
                         // Stop the server.
                         if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
-                            UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                            UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
                         }
                     } finally {
                         // Cleanup configurations.
@@ -905,7 +905,7 @@ public abstract class SingleModMPProjectTestCommon {
             try {
                 if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                     System.out.println("------"+absoluteWLPPath+"-----------");
-                    UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                    UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
                 }
             } finally {
                 // Cleanup configurations.
@@ -943,7 +943,7 @@ public abstract class SingleModMPProjectTestCommon {
             try {
                 if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                     System.out.println("-----inside if loop-----");
-                    UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                    UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
                 }
 //                TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
             } finally {
@@ -1287,7 +1287,7 @@ public abstract class SingleModMPProjectTestCommon {
             // Stops the Liberty server if necessary.
             if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                 // Stop Liberty dev mode and validate that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
 
@@ -1311,7 +1311,7 @@ public abstract class SingleModMPProjectTestCommon {
             // Stops the Liberty server if necessary.
             if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                 // Stop Liberty dev mode and validate that the Liberty server is down.
-                UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
+                UIBotTestUtils.runStopAction(remoteRobot, testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
             }
         }
     }
