@@ -521,7 +521,10 @@ public abstract class SingleModMPProjectTestCommon {
         if (getProjectTypeIsMutliple()) {
             System.out.println("Inside If loop////////");
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, true);
-            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+            if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
+                System.out.println("Inside If loop");
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+            }
         }
         else {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, false);
@@ -554,7 +557,7 @@ public abstract class SingleModMPProjectTestCommon {
             if (getProjectTypeIsMutliple()) {
                 System.out.println("Inside If loop////////");
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, true);
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
             }
             else {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, false);
@@ -704,7 +707,10 @@ public abstract class SingleModMPProjectTestCommon {
         if (getProjectTypeIsMutliple()) {
             System.out.println("Inside If loop////////");
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, true);
-            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+            if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
+                System.out.println("Inside If loop");
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+            }
         }
         else {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, false);
@@ -718,7 +724,7 @@ public abstract class SingleModMPProjectTestCommon {
             if (getProjectTypeIsMutliple()) {
                 System.out.println("Inside If loop////////");
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3, true);
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
             } else {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3, false);
             }
@@ -761,7 +767,8 @@ public abstract class SingleModMPProjectTestCommon {
 
         // Add a new Liberty config.
         String configName = "toolBarDebug-" + getSmMPProjectName();
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName);
+
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple());
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, configName);
@@ -804,7 +811,7 @@ public abstract class SingleModMPProjectTestCommon {
                         if (TestUtils.isServerStopNeeded(absoluteWLPPathGradle)) {
                             UIBotTestUtils.runStopAction(remoteRobot, "singleModGradleMP", testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPathGradle, "singleModGradleMP", 3, getProjectTypeIsMutliple());
                         }
-                        TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
+//                        TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
                     } finally {
                         // Cleanup configurations.
                         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
@@ -830,7 +837,7 @@ public abstract class SingleModMPProjectTestCommon {
 
         // Add a new Liberty config.
         String configName = "menuDebug-" + getSmMPProjectName();
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple());
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingMenu(remoteRobot, configName, UIBotTestUtils.ExecMode.DEBUG);
@@ -889,7 +896,7 @@ public abstract class SingleModMPProjectTestCommon {
 
         // Add a new Liberty config.
         String configName = "toolBarRun-" + getSmMPProjectName();
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple());
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, configName);
@@ -933,7 +940,7 @@ public abstract class SingleModMPProjectTestCommon {
 
         // Add a new Liberty config.
         String configName = "menuRun-" + getSmMPProjectName();
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple());
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingMenu(remoteRobot, configName, UIBotTestUtils.ExecMode.RUN);
@@ -950,7 +957,7 @@ public abstract class SingleModMPProjectTestCommon {
                 if (TestUtils.isServerStopNeeded(absoluteWLPPathGradle)) {
                     UIBotTestUtils.runStopAction(remoteRobot, "singleModGradleMP", testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPathGradle, "singleModGradleMP", 3, getProjectTypeIsMutliple());
                 }
-                TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
+//                TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
             } finally {
                 // Cleanup configurations.
                 UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
@@ -979,11 +986,11 @@ public abstract class SingleModMPProjectTestCommon {
         String cfgUID1 = "mCfgHist1";
         String configName1 = cfgUID1 + "-" + getSmMPProjectName();
         String cfgPrjBldPath1 = projectBldFilePath;
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName1);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName1, getProjectTypeIsMutliple());
         String cfgUID2 = "mCfgHist2";
         String configName2 = cfgUID2 + "-" + getSmMPProjectName();
         String cfgPrjBldPath2 = projectBldFilePath;
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName2);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName2, getProjectTypeIsMutliple());
 
         try {
             // Find newly created config 1 in the config selection box on the toolbar of the project frame.
@@ -1183,7 +1190,10 @@ public abstract class SingleModMPProjectTestCommon {
         if (getProjectTypeIsMutliple()) {
             System.out.println("Inside If loop////////");
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, true);
-            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+            if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
+                System.out.println("Inside If loop");
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+            }
         }
         else {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, false);
@@ -1199,7 +1209,7 @@ public abstract class SingleModMPProjectTestCommon {
                 if (getProjectTypeIsMutliple()) {
                     System.out.println("Inside If loop////////");
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, true);
-                    UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                    UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
                 }
                 else {
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, false);

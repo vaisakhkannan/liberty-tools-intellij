@@ -18,11 +18,14 @@ import com.intellij.remoterobot.utils.Keyboard;
 import com.intellij.remoterobot.utils.RepeatUtilsKt;
 import com.intellij.remoterobot.utils.WaitForConditionTimeoutException;
 import io.openliberty.tools.intellij.it.fixtures.DialogFixture;
+import io.openliberty.tools.intellij.it.fixtures.DragAndDropUtils;
 import io.openliberty.tools.intellij.it.fixtures.ProjectFrameFixture;
 import io.openliberty.tools.intellij.it.fixtures.WelcomeFrameFixture;
 import org.assertj.swing.core.MouseButton;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,6 +51,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * UI helper function.
  */
 public class UIBotTestUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(UIBotTestUtils.class);
 
     /**
      * Print destination types.
@@ -186,8 +191,8 @@ public class UIBotTestUtils {
         // as content is displayed. This, has an effect on the location of the items on the frame.
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofMinutes(2));
 
-        ComponentFixture wpStripeButton = projectFrame.getStripeButton("Liberty", "60");
-        RepeatUtilsKt.waitFor(Duration.ofSeconds(30),
+        ComponentFixture wpStripeButton = projectFrame.getStripeButton("Liberty", "10");
+        RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
                 Duration.ofSeconds(1),
                 "Waiting for the Liberty button on the main window pane stripe to be enabled",
                 "The Liberty button on then main window pane stripe is not enabled",
@@ -1709,9 +1714,9 @@ public class UIBotTestUtils {
                         Duration.ofSeconds(1),
                         "Waiting for the search to filter and show " + action + " in search output",
                         "The search did not filter or show " + action + " in the search output",
-                        () -> findTextInListOutputPanel(projectFrame, action, true) != null);
+                        () -> findTextInListOutputPanel(projectFrame, action, true, 0) != null);
 
-                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action, true);
+                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action, true, 0);
                 if (foundAction != null) {
                     foundAction.click();
                 } else {
@@ -1765,130 +1770,61 @@ public class UIBotTestUtils {
      * @param remoteRobot The RemoteRobot instance.
      * @param projectName The name of the project to select.
      */
-    public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, Boolean isMultple) {
+    public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
-                DialogFixture.byTitle(dialogTitle),
-                Duration.ofSeconds(10));
+        Dimension size = new Dimension(1740, 800);
+
+        DialogFixture addProjectDialog = null;
+        for (int i = 0; i < 2; i++) {
+            addProjectDialog = projectFrame.find(DialogFixture.class,
+                    DialogFixture.byTitle(dialogTitle),
+                    Duration.ofSeconds(10));
+
+            if (isMultple && isResizeRequired) {
+                if (i == 0) {
+                    DragAndDropUtils.resizeTopLeft(addProjectDialog, size);
+                } else {
+                    DragAndDropUtils.resizeBottomRight(addProjectDialog, size);
+                }
+            }
+        }
+
         JButtonFixture jbf = addProjectDialog.getBasicArrowButton();
         jbf.click();
 
         RemoteText remoteProject;
-            remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, !isMultple);
-            System.out.println("//////// "+remoteProject +" /////////");
+        if (isResizeRequired) {
+            remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, !isMultple, 1);
+        } else {
+            remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, !isMultple, 0);
+        }
+        System.out.println("//////// " + remoteProject + " /////////");
         if (remoteProject != null) {
             remoteProject.click();
         } else {
             fail("Unable to find " + projectName + " in the output list of the " + dialogTitle + " dialog.");
         }
 
-        JButtonFixture okButton = addProjectDialog.getButton("OK");
-        okButton.click();
-    }
-
-    public static void selectProjectFromAddLibertyProjectDialogNew(RemoteRobot remoteRobot, String projectName, String dialogTitle, Boolean isMultple) {
-        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
-                DialogFixture.byTitle(dialogTitle),
-                Duration.ofSeconds(10));
-
-
-        // Resize the dialog using JavaScript
-//        addProjectDialog.callJs("component.setSize(new java.awt.Dimension(1840, 800)); component.validate();");
-
-//        String result = addProjectDialog.callJs("""
-//    component.setSize(new java.awt.Dimension(800, 600));
-//    component.revalidate();
-//    component.repaint();
-//    Array.from(component.getComponents()).forEach(child => {
-//        child.revalidate();
-//        child.repaint();
-//    });
-//    "Resized successfully"; // Return the value directly (no `return` keyword)
-//""");
-
-        // Resize the dialog
-//        addProjectDialog.runJs("""
-//        const dialog = component;
-//        dialog.setSize(1440, 700); // Adjust width and height
-//        dialog.revalidate();
-//        dialog.repaint();
-//    """);
-        // Resize the dialog
-//        java.awt.Component dialogComponent = addProjectDialog.getTarget();
-//
-//        // Check if the dialog is a JRootPane or JDialog, which is typical for dialogs
-//        if (dialogComponent instanceof JRootPane) {
-//            JRootPane rootPane = (JRootPane) dialogComponent;
-//
-//            // Resize the dialog window
-//            rootPane.setSize(1200, 800);  // Set to your desired size
-//
-//            // Revalidate and repaint the dialog to adjust its layout
-//            rootPane.revalidate();
-//            rootPane.repaint();
-//
-//            // Resize the components inside the dialog
-//            java.awt.Component[] components = rootPane.getComponents();
-//            for (java.awt.Component component : components) {
-//                if (component instanceof JComponent) {
-//                    ((JComponent) component).revalidate();
-//                    component.repaint();
-//                }
-//            }
-//        }
-//        addProjectDialog.dragMouse(200, 200);
-////        System.out.println(result); // Output: Resized successfully
-
-//        Point location = addProjectDialog.getLocationOnScreen();  // Get the dialog's screen position
-//        int sizeWidth = addProjectDialog.getRemoteComponent().getWidth();  // Get the current width of the dialog
-//        int sizeHeight = addProjectDialog.getRemoteComponent().getHeight();  // Get the current height of the dialog
-//
-//// Calculate the bottom-right corner (resize handle is typically at this corner)
-//        int startX = location.x + sizeWidth - 10;  // 10 pixels from the right edge
-//        int startY = location.y + sizeHeight - 10;  // 10 pixels from the bottom edge
-
-// Simulate the mouse click at the resize handle (bottom-right corner)
-//        MouseFixture mouse = remoteRobot.find(MouseFixture.class);
-//
-//        // Simulate mouse click on the resize handle (bottom-right corner)
-//        mouse.click(startX, startY);  // Click at the bottom-right resize handle
-//
-//        // Drag the mouse to the new size (adjust these values to resize)
-//        mouse.move(startX + 200, startY + 200);  // Move to a new position to resize the dialog
-//        mouse.release();
-
-        // Example of interacting with a button inside the dialog to resize or trigger another event
-//        ButtonFixture resizeButton = addProjectDialog.find(ButtonFixture.class, "Resize Button");
-//
-//        // If the dialog has a button for resizing or a similar action, simulate clicking it
-//        resizeButton.click();  // Simulate a button click (if available for resizing the dialog)
-//
-//        // Alternatively, simulate keyboard events if resizing is tied to a keyboard shortcut
-//        addProjectDialog.pressKeys("Ctrl+Up");
-
-//        addProjectDialog.pressKeys("Ctrl+Up");
-
-//        String layout = addProjectDialog.callJs("return component.getLayout().getClass().getName();");
-//        System.out.println("Layout Manager: " + layout);
-
-
-
-
-        JButtonFixture jbf = addProjectDialog.getBasicArrowButton();
-        jbf.click();
-
-        RemoteText remoteProject;
-        remoteProject = findTextInListOutputPanelNew(addProjectDialog, projectName, !isMultple);
-        System.out.println("//////// "+remoteProject +" /////////");
-        if (remoteProject != null) {
-            remoteProject.click();
-        } else {
-            fail("Unable to find " + projectName + " in the output list of the " + dialogTitle + " dialog.");
+        if (!isResizeRequired) {
+            JButtonFixture okButton = addProjectDialog.getButton("OK");
+            okButton.click();
         }
-        projectFrame.clickOnMainMenuWithActionsNew(remoteRobot, projectName);
-
     }
+
+    public static boolean checkProjectDialog(RemoteRobot remoteRobot, String dialogTitle) {
+        try {
+            ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+            DialogFixture addProject = projectFrame.find(DialogFixture.class,
+                    DialogFixture.byTitle(dialogTitle),
+                    Duration.ofSeconds(10));
+            return addProject.isShowing();
+        } catch (Exception e) {
+            // Log the exception if needed, but return false to indicate the dialog was not found
+            return false;
+        }
+    }
+
+
 
     /**
      * Selects the specified project from the list of detected projects shown in the 'Remove Liberty project'
@@ -1904,7 +1840,7 @@ public class UIBotTestUtils {
                 Duration.ofSeconds(10));
         removeProjectDialog.getBasicArrowButton().click();
 
-        RemoteText remoteProject = findTextInListOutputPanel(removeProjectDialog, projectName, true);
+        RemoteText remoteProject = findTextInListOutputPanel(removeProjectDialog, projectName, true, 0);
         if (remoteProject != null) {
             remoteProject.click();
         } else {
@@ -1987,9 +1923,9 @@ public class UIBotTestUtils {
     public static void waitForIndexing(RemoteRobot remoteRobot) {
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Entry");
         String xPath = "//div[@class='InlineProgressPanel']";
-        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 10);
+        boolean needToWait = waitForIndexingToStart(remoteRobot, xPath, 3);
         if (needToWait) {
-            waitForIndexingToStop(remoteRobot, xPath, 60);
+            waitForIndexingToStop(remoteRobot, xPath, 10);
         }
         TestUtils.printTrace(TestUtils.TraceSevLevel.INFO, "UIBotTestUtils.waitForIndexing Exit");
     }
@@ -2069,7 +2005,7 @@ public class UIBotTestUtils {
      * @param remoteRobot The RemoteRobot instance.
      * @param cfgName     The name of the new configuration.
      */
-    public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName) {
+    public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName, boolean isMultiple) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         String editConfigurationAction= null;
         if (remoteRobot.isMac()) {
@@ -2150,9 +2086,9 @@ public class UIBotTestUtils {
                     "The name of the config did not appear in the text box ",
                     () -> newNameTextField.getText().equals(cfgName));
 
-//            UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true);
-
-//            UIBotTestUtils.selectProjectFromAddLibertyProjectDialogNew(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true);
+            if (isMultiple) {
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true, true);
+            }
 
             // Save the new configuration by clicking on the Apply button.
             JButtonFixture applyButton = addProjectDialog.getButton("Apply");
@@ -2569,22 +2505,16 @@ public class UIBotTestUtils {
      * null if the text was not found.
      */
     public static RemoteText findTextInListOutputPanel(
-            CommonContainerFixture fixture, String text, boolean exactMatch) {
+            CommonContainerFixture fixture, String text, boolean exactMatch, int index) {
         RemoteText foundText = null;
         System.out.println("//////// "+text +" /////////");
 
         List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
         if (!searchLists.isEmpty()) {
-            JListFixture searchList = searchLists.get(0);
+            JListFixture searchList = searchLists.get(index);
             try {
                 List<RemoteText> entries = searchList.findAllText();
-                System.out.println("////////// "+ entries +"//////////");
-                ContainerFixture component= searchList.getRemoteRobot().find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-                System.out.println(component.hasText("Documents"));
                 for (RemoteText entry : entries) {
-                    boolean valueee= entry.getText().contains("Documents");
-                    System.out.println(valueee);
-                    System.out.println(entry.getText().contains("Documents"));
                     if ((exactMatch && entry.getText().equals(text)) || (!exactMatch && entry.getText().contains(text))) {
                         foundText = entry;
                         System.out.println("//////// Inside if exact match /////////");
@@ -2665,7 +2595,7 @@ public class UIBotTestUtils {
                 case SEARCH:
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", maxRetries, false);
                     if (isMultiple) {
-                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, projectName, "Liberty project", true);
+                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, projectName, "Liberty project", true, false);
                     }
                     break;
                 default:
