@@ -757,9 +757,6 @@ public abstract class SingleModMPProjectTestCommon {
     public void testStartWithConfigInDebugModeUsingToolbar() {
         String testName = "testStartWithConfigInDebugModeUsingToolbar";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
-        String absoluteWLPPathGradle = Paths.get(getProjectsDirPath(), "singleModGradleMP", "build").toString();
-        System.out.println("----- "+ absoluteWLPPathGradle +" -------");
-
         System.out.println("----- "+ absoluteWLPPath +" -------");
 
         // Remove all other configurations first.
@@ -807,9 +804,6 @@ public abstract class SingleModMPProjectTestCommon {
                         // Stop the server.
                         if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                             UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
-                        }
-                        if (TestUtils.isServerStopNeeded(absoluteWLPPathGradle)) {
-                            UIBotTestUtils.runStopAction(remoteRobot, "singleModGradleMP", testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPathGradle, "singleModGradleMP", 3, getProjectTypeIsMutliple());
                         }
 //                        TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
                     } finally {
@@ -932,9 +926,6 @@ public abstract class SingleModMPProjectTestCommon {
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
         System.out.println("-----"+ absoluteWLPPath +"-----");
 
-        String absoluteWLPPathGradle = Paths.get(getProjectsDirPath(), "singleModGradleMP", "build").toString();
-        System.out.println("----- "+ absoluteWLPPathGradle +" -------");
-
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
@@ -953,9 +944,6 @@ public abstract class SingleModMPProjectTestCommon {
                 if (TestUtils.isServerStopNeeded(absoluteWLPPath)) {
                     System.out.println("-----inside if loop-----");
                     UIBotTestUtils.runStopAction(remoteRobot, getSmMPProjectName(), testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPath, getSmMPProjectName(), 3, getProjectTypeIsMutliple());
-                }
-                if (TestUtils.isServerStopNeeded(absoluteWLPPathGradle)) {
-                    UIBotTestUtils.runStopAction(remoteRobot, "singleModGradleMP", testName, UIBotTestUtils.ActionExecType.LTWDROPDOWN, absoluteWLPPathGradle, "singleModGradleMP", 3, getProjectTypeIsMutliple());
                 }
 //                TestUtils.validateProjectStopped(testName,getSmMpProjResURI(),absoluteWLPPath);
             } finally {
