@@ -1771,8 +1771,6 @@ public class UIBotTestUtils {
     public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         Dimension size = new Dimension(1740, 800);
-
-        Dimension size1 = new Dimension(1640, 700);
         DialogFixture addProjectDialog = null;
         for (int i = 0; i < 2; i++) {
             addProjectDialog = projectFrame.find(DialogFixture.class,
@@ -1781,9 +1779,9 @@ public class UIBotTestUtils {
 
             if (isMultple && isResizeRequired) {
                 if (i == 0) {
-                    UIBotTestUtils.resizeBottomRight(addProjectDialog, size);
+                    UIBotTestUtils.resizeTopRight(addProjectDialog, size);
                 } else {
-                    UIBotTestUtils.resizeTopLeft(addProjectDialog, size1);
+                    UIBotTestUtils.resizeTopLeft(addProjectDialog, size);
                 }
             }
         }
@@ -2935,7 +2933,7 @@ public class UIBotTestUtils {
      * @param fixture The component fixture
      * @param size    The new size for the component
      */
-    public static void resizeBottomRight(DialogFixture fixture, Dimension size) {
+    public static void resizeTopRight(DialogFixture fixture, Dimension size) {
         Rectangle boundsBeforeResize = new Rectangle(
                 fixture.getLocationOnScreen().x,
                 fixture.getLocationOnScreen().y,
@@ -2943,18 +2941,21 @@ public class UIBotTestUtils {
                 fixture.getRemoteComponent().getHeight()
         );
 
-        Point bottomRightCorner = new Point(
-                boundsBeforeResize.x + boundsBeforeResize.width - 5,
-                boundsBeforeResize.y + boundsBeforeResize.height - 5
+        // Calculate the top-right corner
+        Point topRightCorner = new Point(
+                boundsBeforeResize.x + boundsBeforeResize.width - 5, // X-coordinate
+                boundsBeforeResize.y + 5                              // Y-coordinate remains fixed
         );
 
-        Point shiftedBottomRight = shift(
-                bottomRightCorner,
-                size.width - boundsBeforeResize.width,
-                size.height - boundsBeforeResize.height
+        // Calculate the new position for the top-right corner, changing only x
+        Point shiftedTopRight = shift(
+                topRightCorner,
+                size.width - boundsBeforeResize.width, // Adjust x for width change
+                0                                     // Keep y unchanged
         );
 
-        dragAndDrop(fixture, bottomRightCorner, shiftedBottomRight);
+        // Perform drag-and-drop to resize
+        dragAndDrop(fixture, topRightCorner, shiftedTopRight);
     }
 
     public static void resizeTopLeft(DialogFixture fixture, Dimension size) {
@@ -2965,17 +2966,20 @@ public class UIBotTestUtils {
                 fixture.getRemoteComponent().getHeight()
         );
 
+        // Calculate the top-left corner
         Point topLeftCorner = new Point(
-                boundsBeforeResize.x + 5,
-                boundsBeforeResize.y + 5
+                boundsBeforeResize.x + 5, // X-coordinate
+                boundsBeforeResize.y + 5  // Y-coordinate remains fixed
         );
 
+        // Calculate the new position for the top-left corner, changing only x
         Point shiftedTopLeft = shift(
                 topLeftCorner,
-                boundsBeforeResize.width - size.width,
-                boundsBeforeResize.height - size.height
+                boundsBeforeResize.width - size.width, // Adjust x for width change
+                0                                     // Keep y unchanged
         );
 
+        // Perform drag-and-drop to resize
         dragAndDrop(fixture, topLeftCorner, shiftedTopLeft);
     }
 
