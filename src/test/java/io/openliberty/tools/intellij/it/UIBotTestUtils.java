@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileWriter;
@@ -1770,24 +1771,10 @@ public class UIBotTestUtils {
      */
     public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-        Dimension size = new Dimension(1740, 800);
-        DialogFixture addProjectDialog = null;
-        for (int i = 0; i < 2; i++) {
-            addProjectDialog = projectFrame.find(DialogFixture.class,
+
+        DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
                     DialogFixture.byTitle(dialogTitle),
                     Duration.ofSeconds(10));
-
-            if (isMultple && isResizeRequired) {
-                if (i == 0) {
-                    UIBotTestUtils.resizeTopRight(addProjectDialog, size);
-                } else {
-                    UIBotTestUtils.resizeTopLeft(addProjectDialog, size);
-                }
-            }
-        }
-
-        JButtonFixture jbf = addProjectDialog.getBasicArrowButton();
-        jbf.click();
 
         RemoteText remoteProject;
         if (isResizeRequired) {
@@ -1807,6 +1794,64 @@ public class UIBotTestUtils {
             okButton.click();
         }
     }
+
+    public static void selectProjectFromAddLibertyProjectDialogNew(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired, String buildFilePath) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+        DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
+                DialogFixture.byTitle(dialogTitle),
+                Duration.ofSeconds(10));
+
+        Locator locator = byXpath("//div[@class='DialogPanel']//div[@class='ComboBox']");
+        ComboBoxFixture projBldFileBox = addProjectDialog.comboBox(locator, Duration.ofSeconds(10));
+
+        Keyboard keyboard = new Keyboard(remoteRobot);
+
+        projBldFileBox.click();
+
+        if (remoteRobot.isMac()) {
+            keyboard.hotKey(VK_META, VK_C);
+        } else {
+            // linux + windows
+            keyboard.hotKey(VK_CONTROL, VK_C);
+        }
+//        String copiedValue = null;
+        try {
+            String copiedValue = (String) Toolkit.getDefaultToolkit()
+                    .getSystemClipboard()
+                    .getData(DataFlavor.stringFlavor);
+            System.out.println("Copied Value: " + copiedValue);
+            if (!(copiedValue.equals(buildFilePath))) {
+                System.out.println("-----Inside If loop------");
+//                JButtonFixture jbf = addProjectDialog.getBasicArrowButton();
+//                jbf.click();
+
+
+                List<JListFixture> searchLists = addProjectDialog.jLists(JListFixture.Companion.byType());
+                if (!searchLists.isEmpty()) {
+
+                    System.out.println("-----Iiiiiiiii If loop------");
+                    JListFixture searchList = searchLists.get(1);
+                    System.out.println("searchList: " + searchList);
+                    try {
+                        List<RemoteText> entries = searchList.findAllText();
+                        entries.get(1).click();
+                        System.out.println("Entries: " + entries);
+                    } catch (NoSuchElementException nsee) {
+                        // The list is empty.
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (!isResizeRequired) {
+            JButtonFixture okButton = addProjectDialog.getButton("OK");
+            okButton.click();
+        }
+    }
+
+
 
     public static boolean checkProjectDialog(RemoteRobot remoteRobot, String dialogTitle) {
         try {
@@ -2002,7 +2047,7 @@ public class UIBotTestUtils {
      * @param remoteRobot The RemoteRobot instance.
      * @param cfgName     The name of the new configuration.
      */
-    public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName, boolean isMultiple) {
+    public static void createLibertyConfiguration(RemoteRobot remoteRobot, String cfgName, boolean isMultiple, String buildFilePath) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         String editConfigurationAction= null;
         if (remoteRobot.isMac()) {
@@ -2084,7 +2129,7 @@ public class UIBotTestUtils {
                     () -> newNameTextField.getText().equals(cfgName));
 
             if (isMultiple) {
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true, true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialogNew(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true, true, buildFilePath);
             }
 
             // Save the new configuration by clicking on the Apply button.
@@ -2218,6 +2263,7 @@ public class UIBotTestUtils {
                     () -> projBldFileBox.listValues().size() != 0);
             List<String> entries = projBldFileBox.listValues();
             String projBldFilePath = entries.get(0);
+            System.out.println("-------- "+ projBldFilePath);
             map.put(ConfigEntries.LIBERTYPROJ.toString(), projBldFilePath);
 
             // Get the dev mode parameters
@@ -2956,6 +3002,50 @@ public class UIBotTestUtils {
 
         // Perform drag-and-drop to resize
         dragAndDrop(fixture, topRightCorner, shiftedTopRight);
+    }
+
+    public static void resizeBottomRight(DialogFixture fixture, Dimension size) {
+        Rectangle boundsBeforeResize = new Rectangle(
+                fixture.getLocationOnScreen().x,
+                fixture.getLocationOnScreen().y,
+                fixture.getRemoteComponent().getWidth(),
+                fixture.getRemoteComponent().getHeight()
+        );
+        Point bottomRightCorner = new Point(
+                boundsBeforeResize.x + boundsBeforeResize.width - 5,
+                boundsBeforeResize.y + boundsBeforeResize.height - 5
+        );
+        Point shiftedBottomRight = shift(
+                bottomRightCorner,
+                size.width - boundsBeforeResize.width,
+                size.height - boundsBeforeResize.height
+        );
+        dragAndDrop(fixture, bottomRightCorner, shiftedBottomRight);
+    }
+
+    public static void resizeMiddleRight(DialogFixture fixture, Dimension size) {
+        Rectangle boundsBeforeResize = new Rectangle(
+                fixture.getLocationOnScreen().x,
+                fixture.getLocationOnScreen().y,
+                fixture.getRemoteComponent().getWidth(),
+                fixture.getRemoteComponent().getHeight()
+        );
+
+        // Calculate the middle of the right side of the window
+        Point middleRightSide = new Point(
+                boundsBeforeResize.x + boundsBeforeResize.width - 5, // 5px padding from the edge
+                boundsBeforeResize.y + boundsBeforeResize.height / 2 // Middle of the height
+        );
+
+        // Shift the middle-right point for the new size
+        Point shiftedMiddleRight = shift(
+                middleRightSide,
+                size.width - boundsBeforeResize.width, // Adjust width
+                size.height - boundsBeforeResize.height // No need for division here
+        );
+
+        // Perform the drag-and-drop operation
+        dragAndDrop(fixture, middleRightSide, shiftedMiddleRight);
     }
 
     public static void resizeTopLeft(DialogFixture fixture, Dimension size) {
