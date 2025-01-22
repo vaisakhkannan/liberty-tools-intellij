@@ -2999,7 +2999,7 @@ public class UIBotTestUtils {
                         "const pointEnd = new Point(" + endPoint.x + ", " + endPoint.y + ");" +
                         "try {" +
                         "    robot.moveMouse(pointStart);" +
-                        "    Thread.sleep(300);" +
+                        "    Thread.sleep(500);" +
                         "    robot.pressMouse(MouseButton.LEFT_BUTTON);" +
                         "    Thread.sleep(500);" +
                         "    robot.moveMouse(pointEnd);" +
