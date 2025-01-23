@@ -1711,9 +1711,9 @@ public class UIBotTestUtils {
                         Duration.ofSeconds(1),
                         "Waiting for the search to filter and show " + action + " in search output",
                         "The search did not filter or show " + action + " in the search output",
-                        () -> findTextInListOutputPanel(projectFrame, action, true, 0) != null);
+                        () -> findTextInListOutputPanel(projectFrame, action, true) != null);
 
-                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action, true, 0);
+                RemoteText foundAction = findTextInListOutputPanel(projectFrame, action, true);
                 if (foundAction != null) {
                     foundAction.click();
                 } else {
@@ -1766,7 +1766,7 @@ public class UIBotTestUtils {
      * @param remoteRobot The RemoteRobot instance.
      * @param projectName The name of the project to select.
      */
-    public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultiple) {
+    public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
                 DialogFixture.byTitle(dialogTitle),
@@ -1774,7 +1774,7 @@ public class UIBotTestUtils {
         JButtonFixture jbf = addProjectDialog.getBasicArrowButton();
         jbf.click();
 
-        RemoteText remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, false, 0);
+        RemoteText remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, false);
         if (remoteProject != null) {
             remoteProject.click();
         } else {
@@ -1785,7 +1785,7 @@ public class UIBotTestUtils {
         okButton.click();
     }
 
-    public static void selectProjectFromAddLibertyProjectDialogNew(RemoteRobot remoteRobot, String buildFilePath) {
+    public static void selectProjectBuildFilePath(RemoteRobot remoteRobot, String buildFilePath) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
                 DialogFixture.byTitle("Run/Debug Configurations"),
@@ -1808,20 +1808,13 @@ public class UIBotTestUtils {
             String copiedValue = (String) Toolkit.getDefaultToolkit()
                     .getSystemClipboard()
                     .getData(DataFlavor.stringFlavor);
-            System.out.println("Copied Value: " + copiedValue);
             if (!(copiedValue.equals(buildFilePath))) {
-                System.out.println("-----Inside If loop------");
-
                 List<JListFixture> searchLists = addProjectDialog.jLists(JListFixture.Companion.byType());
                 if (!searchLists.isEmpty()) {
-
-                    System.out.println("-----Iiiiiiiii If loop------");
                     JListFixture searchList = searchLists.get(1);
-                    System.out.println("searchList: " + searchList);
                     try {
                         List<RemoteText> entries = searchList.findAllText();
                         entries.get(1).click();
-                        System.out.println("Entries: " + entries);
                     } catch (NoSuchElementException nsee) {
                         // The list is empty.
                     }
@@ -1860,7 +1853,7 @@ public class UIBotTestUtils {
                 Duration.ofSeconds(10));
         removeProjectDialog.getBasicArrowButton().click();
 
-        RemoteText remoteProject = findTextInListOutputPanel(removeProjectDialog, projectName, true, 0);
+        RemoteText remoteProject = findTextInListOutputPanel(removeProjectDialog, projectName, true);
         if (remoteProject != null) {
             remoteProject.click();
         } else {
@@ -2107,7 +2100,7 @@ public class UIBotTestUtils {
                     () -> newNameTextField.getText().equals(cfgName));
 
             if (isMultiple) {
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialogNew(remoteRobot, buildFilePath);
+                UIBotTestUtils.selectProjectBuildFilePath(remoteRobot, buildFilePath);
             }
 
             // Save the new configuration by clicking on the Apply button.
@@ -2524,57 +2517,18 @@ public class UIBotTestUtils {
      * @return The RemoteText object representing the text found in the list panel, or
      * null if the text was not found.
      */
-    public static RemoteText findTextInListOutputPanel(CommonContainerFixture fixture, String text, boolean exactMatch, int index) {
+    public static RemoteText findTextInListOutputPanel(CommonContainerFixture fixture, String text, boolean exactMatch) {
         RemoteText foundText = null;
 
         List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
         if (!searchLists.isEmpty()) {
-            JListFixture searchList = searchLists.get(index);
+            JListFixture searchList = searchLists.get(0);
             try {
                 List<RemoteText> entries = searchList.findAllText();
                 for (RemoteText entry : entries) {
                     if ((exactMatch && entry.getText().equals(text)) || (!exactMatch && entry.getText().contains(text))) {
                         foundText = entry;
                     }
-                }
-            } catch (NoSuchElementException nsee) {
-                // The list is empty.
-                return null;
-            }
-        }
-
-        return foundText;
-    }
-
-    public static RemoteText findTextInListOutputPanelNew(
-            CommonContainerFixture fixture, String text, boolean exactMatch) {
-        RemoteText foundText = null;
-        System.out.println("//////// "+text +" /////////");
-
-        List<JListFixture> searchLists = fixture.jLists(JListFixture.Companion.byType());
-        if (!searchLists.isEmpty()) {
-            JListFixture searchList = searchLists.get(1);
-            try {
-                List<RemoteText> entries = searchList.findAllText();
-                System.out.println("////////// "+ entries +"//////////");
-//                searchList.find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']//div[@class='DocumentationHintEditorPane']" ));
-                ContainerFixture component= searchList.getRemoteRobot().find(ContainerFixture.class, byXpath("//div[@class='HeavyWeightWindow']"));
-                System.out.println(component.hasText("Documents"));
-//                System.out.println(component.findText("singleModMavenMP"));
-//                List<RemoteText> entries1 = component.findAllText("singleModMavenMP");
-//                String value= entries1.get(0).getText();
-//                System.out.println(value);
-//                boolean valuee= entries1.get(0).getText().contains("Documents");
-//                System.out.println(valuee);
-                for (RemoteText entry : entries) {
-                    boolean valueee= entry.getText().contains("Documents");
-                    System.out.println(valueee);
-                    System.out.println(entry.getText().contains("Documents"));
-                    if ((exactMatch && entry.getText().equals(text)) || (!exactMatch && entry.getText().contains(text))) {
-                        foundText = entry;
-                        System.out.println("//////// Inside if exact match /////////");
-                    }
-                    System.out.println("//////// "+entry.getText() +" /////////");
                 }
             } catch (NoSuchElementException nsee) {
                 // The list is empty.
@@ -2610,7 +2564,7 @@ public class UIBotTestUtils {
                 case SEARCH:
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", maxRetries, false);
                     if (isMultiple) {
-                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, smMPProjName, "Liberty project", true);
+                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, smMPProjName, "Liberty project");
                     }
                     break;
                 default:

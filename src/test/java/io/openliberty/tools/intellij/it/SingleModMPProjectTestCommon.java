@@ -518,7 +518,7 @@ public abstract class SingleModMPProjectTestCommon {
         if (getProjectTypeIsMutliple()) {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, true);
             if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project");
             }
         }
         else {
@@ -551,7 +551,7 @@ public abstract class SingleModMPProjectTestCommon {
         try {
             if (getProjectTypeIsMutliple()) {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, true);
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project");
             }
             else {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, false);
@@ -698,7 +698,7 @@ public abstract class SingleModMPProjectTestCommon {
         if (getProjectTypeIsMutliple()) {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, true);
             if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project");
             }
         }
         else {
@@ -712,7 +712,7 @@ public abstract class SingleModMPProjectTestCommon {
             // Run the application's tests.
             if (getProjectTypeIsMutliple()) {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3, true);
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project");
             } else {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3, false);
             }
@@ -1154,7 +1154,7 @@ public abstract class SingleModMPProjectTestCommon {
         if (getProjectTypeIsMutliple()) {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, true);
             if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project");
             }
         }
         else {
@@ -1169,7 +1169,7 @@ public abstract class SingleModMPProjectTestCommon {
                 // Stop dev mode.
                 if (getProjectTypeIsMutliple()) {
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, true);
-                    UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
+                    UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project");
                 }
                 else {
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, false);
