@@ -744,7 +744,7 @@ public abstract class SingleModMPProjectTestCommon {
     public void testStartWithConfigInDebugModeUsingToolbar() {
         String testName = "testStartWithConfigInDebugModeUsingToolbar";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
-        String absoluteWLPPath1 = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
+        String buildFilePath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
 
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
@@ -752,7 +752,7 @@ public abstract class SingleModMPProjectTestCommon {
         // Add a new Liberty config.
         String configName = "toolBarDebug-" + getSmMPProjectName();
 
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), absoluteWLPPath1);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), buildFilePath);
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, configName);
@@ -806,14 +806,14 @@ public abstract class SingleModMPProjectTestCommon {
     public void testStartWithConfigInDebugModeUsingMenu() {
         String testName = "testStartWithConfigInDebugModeUsingMenu";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
-        String absoluteWLPPath1 = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
+        String buildFilePath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
 
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
         // Add a new Liberty config.
         String configName = "menuDebug-" + getSmMPProjectName();
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), absoluteWLPPath1);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), buildFilePath);
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingMenu(remoteRobot, configName, UIBotTestUtils.ExecMode.DEBUG);
@@ -864,14 +864,14 @@ public abstract class SingleModMPProjectTestCommon {
     public void testStartWithConfigInRunModeUsingToolbar() {
         String testName = "testStartWithConfigInRunModeUsingToolbar";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
-        String absoluteWLPPath1 = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
+        String buildFilePath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
 
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
         // Add a new Liberty config.
         String configName = "toolBarRun-" + getSmMPProjectName();
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), absoluteWLPPath1);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), buildFilePath);
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingToolbar(remoteRobot, configName);
@@ -904,14 +904,14 @@ public abstract class SingleModMPProjectTestCommon {
     public void testStartWithConfigInRunModeUsingMenu() {
         String testName = "testStartWithConfigInRunModeUsingMenu";
         String absoluteWLPPath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getWLPInstallPath()).toString();
-        String absoluteWLPPath1 = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
+        String buildFilePath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
 
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
 
         // Add a new Liberty config.
         String configName = "menuRun-" + getSmMPProjectName();
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), absoluteWLPPath1);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName, getProjectTypeIsMutliple(), buildFilePath);
 
         // Find the newly created config in the config selection box on the project frame.
         UIBotTestUtils.selectConfigUsingMenu(remoteRobot, configName, UIBotTestUtils.ExecMode.RUN);
@@ -944,7 +944,7 @@ public abstract class SingleModMPProjectTestCommon {
 
         // The path of the project build file expected in the configuration. This path constant for this test.
         String projectBldFilePath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
-        String absoluteWLPPath1 = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
+        String buildFilePath = Paths.get(getProjectsDirPath(), getSmMPProjectName(), getBuildFileName()).toString();
 
         // Remove all other configurations first.
         UIBotTestUtils.deleteLibertyRunConfigurations(remoteRobot);
@@ -953,11 +953,11 @@ public abstract class SingleModMPProjectTestCommon {
         String cfgUID1 = "mCfgHist1";
         String configName1 = cfgUID1 + "-" + getSmMPProjectName();
         String cfgPrjBldPath1 = projectBldFilePath;
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName1, getProjectTypeIsMutliple(), absoluteWLPPath1);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName1, getProjectTypeIsMutliple(), buildFilePath);
         String cfgUID2 = "mCfgHist2";
         String configName2 = cfgUID2 + "-" + getSmMPProjectName();
         String cfgPrjBldPath2 = projectBldFilePath;
-        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName2, getProjectTypeIsMutliple(), absoluteWLPPath1);
+        UIBotTestUtils.createLibertyConfiguration(remoteRobot, configName2, getProjectTypeIsMutliple(), buildFilePath);
 
         try {
             // Find newly created config 1 in the config selection box on the toolbar of the project frame.
