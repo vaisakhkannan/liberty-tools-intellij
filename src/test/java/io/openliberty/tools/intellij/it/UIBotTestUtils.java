@@ -1788,10 +1788,10 @@ public class UIBotTestUtils {
         okButton.click();
     }
 
-    public static void selectProjectFromAddLibertyProjectDialogNew(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired, String buildFilePath) {
+    public static void selectProjectFromAddLibertyProjectDialogNew(RemoteRobot remoteRobot, String buildFilePath) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
-                DialogFixture.byTitle(dialogTitle),
+                DialogFixture.byTitle("Run/Debug Configurations"),
                 Duration.ofSeconds(10));
 
         Locator locator = byXpath("//div[@class='DialogPanel']//div[@class='ComboBox']");
@@ -1838,10 +1838,10 @@ public class UIBotTestUtils {
             e.printStackTrace();
         }
 
-        if (!isResizeRequired) {
-            JButtonFixture okButton = addProjectDialog.getButton("OK");
-            okButton.click();
-        }
+//        if (!isResizeRequired) {
+//            JButtonFixture okButton = addProjectDialog.getButton("OK");
+//            okButton.click();
+//        }
     }
 
 
@@ -2122,7 +2122,7 @@ public class UIBotTestUtils {
                     () -> newNameTextField.getText().equals(cfgName));
 
             if (isMultiple) {
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialogNew(remoteRobot, "singleModMavenMP", "Run/Debug Configurations", true, true, buildFilePath);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialogNew(remoteRobot, buildFilePath);
             }
 
             // Save the new configuration by clicking on the Apply button.
