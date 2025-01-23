@@ -1769,30 +1769,23 @@ public class UIBotTestUtils {
      * @param remoteRobot The RemoteRobot instance.
      * @param projectName The name of the project to select.
      */
-    public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired) {
+    public static void selectProjectFromAddLibertyProjectDialog(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple) {
         ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
-
         DialogFixture addProjectDialog = projectFrame.find(DialogFixture.class,
-                    DialogFixture.byTitle(dialogTitle),
-                    Duration.ofSeconds(10));
+                DialogFixture.byTitle(dialogTitle),
+                Duration.ofSeconds(10));
+        JButtonFixture jbf = addProjectDialog.getBasicArrowButton();
+        jbf.click();
 
-        RemoteText remoteProject;
-        if (isResizeRequired) {
-            remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, !isMultple, 1);
-        } else {
-            remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, !isMultple, 0);
-        }
-        System.out.println("//////// " + remoteProject + " /////////");
+        RemoteText remoteProject = findTextInListOutputPanel(addProjectDialog, projectName, false, 0);
         if (remoteProject != null) {
             remoteProject.click();
         } else {
             fail("Unable to find " + projectName + " in the output list of the " + dialogTitle + " dialog.");
         }
 
-        if (!isResizeRequired) {
-            JButtonFixture okButton = addProjectDialog.getButton("OK");
-            okButton.click();
-        }
+        JButtonFixture okButton = addProjectDialog.getButton("OK");
+        okButton.click();
     }
 
     public static void selectProjectFromAddLibertyProjectDialogNew(RemoteRobot remoteRobot, String projectName, String dialogTitle, boolean isMultple, boolean isResizeRequired, String buildFilePath) {
@@ -2638,7 +2631,7 @@ public class UIBotTestUtils {
                 case SEARCH:
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", maxRetries, false);
                     if (isMultiple) {
-                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, smMPProjName, "Liberty project", true, false);
+                        UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, smMPProjName, "Liberty project", true);
                     }
                     break;
                 default:

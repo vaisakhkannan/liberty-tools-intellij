@@ -523,7 +523,7 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, true);
             if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
                 System.out.println("Inside If loop");
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
             }
         }
         else {
@@ -557,7 +557,7 @@ public abstract class SingleModMPProjectTestCommon {
             if (getProjectTypeIsMutliple()) {
                 System.out.println("Inside If loop////////");
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, true);
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
             }
             else {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start...", 3, false);
@@ -709,7 +709,7 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start", 3, true);
             if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
                 System.out.println("Inside If loop");
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
             }
         }
         else {
@@ -724,7 +724,7 @@ public abstract class SingleModMPProjectTestCommon {
             if (getProjectTypeIsMutliple()) {
                 System.out.println("Inside If loop////////");
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3, true);
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
             } else {
                 UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Run tests", 3, false);
             }
@@ -1193,7 +1193,7 @@ public abstract class SingleModMPProjectTestCommon {
             UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Start in container", 3, true);
             if (UIBotTestUtils.checkProjectDialog(remoteRobot, "Liberty project")) {
                 System.out.println("Inside If loop");
-                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+                UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
             }
         }
         else {
@@ -1210,7 +1210,7 @@ public abstract class SingleModMPProjectTestCommon {
                 if (getProjectTypeIsMutliple()) {
                     System.out.println("Inside If loop////////");
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, true);
-                    UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true, false);
+                    UIBotTestUtils.selectProjectFromAddLibertyProjectDialog(remoteRobot, getSmMPProjectName(), "Liberty project", true);
                 }
                 else {
                     UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Liberty: Stop", 3, false);
