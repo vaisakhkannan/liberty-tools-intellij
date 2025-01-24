@@ -47,8 +47,6 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    #Added timeout
-    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -135,6 +133,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
       - name: 'Run UI integration tests'
+        #Added timeout
+        timeout-minutes: 10
         id: run_tests
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/run.sh
