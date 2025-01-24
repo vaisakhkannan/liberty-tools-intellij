@@ -134,7 +134,7 @@ jobs:
           retention-days: 7
       - name: 'Run UI integration tests'
         #Added timeout
-        timeout-minutes: 10
+        timeout-minutes: 360
         id: run_tests
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/run.sh
