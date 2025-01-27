@@ -50,6 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Added muitiple windows build
         runtime: [ windows, windows1, windows2, windows3, windows4, windows5, windows6, windows7, windows8, windows9  ]
         include:
           - runtime: windows
