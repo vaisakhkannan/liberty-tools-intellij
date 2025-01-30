@@ -96,7 +96,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ linux, mac, windows ]
+        runtime: [ linux, mac, windows, linux1, mac1, windows1, linux2, mac2, windows2 ]
         include:
           - runtime: linux
             os: ubuntu-latest
@@ -105,6 +105,24 @@ jobs:
             os: macOS-latest
             reportName: mac-test-report
           - runtime: windows
+            os: windows-latest
+            reportName: windows-test-report
+          - runtime: linux1
+            os: ubuntu-latest
+            reportName: linux-test-report
+          - runtime: mac1
+            os: macOS-latest
+            reportName: mac-test-report
+          - runtime: windows1
+            os: windows-latest
+            reportName: windows-test-report
+          - runtime: linux2
+            os: ubuntu-latest
+            reportName: linux-test-report
+          - runtime: mac2
+            os: macOS-latest
+            reportName: mac-test-report
+          - runtime: windows2
             os: windows-latest
             reportName: windows-test-report
     env:
