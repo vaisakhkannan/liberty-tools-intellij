@@ -216,7 +216,7 @@ jobs:
           }')
 
           # Send the payload to Slack
-          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL_COPY || echo "Slack notification failed with status code: $?"
 
       - name: Save current timestamp
         run: |
