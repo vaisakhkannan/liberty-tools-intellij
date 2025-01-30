@@ -218,7 +218,9 @@ jobs:
 
           # Send the payload to Slack
           #          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL_COPY_NEW || echo "Slack notification failed with status code: $?"
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' $SLACK_WEBHOOK_URL_COPY_NEW
+          #curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' $SLACK_WEBHOOK_URL_COPY_NEW
+          curl -X POST -H "Content-Type: application/json" --data '{"text":"Test message"}' https://hooks.slack.com/services/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
+
 
       - name: Save current timestamp
         run: |
