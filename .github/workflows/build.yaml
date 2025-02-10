@@ -44,8 +44,8 @@ on:
         type: string
         required: false
         default: main
-  push:
-    branches: '**'
+  # push:
+    # branches: '**'
   pull_request:
     branches: [ main ]
 

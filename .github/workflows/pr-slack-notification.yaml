@@ -1,6 +1,7 @@
 name: Fetch All Open and Recently Closed Pull Requests using cron job
 
 on:
+  push:
   workflow_dispatch:
   schedule:
     - cron: '30 15 * * 1-5'  # At 15:30 on every day-of-week from Monday through Friday(UTC Time), 9pm in IST and 11:30 AM in EST.
@@ -11,10 +12,14 @@ jobs:
 
     env:
       REPO: ${{ github.repository }}
-      BRANCH: main
+      # BRANCH: main.
+      BRANCH: 1244-Avoid-special-character
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
+      # API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
+      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      # https://github.com/vaisakhkannan/liberty-tools-intellij:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_NEW: ${{ secrets.SLACK_NEW }}
       WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.WORKFLOW_BUILDER_WEBHOOK }}
       NO_PR_WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.NO_PR_WORKFLOW_BUILDER_WEBHOOK }}
 
@@ -105,7 +110,17 @@ jobs:
                 draft_status="\n*Draft*: true"
               fi
 
-              pr_list="${pr_list}\n*Pull Request* #${pr_number}: ${pr_title}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}${draft_status}\n*Created At*: ${pr_created_at}\n*Last Updated At*: ${pr_updated_at}\n"
+              # pr_list="${pr_list}\n*Pull Request* ${pr_number}: ${pr_title}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}${draft_status}\n*Created At*: ${pr_created_at}\n*Last Updated At*: ${pr_updated_at}\n"
+          
+              # Process PR title with jq before using it in the shell.
+              # ZWSP=$'\u200B'  # Define zero-width space
+              # pr_title_cleaned=$(echo "$pr_title" | sed "s/#\([0-9]\+\)/#${ZWSP}\1/g")
+              # pr_title_cleaned=$(echo "$pr_title" | sed 's/#\([0-9]\+\)/#\​\1/g')
+          
+              pr_title_cleaned=$(echo "$pr_title" | sed 's/#/#​/g')  # Inserts zero-width space
+
+              pr_list="${pr_list}\n*Pull Request* ${pr_number}: ${pr_title_cleaned}\n*Created by*: ${pr_user}\n*URL*: ${pr_url}${draft_status}\n*Created At*: ${pr_created_at}\n*Last Updated At*: ${pr_updated_at}\n"
+                                                                                                                                                  
               notify=true
             fi
           done
@@ -141,8 +156,8 @@ jobs:
           
           closed_pr_list=$(echo "$closed_prs" | jq -r \
           --arg last_run "$last_run_timestamp" \
-          '.[] | select(.closed_at > $last_run) | "*Closed Pull Request* #\(.number): \(.title)\n*Closed by*: \(.user.login)\n*URL*: \(.html_url)\n*Closed At*: \(.closed_at)\n"')
-          
+          '.[] | select(.closed_at > $last_run) | "*Closed Pull Request* \(.number): \(.title | gsub("(#\\d+)"; "`\\1`"))\n*Closed by*: \(.user.login)\n*URL*: \(.html_url)\n*Closed At*: \(.closed_at)\n"')
+  
           echo "Closed PR List since last cron job:"
           echo "$closed_pr_list"
           
@@ -216,7 +231,12 @@ jobs:
           }')
 
           # Send the payload to Slack
-          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_WEBHOOK_URL || echo "Slack notification failed with status code: $?"
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_NEW || echo "Slack notification failed with status code: $?"
+          
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' https://hooks.slack.com/services/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
+          
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' $SLACK_NEW
+          
 
       - name: Save current timestamp
         run: |
