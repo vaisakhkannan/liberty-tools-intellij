@@ -12,7 +12,7 @@ jobs:
 
     env:
       REPO: ${{ github.repository }}
-      # BRANCH: main
+      # BRANCH: main.
       BRANCH: 1244-Avoid-special-character
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
