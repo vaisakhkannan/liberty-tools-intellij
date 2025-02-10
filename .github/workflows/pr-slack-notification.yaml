@@ -16,6 +16,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_NEW: ${{ secrets.SLACK_NEW }}
       WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.WORKFLOW_BUILDER_WEBHOOK }}
       NO_PR_WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.NO_PR_WORKFLOW_BUILDER_WEBHOOK }}
 
