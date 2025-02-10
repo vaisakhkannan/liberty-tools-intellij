@@ -14,7 +14,9 @@ jobs:
       REPO: ${{ github.repository }}
       BRANCH: main
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
+      # API_URL: https://api.github.com/repos/redhat-developer/lsp4ij/pulls
+      API_URL: https://api.github.com/repos/vaisakhkannan/liberty-tools-intellij/pulls
+      # https://github.com/vaisakhkannan/liberty-tools-intellij:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       SLACK_NEW: ${{ secrets.SLACK_NEW }}
       WORKFLOW_BUILDER_WEBHOOK: ${{ secrets.WORKFLOW_BUILDER_WEBHOOK }}
@@ -218,7 +220,7 @@ jobs:
           }')
 
           # Send the payload to Slack
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' $SLACK_NEW || echo "Slack notification failed with status code: $?"
+          curl -X POST -H 'Content-type: application/json' --data "$payload" $SLACK_NEW || echo "Slack notification failed with status code: $?"
           
           # curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' https://hooks.slack.com/services/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
           
