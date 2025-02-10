@@ -156,7 +156,9 @@ jobs:
           
           closed_pr_list=$(echo "$closed_prs" | jq -r \
           --arg last_run "$last_run_timestamp" \
-          '.[] | select(.closed_at > $last_run) | "*Closed Pull Request* \(.number): \(.title | gsub("(#\\d+)"; "`\\1`"))\n*Closed by*: \(.user.login)\n*URL*: \(.html_url)\n*Closed At*: \(.closed_at)\n"')
+          '.[] | select(.closed_at > $last_run) | "*Closed Pull Request* \(.number): \(.title)\n*Closed by*: \(.user.login)\n*URL*: \(.html_url)\n*Closed At*: \(.closed_at)\n"')
+          
+          closed_pr_list=$(echo "$closed_pr_list" | sed 's/#/#​/g')  # Inserts zero-width space
   
           echo "Closed PR List since last cron job:"
           echo "$closed_pr_list"
