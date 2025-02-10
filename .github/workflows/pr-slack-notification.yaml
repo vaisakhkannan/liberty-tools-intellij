@@ -221,7 +221,7 @@ jobs:
           
           # curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' https://hooks.slack.com/services/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
           
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' https://hooks.slack.com/services/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
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' $SLACK_NEW
           
 
       - name: Save current timestamp
