@@ -223,13 +223,8 @@ intellijPlatform {
     pluginVerification {
 
         ides {
-            ide IntelliJPlatformType.IntellijIdeaCommunity, "2024.1"
-            local file('/path/to/ide/')
-            recommended()
-            select {
-                it.types = [IntelliJPlatformType.IntellijIdeaCommunity]
-                it.sinceBuild = '241'
-                it.untilBuild = '243.*'
+            ides {
+                recommended()
             }
         }
     }
