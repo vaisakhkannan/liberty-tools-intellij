@@ -59,6 +59,7 @@ repositories {
     }
     intellijPlatform {
         defaultRepositories()
+        localPlatformArtifacts()
     }
     mavenLocal() // TODO remove once Liberty LS is publicly available
 }
