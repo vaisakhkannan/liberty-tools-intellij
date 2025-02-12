@@ -225,6 +225,11 @@ intellijPlatform {
         ides {
             ides {
                 recommended()
+                select {
+                    it.types = [IntelliJPlatformType.IntellijIdeaCommunity, IntelliJPlatformType.IntellijIdeaUltimate]
+                    it.sinceBuild = '241'
+                    it.untilBuild = '243.*'
+                }
             }
         }
         freeArgs = [
