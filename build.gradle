@@ -227,6 +227,10 @@ intellijPlatform {
                 recommended()
             }
         }
+        freeArgs = [
+                "-mute",
+                "TemplateWordInPluginId",
+        ]
     }
     pluginConfiguration {
         ideaVersion {
