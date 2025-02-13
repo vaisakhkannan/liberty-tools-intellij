@@ -76,14 +76,25 @@ public abstract class BaseJakartaTest extends MavenImportingTestCase {
             pomFiles.add(pomFile);
 
         }
+        File projectDir = new File("src/test/resources/projects/maven/jakarta-sample");
+        System.out.println("Project directory exists: " + projectDir.exists());
+        System.out.println("Pom File: " + pomFiles);
         // Make a blocking call to the Kotlin suspend function: importProjectsAsync().
-        BuildersKt.runBlocking(
-                EmptyCoroutineContext.INSTANCE,
-                (scope, continuation) -> importProjectsAsync(pomFiles.toArray(VirtualFile[]::new), continuation)
-        );
+//        BuildersKt.runBlocking(
+//                EmptyCoroutineContext.INSTANCE,
+//                (scope, continuation) -> importProjectsAsync(pomFiles.toArray(VirtualFile[]::new), continuation)
+//        );
+
+        importProjectsWithErrors(pomFiles.toArray(VirtualFile[]::new));
+
+
+//        importProjectsWithErrors
+//        importProjectsAsync(pomFiles.toArray(VirtualFile[]::new));
+//        importProjects(pomFiles.toArray(VirtualFile[]::new));
         Module[] modules = ModuleManager.getInstance(getTestFixture().getProject()).getModules();
-        for (Module module : modules) {
-            setupJdkForModule(module.getName());
+        System.out.println("Total modules found: " + modules.length);
+        for (Module m : modules) {
+            System.out.println("Module: " + m.getName());
         }
         // REVISIT: After calling setupJdkForModule() initialization appears to continue in the background
         // and a may cause a test to intermittently fail if it accesses the module too early. A 10-second wait

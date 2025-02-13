@@ -40,7 +40,9 @@ public class PostConstructAnnotationTest extends BaseJakartaTest {
 
     @Test
     public void GeneratedAnnotation() throws Exception {
+        System.out.println("Creating module...");
         Module module = createMavenModule(new File("src/test/resources/projects/maven/jakarta-sample"));
+        System.out.println("Created module: " + module);
         IPsiUtils utils = PsiUtilsLSImpl.getInstance(getProject());
 
         VirtualFile javaFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(ModuleUtilCore.getModuleDirPath(module)
