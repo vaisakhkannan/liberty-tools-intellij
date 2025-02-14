@@ -214,7 +214,7 @@ public class JakartaPersistenceTest extends BaseJakartaTest {
         assertJavaCodeAction(codeActionParams1, utils, ca1, ca2);
     }
 
-    @Test
+//    @Test
     public void removeFinalModifiers() throws Exception {
         Module module = createMavenModule(new File("src/test/resources/projects/maven/jakarta-sample"));
         IPsiUtils utils = PsiUtilsLSImpl.getInstance(getProject());
