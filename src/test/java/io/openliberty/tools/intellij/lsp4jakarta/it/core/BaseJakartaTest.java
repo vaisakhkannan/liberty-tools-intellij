@@ -76,11 +76,7 @@ public abstract class BaseJakartaTest extends MavenImportingTestCase {
             pomFiles.add(pomFile);
 
         }
-        // Make a blocking call to the Kotlin suspend function: importProjectsAsync().
-        BuildersKt.runBlocking(
-                EmptyCoroutineContext.INSTANCE,
-                (scope, continuation) -> importProjectsAsync(pomFiles.toArray(VirtualFile[]::new), continuation)
-        );
+        importProjectsWithErrors(pomFiles.toArray(VirtualFile[]::new));
         Module[] modules = ModuleManager.getInstance(getTestFixture().getProject()).getModules();
         for (Module module : modules) {
             setupJdkForModule(module.getName());
