@@ -14,13 +14,22 @@
 package io.openliberty.tools.intellij.lsp4jakarta.it.core;
 
 import com.intellij.maven.testFramework.MavenImportingTestCase;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.LanguageLevelProjectExtension;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ModuleRootModificationUtil;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
+import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.*;
@@ -55,7 +64,11 @@ public abstract class BaseJakartaTest extends MavenImportingTestCase {
         final var testFixture = factory.createCodeInsightFixture(myProjectBuilder.getFixture());
         setTestFixture(testFixture);
         testFixture.setUp();
-        LanguageLevelProjectExtension.getInstance(testFixture.getProject()).setLanguageLevel(LanguageLevel.JDK_1_6);
+        LanguageLevelProjectExtension.getInstance(testFixture.getProject()).setLanguageLevel(LanguageLevel.JDK_15);
+        Sdk value = ProjectRootManager.getInstance(testFixture.getProject()).getProjectSdk();
+        Sdk value1 = ModuleRootManager.getInstance(testFixture.getModule()).getSdk();
+        System.out.println("-------- "+ value);
+        System.out.println("-------- "+ value1);
     }
 
     private static AtomicInteger counter = new AtomicInteger(0);
@@ -76,11 +89,53 @@ public abstract class BaseJakartaTest extends MavenImportingTestCase {
             pomFiles.add(pomFile);
 
         }
+        Sdk value = ProjectRootManager.getInstance(getTestFixture().getProject()).getProjectSdk();
+        Sdk value1 = ModuleRootManager.getInstance(getTestFixture().getModule()).getSdk();
+        Sdk sdk = ProjectJdkTable.getInstance().getAllJdks()[0]; // Get the first available JDK
+//        ApplicationManager.getApplication().runWriteAction(() -> {
+//            ProjectRootManager.getInstance(getTestFixture().getProject()).setProjectSdk(sdk);
+//        });
+
+        Sdk value2 = ProjectRootManager.getInstance(getTestFixture().getProject()).getProjectSdk();
+
+        System.out.println("-------- "+ value);
+        System.out.println("-------- "+ value1);
+        System.out.println("-------- "+ value2);
+
+        System.out.println("-------- "+ sdk);
+
+        // do this once
+//        Sdk jdk11 = IdeaTestUtil.getMockJdk11();
+
+        // do this for every module
+//        ModuleRootModificationUtil.setModuleSdk(module, jdk11);
+
+
         importProjectsWithErrors(pomFiles.toArray(VirtualFile[]::new));
         Module[] modules = ModuleManager.getInstance(getTestFixture().getProject()).getModules();
+        Sdk jdk11 =IdeaTestUtil.getMockJdk11();
+        Sdk[] values = JavaAwareProjectJdkTableImpl.getInstanceEx().getAllJdks();
+        Sdk va = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+//        String vaNew = "/Users/vaisakht/.gradle/caches/transforms-4/b65e30a80a1aafe3dbc3a997cb22772f/transformed/ideaIC-2024.1-aarch64/jbr/Contents/Home)";
+
+        System.out.println("-------- "+ values);
+
+        System.out.println("-------- "+ va);
+        System.out.println("-------- "+ jdk11);
+//        WriteAction.runAndWait(() -> ProjectJdkTable.getInstance()
+//                .addJdk(va, getTestRootDisposable()));
         for (Module module : modules) {
             setupJdkForModule(module.getName());
+            // do this for every module
+//            ModuleRootModificationUtil.setModuleSdk(module, va);
         }
+
+        Sdk valueNew = ProjectRootManager.getInstance(getTestFixture().getProject()).getProjectSdk();
+        Sdk valueNew1 = ModuleRootManager.getInstance(getTestFixture().getModule()).getSdk();
+
+        System.out.println("-------- "+ valueNew);
+        System.out.println("-------- "+ valueNew1);
+
         // REVISIT: After calling setupJdkForModule() initialization appears to continue in the background
         // and a may cause a test to intermittently fail if it accesses the module too early. A 10-second wait
         // is hopefully long enough but would be preferable to synchronize on a completion event if one is

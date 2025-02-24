@@ -14,6 +14,7 @@
 package io.openliberty.tools.intellij.lsp4jakarta.lsp4ij.beanvalidation;
 
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiUtil;
 import io.openliberty.tools.intellij.lsp4jakarta.lsp4ij.AbstractDiagnosticsCollector;
 import io.openliberty.tools.intellij.lsp4jakarta.lsp4ij.Messages;
 import org.eclipse.lsp4j.Diagnostic;
@@ -81,6 +82,8 @@ public class BeanValidationDiagnosticsCollector extends AbstractDiagnosticsColle
                         annotationName, DiagnosticSeverity.Error));
             } else {
                 PsiType type = (isMethod) ? ((PsiMethod) element).getReturnType() : ((PsiField) element).getType();
+                PsiClass value = PsiUtil.resolveClassInClassTypeOnly(type);
+                System.out.println("//////// " + value + "//////////");
                 if (type instanceof PsiClassType) {
                     PsiType t = PsiPrimitiveType.getUnboxedType(type);
                     if (t != null) {

@@ -14,6 +14,7 @@
 package io.openliberty.tools.intellij.lsp4jakarta.lsp4ij.persistence;
 
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiUtil;
 import io.openliberty.tools.intellij.lsp4jakarta.lsp4ij.AbstractDiagnosticsCollector;
 import io.openliberty.tools.intellij.lsp4jakarta.lsp4ij.Messages;
 import org.eclipse.lsp4j.Diagnostic;
@@ -94,6 +95,11 @@ public class PersistenceMapKeyDiagnosticsCollector extends AbstractDiagnosticsCo
         String message = (element instanceof PsiMethod) ?
                 Messages.getMessage("MultipleMapKeyJoinColumnMethod") :
                 Messages.getMessage("MultipleMapKeyJoinColumnField");
+        boolean isMethod = element instanceof PsiMethod;
+        PsiType type = (isMethod) ? ((PsiMethod) element).getReturnType() : ((PsiField) element).getType();
+        PsiClass value = PsiUtil.resolveClassInClassTypeOnly(type);
+        System.out.println("/////////// "+ value);
+
         annotations.forEach(annotation -> {
             boolean allNamesSpecified, allReferencedColumnNameSpecified;
             List<PsiNameValuePair> memberValues = Arrays.asList(annotation.getParameterList().getAttributes());

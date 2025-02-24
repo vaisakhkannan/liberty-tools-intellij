@@ -143,6 +143,9 @@ dependencies {
     implementation files(new File(buildDir, 'server')) {
         builtBy 'copyDeps'
     }
+
+//    implementation 'com.jetbrains.intellij.maven:maven-test-framework:241.19416.15'
+//    implementation 'com.jetbrains.intellij.java:java-test-framework:241.19416.15'
     intellijPlatform {
         // For a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
