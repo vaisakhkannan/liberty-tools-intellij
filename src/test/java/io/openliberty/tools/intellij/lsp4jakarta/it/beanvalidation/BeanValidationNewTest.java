@@ -14,6 +14,9 @@ package io.openliberty.tools.intellij.lsp4jakarta.it.beanvalidation;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -41,6 +44,8 @@ public class BeanValidationNewTest extends BaseJakartaTest {
     @Test
     public void validFieldConstraints() throws Exception {
         Module module = createMavenModule(new File("src/test/resources/projects/maven/app-name-test-maven"));
+        Sdk valueNew = ProjectRootManager.getInstance(getTestFixture().getProject()).getProjectSdk();
+        Sdk valueNew1 = ModuleRootManager.getInstance(getTestFixture().getModule()).getSdk();
         IPsiUtils utils = PsiUtilsLSImpl.getInstance(getProject());
 
         VirtualFile javaFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(ModuleUtilCore.getModuleDirPath(module)
