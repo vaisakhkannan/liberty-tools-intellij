@@ -1,5 +1,5 @@
 /******************************************************************************* 
-* Copyright (c) 2022 IBM Corporation and others.
+ * Copyright (c) 2022 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -29,46 +29,46 @@ public class JsonbTransientDiagnostic {
     @JsonbAnnotation
     @JsonbTransient
     private String favoriteLanguage;    // Diagnostic: JsonbTransient is mutually exclusive with other JsonB annotations
-    
+
     // No diagnostic as field is not annotated with other Jsonb annotations,
     // even though the accessors are annotated with @JsonbTransient
     private String favoriteDatabase;
-    
+
     // Diagnostic will appear as field accessors have @JsonbTransient,
     // but field itself has annotation other than transient
     @JsonbProperty("fav_editor")
     private String favoriteEditor;
-    
+
     @JsonbProperty("person-id")
-    private int getId() { 
+    private int getId() {
         // A diagnostic is expected on getId because as a getter, it is annotated with other 
         // Jsonb annotations while its corresponding field id is annotated with JsonbTransient
         return id;
     }
-    
+
     @JsonbAnnotation
     private void setId(int id) {
         // A diagnostic is expected on setId because as a setter, it is annotated with other 
         // Jsonb annotations while its corresponding field id is annotated with JsonbTransient
         this.id = id;
     }
-    
+
     @JsonbTransient
     private String getFavoriteDatabase() {
         return favoriteDatabase;
     }
-    
+
     @JsonbTransient
     private void setFavoriteDatabase(String favoriteDatabase) {
         this.favoriteDatabase = favoriteDatabase;
     }
-    
+
     // A diagnostic will appear as field has conflicting annotation
     @JsonbTransient
     private String getFavoriteEditor() {
         return favoriteEditor;
     }
-    
+
     // A diagnostic will appear as @JsonbTransient is not mutually exclusive on this accessor
     @JsonbAnnotation
     @JsonbTransient

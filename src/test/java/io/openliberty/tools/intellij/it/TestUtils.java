@@ -11,6 +11,10 @@ package io.openliberty.tools.intellij.it;
 
 import org.junit.jupiter.api.Assertions;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,6 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Test utilities.
@@ -343,6 +350,26 @@ public class TestUtils {
         }
     }
 
+    public static void validateCodeInJavaSrcNew(String pathToJavaSrc, String insertedCodeLine) {
+        try {
+            Assertions.assertTrue(containsCodeSnippet(pathToJavaSrc, insertedCodeLine));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean containsCodeSnippet(String filePath, String checkString) throws IOException {
+        Pattern pattern = Pattern.compile(checkString, Pattern.MULTILINE);
+
+        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+            String content = lines.reduce("", (a, b) -> a + "\n" + b);
+            return pattern.matcher(content).find();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * Validates the expected configuration name vale pair entry is found in config file
      *
@@ -615,5 +642,31 @@ public class TestUtils {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getClipboardText() {
+        try {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable contents = clipboard.getContents(null);
+            if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                return (String) contents.getTransferData(DataFlavor.stringFlavor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Converts escape sequences into visible representations
+    public static String escapeSpecialCharacters(String input) {
+        if (input == null) return null;
+        return input
+                .replace("\\", "\\\\")  // Escape backslashes
+                .replace("\n", "\\n")   // Show new lines as \n
+                .replace("\r", "\\r")   // Show carriage returns as \r
+                .replace("\t", "\\t")   // Show tabs as \t
+                .replace("\"", "\\\"")  // Escape double quotes
+                .replace("\b", "\\b")   // Show backspaces as \b
+                .replace("\f", "\\f");  // Show form feed as \f
     }
 }
