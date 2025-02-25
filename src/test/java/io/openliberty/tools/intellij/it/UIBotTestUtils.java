@@ -28,15 +28,19 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.intellij.remoterobot.fixtures.dataExtractor.TextDataPredicatesKt.contains;
 import static com.intellij.remoterobot.search.locators.Locators.byXpath;
@@ -1518,6 +1522,28 @@ public class UIBotTestUtils {
         }
     }
 
+    /**
+     * Undo the last change from the currently active window.
+     *
+     * @param remoteRobot The RemoteRobot instance.
+     */
+    public static void undoWindowContent(RemoteRobot remoteRobot) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(30));
+
+        if (remoteRobot.isMac()) {
+            // Undo the last change.
+            projectFrame.clickOnMainMenuWithActions(remoteRobot, "Edit", "Undo");
+        }
+        else {
+            clickOnMainMenu(remoteRobot);
+            // Undo the last change.
+            ComponentFixture editMenuEntryNew = projectFrame.getActionMenu("Edit", "10");
+            editMenuEntryNew.moveMouse();
+            ComponentFixture deleteEntry = projectFrame.getActionMenuItem("Undo");
+            deleteEntry.click();
+        }
+    }
+
     public static void pasteOnActiveWindow(RemoteRobot remoteRobot) {
         pasteOnActiveWindow(remoteRobot, false);
     }
@@ -2837,6 +2863,24 @@ public class UIBotTestUtils {
         }
 
         return menuAction2;
+    }
+
+    /**
+     * Validates whether a given Java source file contains the specified code snippet.
+     *
+     * @param filePath   The path to the Java source file.
+     * @param codeSnippet The code snippet to search for in the file.
+     * @throws RuntimeException if an I/O error occurs while reading the file.
+     */
+    public static void validateCodeSnippet(String filePath, String codeSnippet) {
+        Pattern pattern = Pattern.compile(codeSnippet, Pattern.MULTILINE);
+
+        try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
+            String content = lines.reduce("", (a, b) -> a + "\n" + b);
+            Assertions.assertTrue(pattern.matcher(content).find(), "Code snippet not found in file");
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading file: " + filePath, e);
+        }
     }
 
 }
