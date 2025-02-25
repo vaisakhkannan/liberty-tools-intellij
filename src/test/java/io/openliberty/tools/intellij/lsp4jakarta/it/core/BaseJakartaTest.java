@@ -114,22 +114,22 @@ public abstract class BaseJakartaTest extends MavenImportingTestCase {
         importProjects(pomFiles.toArray(VirtualFile[]::new));
         Module[] modules = ModuleManager.getInstance(getTestFixture().getProject()).getModules();
         Sdk jdk11 =IdeaTestUtil.getMockJdk11();
-        Sdk[] values = JavaAwareProjectJdkTableImpl.getInstanceEx().getAllJdks();
-        Sdk va = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+//        Sdk[] values = JavaAwareProjectJdkTableImpl.getInstanceEx().getAllJdks();
+//        Sdk va = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
 //        String vaNew = "/Users/vaisakht/.gradle/caches/transforms-4/b65e30a80a1aafe3dbc3a997cb22772f/transformed/ideaIC-2024.1-aarch64/jbr/Contents/Home)";
 
 //        System.out.println("-------- "+ vaa);
 
-        System.out.println("-------- "+ values);
-
-        System.out.println("-------- "+ va);
-        System.out.println("-------- "+ jdk11);
-        WriteAction.runAndWait(() -> ProjectJdkTable.getInstance()
-                .addJdk(va, getTestRootDisposable()));
+//        System.out.println("-------- "+ values);
+//
+//        System.out.println("-------- "+ va);
+//        System.out.println("-------- "+ jdk11);
+//        WriteAction.runAndWait(() -> ProjectJdkTable.getInstance()
+//                .addJdk(va, getTestRootDisposable()));
         for (Module module : modules) {
-//            setupJdkForModule(module.getName());
+            setupJdkForModule(module.getName());
             // do this for every module
-            ModuleRootModificationUtil.setModuleSdk(module, va);
+//            ModuleRootModificationUtil.setModuleSdk(module, va);
         }
 
         Sdk valueNew = ProjectRootManager.getInstance(getTestFixture().getProject()).getProjectSdk();
