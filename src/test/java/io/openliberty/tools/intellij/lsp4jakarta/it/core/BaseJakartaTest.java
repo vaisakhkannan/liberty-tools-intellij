@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
+import com.intellij.testFramework.IndexingTestUtil;
 import com.intellij.testFramework.builders.JavaModuleFixtureBuilder;
 import com.intellij.testFramework.builders.ModuleFixtureBuilder;
 import com.intellij.testFramework.fixtures.*;
@@ -110,8 +111,10 @@ public abstract class BaseJakartaTest extends MavenImportingTestCase {
         // do this for every module
 //        ModuleRootModificationUtil.setModuleSdk(module, jdk11);
 
+//        IndexingTestUtil.waitUntilIndexesAreReady(project);
 
         importProjects(pomFiles.toArray(VirtualFile[]::new));
+//        IndexingTestUtil.waitUntilIndexesAreReady(project);
         Module[] modules = ModuleManager.getInstance(getTestFixture().getProject()).getModules();
         Sdk jdk11 =IdeaTestUtil.getMockJdk11();
 //        Sdk[] values = JavaAwareProjectJdkTableImpl.getInstanceEx().getAllJdks();
@@ -131,6 +134,8 @@ public abstract class BaseJakartaTest extends MavenImportingTestCase {
             // do this for every module
 //            ModuleRootModificationUtil.setModuleSdk(module, va);
         }
+
+        IndexingTestUtil.waitUntilIndexesAreReady(project);
 
         Sdk valueNew = ProjectRootManager.getInstance(getTestFixture().getProject()).getProjectSdk();
         Sdk valueNew1 = ModuleRootManager.getInstance(getTestFixture().getModule()).getSdk();
