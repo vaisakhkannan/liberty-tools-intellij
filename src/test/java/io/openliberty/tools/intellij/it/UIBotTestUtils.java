@@ -877,6 +877,60 @@ public class UIBotTestUtils {
         }
     }
 
+    public static void hoverInAppServerCfgFileNew(RemoteRobot remoteRobot, String hoverTarget, String hoverFile, PopupType popupType) {
+
+        Keyboard keyboard = new Keyboard(remoteRobot);
+
+        Locator locator = byXpath("//div[@class='EditorCompositePanel']//div[@class='EditorComponentImpl']");
+        clickOnFileTab(remoteRobot, hoverFile);
+        EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
+
+//        Exception error = null;
+        for (int i = 0; i < 3; i++) {
+//            error = null;
+            try {
+                // move the cursor to the origin of the editor
+                goToLineAndColumn(remoteRobot, keyboard, 1, 1);
+
+                // Find the target text on the editor and move the move to it.
+                editorNew.findText(contains(hoverTarget)).moveMouse();
+                // clear and "lightbulb" icons?
+                if (!hoverFile.equals("server.xml")) {
+                    keyboard.hotKey(VK_ESCAPE);
+                }
+
+                // jitter the cursor
+                Point p = editorNew.findText(contains(hoverTarget)).getPoint();
+
+                // provoke the hint popup with a cursor jitter
+                jitterCursor(editorNew, p.x, p.y);
+
+                // first get the contents of the popup - put in a String
+                ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(10));
+                switch (popupType.name()) {
+                    case "DOCUMENTATION":
+                        projectFrame.getDocumentationHintEditorPane();
+                        break;
+                    case "DIAGNOSTIC":
+                        projectFrame.getDiagnosticPane();
+                        break;
+                    default:
+                        // no known popup type provided, return
+                        return;
+                }
+
+                break;
+            } catch (WaitForConditionTimeoutException wftoe) {
+//                error = wftoe;
+                TestUtils.sleepAndIgnoreException(20);
+                // click on center of editor pane - allow hover to work on next attempt
+                editorNew.click();
+            }
+        }
+
+        // Report the last error if there is one.
+    }
+
     /**
      * Moves the mouse cursor to a specific string target in an application file
      *

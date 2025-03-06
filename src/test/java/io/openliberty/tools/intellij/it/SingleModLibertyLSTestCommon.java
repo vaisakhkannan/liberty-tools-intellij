@@ -414,6 +414,8 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.copyWindowContent(remoteRobot);
 
         try {
+            UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
+
             UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 20, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
 
             //move cursor to hover point
@@ -450,6 +452,8 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.copyWindowContent(remoteRobot);
 
         try {
+            UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
+
             UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 20, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
 
             //there should be a diagnostic - move cursor to hover point
