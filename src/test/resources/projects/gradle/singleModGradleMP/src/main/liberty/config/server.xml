@@ -25,4 +25,6 @@
 
     <applicationManager autoExpand="true"/>
 
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+
 </server>
