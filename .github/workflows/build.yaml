@@ -96,35 +96,35 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [ linux, mac, windows, linux1, mac1, windows1, linux2, mac2, windows2 ]
+        runtime: [ windows0, windows1, windows2, windows3, windows4, windows5, windows6, windows7, windows8 ]
         include:
-          - runtime: linux
-            os: ubuntu-latest
-            reportName: linux-test-report
-          - runtime: mac
-            os: macOS-latest
-            reportName: mac-test-report
-          - runtime: windows
+          - runtime: windows0
             os: windows-latest
-            reportName: windows-test-report
-          - runtime: linux1
-            os: ubuntu-latest
-            reportName: linux-test-report1
-          - runtime: mac1
-            os: macOS-latest
-            reportName: mac-test-report1
+            reportName: windows-test-report0
           - runtime: windows1
             os: windows-latest
             reportName: windows-test-report1
-          - runtime: linux2
-            os: ubuntu-latest
-            reportName: linux-test-report2
-          - runtime: mac2
-            os: macOS-latest
-            reportName: mac-test-report2
           - runtime: windows2
             os: windows-latest
             reportName: windows-test-report2
+          - runtime: windows3
+            os: windows-latest
+            reportName: windows-test-report3
+          - runtime: windows4
+            os: windows-latest
+            reportName: windows-test-report4
+          - runtime: windows5
+            os: windows-latest
+            reportName: windows-test-report5
+          - runtime: windows6
+            os: windows-latest
+            reportName: windows-test-report6
+          - runtime: windows7
+            os: windows-latest
+            reportName: windows-test-report7
+          - runtime: windows8
+            os: windows-latest
+            reportName: windows-test-report8
     env:
       USE_LOCAL_PLUGIN: ${{ inputs.useLocalPlugin || false }}
       REF_LSP4IJ: ${{ needs.fetch_merge_commit_sha_from_lsp4ij_PR.outputs.pr_details }}
