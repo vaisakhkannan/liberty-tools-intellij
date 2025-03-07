@@ -94,6 +94,7 @@ jobs:
     needs: fetch_merge_commit_sha_from_lsp4ij_PR
     runs-on: ${{ matrix.os }}
     strategy:
+      max-parallel: 2
       fail-fast: false
       matrix:
         runtime: [ windows0, windows1, windows2, windows3, windows4, windows5, windows6, windows7, windows8 ]
