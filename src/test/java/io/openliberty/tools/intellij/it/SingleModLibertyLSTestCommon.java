@@ -424,6 +424,7 @@ public abstract class SingleModLibertyLSTestCommon {
             TestUtils.validateHoverData(expectedHoverData, foundHoverData);
 
         } finally {
+            UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot);
         }
@@ -463,6 +464,7 @@ public abstract class SingleModLibertyLSTestCommon {
             TestUtils.validateStanzaInConfigFile(pathToServerXML.toString(), correctedStanza);
 
         } finally {
+            UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot, true);
         }

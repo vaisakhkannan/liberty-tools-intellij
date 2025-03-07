@@ -94,7 +94,6 @@ jobs:
     needs: fetch_merge_commit_sha_from_lsp4ij_PR
     runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 2
       fail-fast: false
       matrix:
         runtime: [ linux, mac, windows, linux1, mac1, windows1, linux2, mac2, windows2 ]
