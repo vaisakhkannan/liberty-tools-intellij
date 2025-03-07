@@ -949,7 +949,7 @@ public class UIBotTestUtils {
         Point originPt = new Point(1, 1);
 
         Exception error = null;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             error = null;
             try {
                 // move the cursor to the origin of the editor
