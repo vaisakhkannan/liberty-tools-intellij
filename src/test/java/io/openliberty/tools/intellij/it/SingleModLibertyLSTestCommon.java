@@ -437,6 +437,7 @@ public abstract class SingleModLibertyLSTestCommon {
     @Test
     @Video
     public void testQuickFixInServerXML() {
+        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
         String stanzaSnippet = "<logging appsWriteJson=wrong\" />";
         String flaggedString = "wrong";
         String correctedStanza = "<logging appsWriteJson=\"true\" />";

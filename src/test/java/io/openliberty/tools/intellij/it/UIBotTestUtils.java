@@ -3031,4 +3031,24 @@ public class UIBotTestUtils {
 
         TestUtils.sleepAndIgnoreException(5);
     }
+
+    public static void checkLanguageServerLog(RemoteRobot remoteRobot) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(5));
+        try {
+            projectFrame.getBaseLabel("Language Servers", "5");
+        } catch (WaitForConditionTimeoutException e) {
+            // The Liberty tool window is closed. Open it.
+            clickOnWindowPaneStripeButton(remoteRobot, "Language Servers");
+        }
+        String fileName = "Liberty LemMinX";
+        try {
+            String xPath = "//div[@accessiblename='" + fileName + "' and @class='JComponent']";
+            ComponentFixture actionButton = projectFrame.getActionButton(xPath, "10");
+            actionButton.click();
+            TestUtils.sleepAndIgnoreException(5);
+
+        } catch (WaitForConditionTimeoutException e) {
+            // file is not closed, nothing to do
+        }
+    }
 }
