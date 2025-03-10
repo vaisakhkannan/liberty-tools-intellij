@@ -400,6 +400,7 @@ public abstract class SingleModLibertyLSTestCommon {
     @Test
     @Video
     public void testDiagnosticInServerXML() {
+        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
         String stanzaSnippet = "<logging appsWriteJson=wrong\" />";
         String flaggedString = "wrong";
         String expectedHoverData = "cvc-datatype-valid.1.2.3: 'wrong' is not a valid value of union type 'booleanType'.";
@@ -427,6 +428,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot);
+            UIBotTestUtils.checkLanguageServerLog(remoteRobot);
         }
     }
 
@@ -468,6 +470,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot, true);
+            UIBotTestUtils.checkLanguageServerLog(remoteRobot);
         }
     }
 
