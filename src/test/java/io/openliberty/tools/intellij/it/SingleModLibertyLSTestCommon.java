@@ -411,6 +411,7 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
 
         UIBotTestUtils.checkLanguageServerLog(remoteRobot);
+        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
 
         // Save the current server.xml content.
         UIBotTestUtils.copyWindowContent(remoteRobot);
@@ -453,6 +454,8 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
 
         UIBotTestUtils.checkLanguageServerLog(remoteRobot);
+        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+
 
         // Save the current server.xml content.
         UIBotTestUtils.copyWindowContent(remoteRobot);
