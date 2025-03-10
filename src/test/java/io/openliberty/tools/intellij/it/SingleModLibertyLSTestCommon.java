@@ -68,7 +68,7 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.closeFileEditorTab(remoteRobot, "server.env", "5");
         UIBotTestUtils.closeFileEditorTab(remoteRobot, "bootstrap.properties", "5");
         if (!remoteRobot.isMac()) {
-            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
+//            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         }
         UIBotTestUtils.closeProjectView(remoteRobot);
         UIBotTestUtils.closeProjectFrame(remoteRobot);
@@ -400,7 +400,6 @@ public abstract class SingleModLibertyLSTestCommon {
     @Test
     @Video
     public void testDiagnosticInServerXML() {
-        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
         String stanzaSnippet = "<logging appsWriteJson=wrong\" />";
         String flaggedString = "wrong";
         String expectedHoverData = "cvc-datatype-valid.1.2.3: 'wrong' is not a valid value of union type 'booleanType'.";
@@ -410,6 +409,8 @@ public abstract class SingleModLibertyLSTestCommon {
 
         // get focus on server.xml tab prior to copy
         UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+
+        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
 
         // Save the current server.xml content.
         UIBotTestUtils.copyWindowContent(remoteRobot);
@@ -428,7 +429,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot);
-            UIBotTestUtils.checkLanguageServerLog(remoteRobot);
+            UIBotTestUtils.clickOnWindowPaneStripeButton(remoteRobot, "Language Servers");
         }
     }
 
@@ -439,7 +440,6 @@ public abstract class SingleModLibertyLSTestCommon {
     @Test
     @Video
     public void testQuickFixInServerXML() {
-        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
         String stanzaSnippet = "<logging appsWriteJson=wrong\" />";
         String flaggedString = "wrong";
         String correctedStanza = "<logging appsWriteJson=\"true\" />";
@@ -451,6 +451,8 @@ public abstract class SingleModLibertyLSTestCommon {
 
         // get focus on server.xml tab prior to copy
         UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+
+        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
 
         // Save the current server.xml content.
         UIBotTestUtils.copyWindowContent(remoteRobot);
@@ -470,7 +472,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot, true);
-            UIBotTestUtils.checkLanguageServerLog(remoteRobot);
+            UIBotTestUtils.clickOnWindowPaneStripeButton(remoteRobot, "Language Servers");
         }
     }
 
@@ -591,7 +593,7 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.importProject(remoteRobot, projectPath, projectName);
         UIBotTestUtils.openProjectView(remoteRobot);
         if (!remoteRobot.isMac()) {
-            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
+//            UIBotTestUtils.runActionFromSearchEverywherePanel(remoteRobot, "Compact Mode", 3);
         }
         // IntelliJ does not start building and indexing until the Project View is open
         UIBotTestUtils.waitForIndexing(remoteRobot);

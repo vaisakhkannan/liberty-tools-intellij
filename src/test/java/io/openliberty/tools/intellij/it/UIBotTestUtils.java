@@ -866,7 +866,7 @@ public class UIBotTestUtils {
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
                 TestUtils.sleepAndIgnoreException(20);
-                UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+//                UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
                 // click on center of editor pane - allow hover to work on next attempt
                 editorNew.click();
             }
@@ -986,7 +986,7 @@ public class UIBotTestUtils {
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
                 TestUtils.sleepAndIgnoreException(2);
-                UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+//                UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
                 // click on upper left corner of editor pane - allow hover to work on next attempt
                 editorNew.click(originPt);
             }
