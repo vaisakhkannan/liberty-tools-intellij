@@ -410,8 +410,8 @@ public abstract class SingleModLibertyLSTestCommon {
         // get focus on server.xml tab prior to copy
         UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
 
-        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
-        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+//        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
+//        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
 
         // Save the current server.xml content.
         UIBotTestUtils.copyWindowContent(remoteRobot);
@@ -430,7 +430,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot);
-            UIBotTestUtils.clickOnWindowPaneStripeButton(remoteRobot, "Language Servers");
+//            UIBotTestUtils.clickOnWindowPaneStripeButton(remoteRobot, "Language Servers");
         }
     }
 
@@ -453,8 +453,8 @@ public abstract class SingleModLibertyLSTestCommon {
         // get focus on server.xml tab prior to copy
         UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
 
-        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
-        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
+//        UIBotTestUtils.checkLanguageServerLog(remoteRobot);
+//        UIBotTestUtils.clickOnFileTab(remoteRobot, "server.xml");
 
 
         // Save the current server.xml content.
@@ -475,7 +475,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.hoverInAppServerCfgFileNew(remoteRobot, "feature", "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot, true);
-            UIBotTestUtils.clickOnWindowPaneStripeButton(remoteRobot, "Language Servers");
+//            UIBotTestUtils.clickOnWindowPaneStripeButton(remoteRobot, "Language Servers");
         }
     }
 
