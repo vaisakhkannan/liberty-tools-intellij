@@ -128,7 +128,7 @@ public abstract class SingleModJakartaLSTestCommon {
 
             // if the LS has not yet poulated the popup, re-get the popup data
             for (int i = 0; i<=5; i++){
-                if (foundHoverData.contains("method 'getProperties' is never used")) {
+                if (foundHoverData.contains("method 'getProperties()' is never used")) {
                     foundHoverData = UIBotTestUtils.getHoverStringData(remoteRobot, UIBotTestUtils.PopupType.DIAGNOSTIC);
                 }
                 else {
