@@ -865,7 +865,7 @@ public class UIBotTestUtils {
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
-                TestUtils.sleepAndIgnoreException(30);
+                TestUtils.sleepAndIgnoreException(20);
                 // click on center of editor pane - allow hover to work on next attempt
                 editorNew.click();
             }
@@ -930,7 +930,7 @@ public class UIBotTestUtils {
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
-                TestUtils.sleepAndIgnoreException(10);
+                TestUtils.sleepAndIgnoreException(2);
                 // click on upper left corner of editor pane - allow hover to work on next attempt
                 editorNew.click(originPt);
             }
