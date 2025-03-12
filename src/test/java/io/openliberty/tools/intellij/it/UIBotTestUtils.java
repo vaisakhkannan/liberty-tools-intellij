@@ -829,7 +829,7 @@ public class UIBotTestUtils {
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
 
         Exception error = null;
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 10; i++) {
             error = null;
             try {
                 // move the cursor to the origin of the editor
@@ -895,7 +895,7 @@ public class UIBotTestUtils {
         Point originPt = new Point(1, 1);
 
         Exception error = null;
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 10; i++) {
             error = null;
             try {
                 // move the cursor to the origin of the editor
@@ -930,7 +930,7 @@ public class UIBotTestUtils {
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
-                TestUtils.sleepAndIgnoreException(10);
+                TestUtils.sleepAndIgnoreException(2);
                 // click on upper left corner of editor pane - allow hover to work on next attempt
                 editorNew.click(originPt);
             }
