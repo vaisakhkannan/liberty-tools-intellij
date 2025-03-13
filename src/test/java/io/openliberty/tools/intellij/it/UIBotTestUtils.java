@@ -829,7 +829,8 @@ public class UIBotTestUtils {
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
 
         Exception error = null;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
+            System.out.println("//////// hover Attempt "+ i +" ------------");
             error = null;
             try {
                 // move the cursor to the origin of the editor
@@ -895,7 +896,8 @@ public class UIBotTestUtils {
         Point originPt = new Point(1, 1);
 
         Exception error = null;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
+            System.out.println("//////// Quickfix hover Attempt "+ i +" ------------");
             error = null;
             try {
                 // move the cursor to the origin of the editor
