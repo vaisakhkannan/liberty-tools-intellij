@@ -417,7 +417,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 20, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
 
             //move cursor to hover point
-            UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, flaggedString, "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC);
+            UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, flaggedString, "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC, true);
             String foundHoverData = UIBotTestUtils.getHoverStringData(remoteRobot, UIBotTestUtils.PopupType.DIAGNOSTIC);
             TestUtils.validateHoverData(expectedHoverData, foundHoverData);
 
@@ -453,7 +453,7 @@ public abstract class SingleModLibertyLSTestCommon {
             UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 20, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
 
             //there should be a diagnostic - move cursor to hover point
-            UIBotTestUtils.hoverForQuickFixInAppFile(remoteRobot, flaggedString, "server.xml", quickfixChooserString);
+            UIBotTestUtils.hoverForQuickFixInAppFile(remoteRobot, flaggedString, "server.xml", quickfixChooserString, true);
 
             UIBotTestUtils.chooseQuickFix(remoteRobot, quickfixChooserString);
             TestUtils.validateStanzaInConfigFile(pathToServerXML.toString(), correctedStanza);

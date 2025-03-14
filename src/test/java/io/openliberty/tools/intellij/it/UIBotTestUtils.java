@@ -810,6 +810,10 @@ public class UIBotTestUtils {
             // file not open, nothing to do
         }
     }
+    
+    public static void hoverInAppServerCfgFile(RemoteRobot remoteRobot, String hoverTarget, String hoverFile, PopupType popupType) {
+        hoverInAppServerCfgFile(remoteRobot, hoverTarget, hoverFile, popupType, false);
+    }
 
 
     /**
@@ -820,7 +824,7 @@ public class UIBotTestUtils {
      * @param hoverFile   The string path to the config file
      * @param popupType   the type of popup window that is expected from the hover action
      */
-    public static void hoverInAppServerCfgFile(RemoteRobot remoteRobot, String hoverTarget, String hoverFile, PopupType popupType) {
+    public static void hoverInAppServerCfgFile(RemoteRobot remoteRobot, String hoverTarget, String hoverFile, PopupType popupType, boolean isDelayRequired) {
 
         Keyboard keyboard = new Keyboard(remoteRobot);
 
@@ -828,8 +832,16 @@ public class UIBotTestUtils {
         clickOnFileTab(remoteRobot, hoverFile);
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
 
+        int iterationCount = 10;
+        if (remoteRobot.isWin()) {
+            iterationCount = 15;
+        }
+        if (isDelayRequired) {
+            iterationCount = 15;
+        }
+
         Exception error = null;
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < iterationCount; i++) {
             System.out.println("//////// hover Attempt "+ i +" ------------");
             error = null;
             try {
@@ -866,7 +878,7 @@ public class UIBotTestUtils {
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
-                TestUtils.sleepAndIgnoreException(20);
+                TestUtils.sleepAndIgnoreException(10);
                 // click on center of editor pane - allow hover to work on next attempt
                 editorNew.click();
             }
@@ -878,6 +890,10 @@ public class UIBotTestUtils {
         }
     }
 
+    public static void hoverForQuickFixInAppFile(RemoteRobot remoteRobot, String hoverTarget, String hoverFile, String quickfixChooserString) {
+        hoverForQuickFixInAppFile(remoteRobot, hoverTarget, hoverFile, quickfixChooserString, false);
+    }
+
     /**
      * Moves the mouse cursor to a specific string target in an application file
      *
@@ -886,7 +902,7 @@ public class UIBotTestUtils {
      * @param hoverFile             The string path to the config file
      * @param quickfixChooserString the string to use when choosing a quickfix action
      */
-    public static void hoverForQuickFixInAppFile(RemoteRobot remoteRobot, String hoverTarget, String hoverFile, String quickfixChooserString) {
+    public static void hoverForQuickFixInAppFile(RemoteRobot remoteRobot, String hoverTarget, String hoverFile, String quickfixChooserString, boolean isDelayRequired) {
 
         Keyboard keyboard = new Keyboard(remoteRobot);
 
@@ -895,8 +911,19 @@ public class UIBotTestUtils {
         EditorFixture editorNew = remoteRobot.find(EditorFixture.class, locator, Duration.ofSeconds(20));
         Point originPt = new Point(1, 1);
 
+        int iterationCount = 10;
+        int sleepSeconds = 2;
+        if (remoteRobot.isWin()) {
+            iterationCount = 15;
+            sleepSeconds = 10;
+        }
+        if (isDelayRequired) {
+            iterationCount = 15;
+            sleepSeconds = 10;
+        }
+
         Exception error = null;
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < iterationCount; i++) {
             System.out.println("//////// Quickfix hover Attempt "+ i +" ------------");
             error = null;
             try {
@@ -932,7 +959,7 @@ public class UIBotTestUtils {
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
-                TestUtils.sleepAndIgnoreException(10);
+                TestUtils.sleepAndIgnoreException(sleepSeconds);
                 // click on upper left corner of editor pane - allow hover to work on next attempt
                 editorNew.click(originPt);
             }
