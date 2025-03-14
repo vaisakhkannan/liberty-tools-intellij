@@ -136,6 +136,14 @@ public class ProjectFrameFixture extends CommonContainerFixture {
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 
+    public ComponentFixture getContentLabel(String... xpathVars) {
+        String text = xpathVars[0];
+        String waitTime = xpathVars[1];
+        return find(ComponentFixture.class,
+                byXpath("//div[@class='ContentTabLabel' and @text='" + text + "']"),
+                Duration.ofSeconds(Integer.parseInt(waitTime)));
+    }
+
     /**
      * Returns the ComponentFixture object associated with the ContentComboLabel class.
      *
@@ -219,6 +227,15 @@ public class ProjectFrameFixture extends CommonContainerFixture {
 
         return find(ComponentFixture.class,
                 byXpath("//div[@class='Tree' and @name='" + name + "' and contains(@visible_text, '" + visibleText + "')]"),
+                Duration.ofSeconds(Integer.parseInt(waitTime)));
+    }
+
+    public ComponentFixture getTreeNew(String... xpathVars) {
+        String visibleText = xpathVars[0];
+        String waitTime = xpathVars[1];
+
+        return find(ComponentFixture.class,
+                byXpath("//div[@class='Tree' and contains(@visible_text, '" + visibleText + "')]"),
                 Duration.ofSeconds(Integer.parseInt(waitTime)));
     }
 

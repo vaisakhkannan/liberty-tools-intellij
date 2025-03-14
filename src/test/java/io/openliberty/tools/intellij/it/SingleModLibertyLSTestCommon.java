@@ -414,7 +414,8 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.copyWindowContent(remoteRobot);
 
         try {
-            UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 20, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
+            UIBotTestUtils.checkLanguageServerLog(remoteRobot, true);
+            UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 11, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
 
             //move cursor to hover point
             UIBotTestUtils.hoverInAppServerCfgFile(remoteRobot, flaggedString, "server.xml", UIBotTestUtils.PopupType.DIAGNOSTIC, true);
@@ -424,6 +425,7 @@ public abstract class SingleModLibertyLSTestCommon {
         } finally {
             // Replace server.xml content with the original content
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot);
+            UIBotTestUtils.checkLanguageServerLog(remoteRobot, false);
         }
     }
 
@@ -450,7 +452,8 @@ public abstract class SingleModLibertyLSTestCommon {
         UIBotTestUtils.copyWindowContent(remoteRobot);
 
         try {
-            UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 20, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
+            UIBotTestUtils.checkLanguageServerLog(remoteRobot, true);
+            UIBotTestUtils.insertStanzaInAppServerXML(remoteRobot, stanzaSnippet, 11, 0, UIBotTestUtils.InsertionType.ELEMENT, false);
 
             //there should be a diagnostic - move cursor to hover point
             UIBotTestUtils.hoverForQuickFixInAppFile(remoteRobot, flaggedString, "server.xml", quickfixChooserString, true);
@@ -460,6 +463,7 @@ public abstract class SingleModLibertyLSTestCommon {
 
         } finally {
             // Replace server.xml content with the original content
+            UIBotTestUtils.checkLanguageServerLog(remoteRobot, false);
             UIBotTestUtils.pasteOnActiveWindow(remoteRobot, true);
         }
     }

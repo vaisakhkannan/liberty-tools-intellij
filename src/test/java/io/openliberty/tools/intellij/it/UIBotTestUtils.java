@@ -3004,4 +3004,96 @@ public class UIBotTestUtils {
 
         TestUtils.sleepAndIgnoreException(5);
     }
+
+    public static void checkLanguageServerLog(RemoteRobot remoteRobot, boolean executeRemain) {
+        ProjectFrameFixture projectFrame = remoteRobot.find(ProjectFrameFixture.class, Duration.ofSeconds(5));
+        ComponentFixture wpStripeButton = projectFrame.getStripeButton("Language Servers", "10");
+        wpStripeButton.click();
+        if (executeRemain) {
+            String fileName = "Liberty LemMinX";
+            ComponentFixture libertyTWBar = projectFrame.getContentLabel("LSP Consoles", "10");
+            libertyTWBar.click();
+            try {
+
+                ComponentFixture treeFixture = projectFrame.getTreeNew( fileName, "30");
+                RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+                        Duration.ofSeconds(2),
+                        "Waiting for " + fileName + " in tree fixture to show and come into focus",
+                        "Action " + fileName + " in tree fixture is not showing or not in focus",
+                        treeFixture::isShowing);
+
+                List<RemoteText> rts = treeFixture.findAllText();
+                for (RemoteText rt : rts) {
+                    if (fileName.equals(rt.getText())) {
+                        rt.click();
+                        break;
+                    }
+                }
+                ComponentFixture actionsTabFixture = projectFrame.getSETabLabel("Debug");
+                actionsTabFixture.click();
+                Locator locator1 = byXpath("//div[@accessiblename='Error reporting:' and @class='JPanel']//div[@class='ComboBox']");
+                ComboBoxFixture projBldFileBox1 = projectFrame.comboBox(locator1, Duration.ofSeconds(10));
+                projBldFileBox1.click();
+
+                List<JListFixture> searchLists = projectFrame.jLists(JListFixture.Companion.byType());
+                if (!searchLists.isEmpty()) {
+                    JListFixture searchList = searchLists.get(0);
+                    try {
+                        List<RemoteText> entries = searchList.findAllText();
+                        for (RemoteText entry : entries) {
+                            if (entry.getText().equals("In log")) {
+                                entry.click();
+                            }
+                        }
+                    } catch (NoSuchElementException nsee) {
+                        // The list is empty.
+                        throw new RuntimeException("Not found the entry");
+                    }
+                }
+                Locator locator = byXpath("//div[@accessiblename='Trace:' and @class='ComboBox']");
+                ComboBoxFixture projBldFileBox = projectFrame.comboBox(locator, Duration.ofSeconds(10));
+                projBldFileBox.click();
+                List<JListFixture> searchListsNew = projectFrame.jLists(JListFixture.Companion.byType());
+                if (!searchLists.isEmpty()) {
+                    JListFixture searchList = searchListsNew.get(0);
+                    try {
+                        List<RemoteText> entries = searchList.findAllText();
+                        for (RemoteText entry : entries) {
+                            if (entry.getText().equals("verbose")) {
+                                entry.click();
+                            }
+                        }
+                    } catch (NoSuchElementException nsee) {
+                        // The list is empty.
+                        throw new RuntimeException("Not found the entry");
+                    }
+                }
+                String xPath = "//div[@accessiblename='Apply' and @class='ActionButton']";
+                ComponentFixture terminalLabel = projectFrame.getActionButton(xPath, "10");
+                terminalLabel.click();
+
+                String fileNameNew = "started pid:";
+                ComponentFixture treeFixtureNew = projectFrame.getTreeNew( fileNameNew, "30");
+                RepeatUtilsKt.waitFor(Duration.ofSeconds(10),
+                        Duration.ofSeconds(2),
+                        "Waiting for " + fileNameNew + " in tree fixture to show and come into focus",
+                        "Action " + fileNameNew + " in tree fixture is not showing or not in focus",
+                        treeFixtureNew::isShowing);
+
+                List<RemoteText> rtsNew = treeFixtureNew.findAllText();
+                boolean flag = false;
+                for (RemoteText rt : rtsNew) {
+                    if (fileName.equals(rt.getText())) {
+                        flag = true;
+                    }
+                    if (rt.getText().contains(fileNameNew) && flag) {
+                        rt.click();
+                        break;
+                    }
+                }
+            } catch (WaitForConditionTimeoutException e) {
+                throw new RuntimeException("Failed to find the component");
+            }
+        }
+    }
 }
