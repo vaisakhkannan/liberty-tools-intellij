@@ -834,10 +834,10 @@ public class UIBotTestUtils {
 
         int iterationCount = 10;
         if (remoteRobot.isWin()) {
-            iterationCount = 15;
+            iterationCount = 20;
         }
         if (isDelayRequired) {
-            iterationCount = 15;
+            iterationCount = 20;
         }
 
         Exception error = null;
@@ -878,7 +878,7 @@ public class UIBotTestUtils {
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
-                TestUtils.sleepAndIgnoreException(10);
+                TestUtils.sleepAndIgnoreException(5);
                 // click on center of editor pane - allow hover to work on next attempt
                 editorNew.click();
             }
@@ -914,12 +914,12 @@ public class UIBotTestUtils {
         int iterationCount = 10;
         int sleepSeconds = 2;
         if (remoteRobot.isWin()) {
-            iterationCount = 15;
-            sleepSeconds = 10;
+            iterationCount = 20;
+            sleepSeconds = 5;
         }
         if (isDelayRequired) {
-            iterationCount = 15;
-            sleepSeconds = 10;
+            iterationCount = 20;
+            sleepSeconds = 5;
         }
 
         Exception error = null;
