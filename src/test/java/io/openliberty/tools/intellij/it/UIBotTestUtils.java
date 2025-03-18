@@ -834,10 +834,10 @@ public class UIBotTestUtils {
 
         int iterationCount = 10;
         if (remoteRobot.isWin()) {
-            iterationCount = 20;
+            iterationCount = 10;
         }
         if (isDelayRequired) {
-            iterationCount = 20;
+            iterationCount = 10;
         }
 
         Exception error = null;
@@ -914,11 +914,11 @@ public class UIBotTestUtils {
         int iterationCount = 10;
         int sleepSeconds = 2;
         if (remoteRobot.isWin()) {
-            iterationCount = 20;
+            iterationCount = 10;
             sleepSeconds = 5;
         }
         if (isDelayRequired) {
-            iterationCount = 20;
+            iterationCount = 10;
             sleepSeconds = 5;
         }
 
