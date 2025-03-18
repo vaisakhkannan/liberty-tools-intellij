@@ -1293,7 +1293,7 @@ public class UIBotTestUtils {
 
                 // For either a FEATURE or a CONFIG stanza, insert where the cursor is currently located.
 //                keyboard.enterText(stanzaSnippet);
-                keyboard.enterText(stanzaSnippet,1);
+                keyboard.enterText(stanzaSnippet,500);
 //                keyboard.enterText(stanzaSnippet);
 
                 if (completeWithPopup) {
