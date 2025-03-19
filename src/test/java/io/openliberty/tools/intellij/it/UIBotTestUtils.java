@@ -834,10 +834,10 @@ public class UIBotTestUtils {
 
         int iterationCount = 10;
         if (remoteRobot.isWin()) {
-            iterationCount = 10;
+            iterationCount = 15;
         }
         if (isDelayRequired) {
-            iterationCount = 10;
+            iterationCount = 15;
         }
 
         Exception error = null;
@@ -914,11 +914,11 @@ public class UIBotTestUtils {
         int iterationCount = 10;
         int sleepSeconds = 2;
         if (remoteRobot.isWin()) {
-            iterationCount = 10;
+            iterationCount = 15;
             sleepSeconds = 5;
         }
         if (isDelayRequired) {
-            iterationCount = 10;
+            iterationCount = 15;
             sleepSeconds = 5;
         }
 
@@ -1292,9 +1292,12 @@ public class UIBotTestUtils {
                 }
 
                 // For either a FEATURE or a CONFIG stanza, insert where the cursor is currently located.
-//                keyboard.enterText(stanzaSnippet);
-                keyboard.enterText(stanzaSnippet,500);
-//                keyboard.enterText(stanzaSnippet);
+                if (remoteRobot.isWin()) {
+                    keyboard.enterText(stanzaSnippet, 300);
+                }
+                else {
+                    keyboard.enterText(stanzaSnippet);
+                }
 
                 if (completeWithPopup) {
                     // Select the appropriate completion suggestion in the pop-up window that is automatically
