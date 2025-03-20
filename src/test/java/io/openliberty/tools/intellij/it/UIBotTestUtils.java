@@ -866,7 +866,7 @@ public class UIBotTestUtils {
                 break;
             } catch (WaitForConditionTimeoutException wftoe) {
                 error = wftoe;
-                TestUtils.sleepAndIgnoreException(10);
+                TestUtils.sleepAndIgnoreException(20);
                 // click on center of editor pane - allow hover to work on next attempt
                 editorNew.click();
             }
