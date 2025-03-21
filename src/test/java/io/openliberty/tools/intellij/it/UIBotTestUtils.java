@@ -837,7 +837,15 @@ public class UIBotTestUtils {
                 goToLineAndColumn(remoteRobot, keyboard, 1, 1);
 
                 // Find the target text on the editor and move the move to it.
-                editorNew.findText(contains(hoverTarget)).moveMouse();
+                for (int retry = 0; retry < 5; retry++) {
+                    boolean value = editorNew.hasText(contains(hoverTarget));
+                    System.out.println("/////////// "+ value + " ////////////");
+                    if (editorNew.hasText(contains(hoverTarget))) {
+                        editorNew.findText(contains(hoverTarget)).moveMouse();
+                        break;
+                    }
+                    TestUtils.sleepAndIgnoreException(1);  // Wait before retrying
+                }
                 // clear and "lightbulb" icons?
                 if (!hoverFile.equals("server.xml")) {
                     keyboard.hotKey(VK_ESCAPE);
@@ -906,7 +914,15 @@ public class UIBotTestUtils {
                 editorNew.click(originPt);
 
                 // Find the target text on the editor and move the move to it.
-                editorNew.findText(contains(hoverTarget)).moveMouse();
+                for (int retry = 0; retry < 5; retry++) {
+                    boolean value = editorNew.hasText(contains(hoverTarget));
+                    System.out.println("/////////// "+ value + " ////////////");
+                    if (editorNew.hasText(contains(hoverTarget))) {
+                        editorNew.findText(contains(hoverTarget)).moveMouse();
+                        break;
+                    }
+                    TestUtils.sleepAndIgnoreException(1);  // Wait before retrying
+                }
 
                 // jitter the cursor
                 Point p = editorNew.findText(contains(hoverTarget)).getPoint();
