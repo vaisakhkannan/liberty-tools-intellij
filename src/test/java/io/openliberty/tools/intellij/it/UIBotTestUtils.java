@@ -1282,10 +1282,10 @@ public class UIBotTestUtils {
 
                 // For either a FEATURE or a CONFIG stanza, insert where the cursor is currently located.
                 if (remoteRobot.isWin()) {
-                    keyboard.enterText(stanzaSnippet, 200);
+                    keyboard.enterText(stanzaSnippet, 300);
                 }
                 else if (remoteRobot.isMac()) {
-                    keyboard.enterText(stanzaSnippet, 200);
+                    keyboard.enterText(stanzaSnippet, 100);
                 }
                 else {
                     keyboard.enterText(stanzaSnippet);
