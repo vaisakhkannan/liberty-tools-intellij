@@ -1285,7 +1285,7 @@ public class UIBotTestUtils {
                     keyboard.enterText(stanzaSnippet, 300);
                 }
                 else if (remoteRobot.isMac()) {
-                    keyboard.enterText(stanzaSnippet, 100);
+                    keyboard.enterText(stanzaSnippet);
                 }
                 else {
                     keyboard.enterText(stanzaSnippet);
