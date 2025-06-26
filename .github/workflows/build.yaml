@@ -129,7 +129,7 @@ jobs:
         working-directory: ./liberty-tools-intellij
         run: bash ./src/test/resources/ci/scripts/setup.sh
 
-      # Checkout and build lsp4ij only if USE_LOCAL_PLUGIN is true
+      # Checkout and build lsp4ij only if USE_LOCAL_PLUGIN is true.
       - name: 'Checkout lsp4ij'
         if: ${{ inputs.useLocalPlugin == true }}
         uses: actions/checkout@v4
