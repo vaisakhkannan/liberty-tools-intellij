@@ -213,6 +213,11 @@ main() {
     echo "export PATH=$PATH:\$PATH" >> $HOME/.bashrc
     cat $HOME/.bashrc
 
+    echo "\n INFO: Display user info before port assign..."
+    whoami
+    echo $DISPLAY
+    ps -ef | grep -i windowserver
+
     # Tell the terminal session to use display port 77.
     export DISPLAY=:77.0
 
