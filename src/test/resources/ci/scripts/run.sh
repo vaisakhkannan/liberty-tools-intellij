@@ -167,6 +167,12 @@ startIDE() {
     echo -e "\n$(${currentTime[@]}): INFO: Starting the IntelliJ IDE..."
     # Have liberty tools debugger wait 480s for Maven or Gradle dev mode to start
     export LIBERTY_TOOLS_INTELLIJ_DEBUGGER_TIMEOUT=480
+
+    echo "\n INFO: Display user info..."
+    whoami
+    echo $DISPLAY
+    ps -ef | grep -i windowserver
+
     ./gradlew runIdeForUiTests -PuseLocal=$USE_LOCAL_PLUGIN --info  > remoteServer.log  2>&1 &
 
     # Wait for the IDE to come up.
@@ -239,6 +245,11 @@ main() {
     # 6 hours so it is unlikely we could run more than 5 times in one build.
     for restartCount in {1..5}; do
         startIDE
+
+        echo "\n INFO: Display user info 2nd details..."
+            whoami
+            echo $DISPLAY
+            ps -ef | grep -i windowserver
         # Run the tests
         echo -e "\n$(${currentTime[@]}): INFO: Running tests..."
         set -o pipefail # using tee requires we use this setting to gather the rc of gradlew
