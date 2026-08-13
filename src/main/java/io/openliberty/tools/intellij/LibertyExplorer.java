@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020, 2025 IBM Corporation.
+ * Copyright (c) 2020, 2026 IBM Corporation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -62,7 +62,7 @@ public class LibertyExplorer extends SimpleToolWindowPanel {
                 }, modalityState);
             } else {
                 ApplicationManager.getApplication().invokeLater(() -> {
-                    JBTextArea jbTextArea = new JBTextArea(LocalizedResourceUtil.getMessage("no.liberty.projects.detected"));
+                    JBTextArea jbTextArea = new JBTextArea(LibertyBundles.message("no.liberty.projects.detected"));
                     jbTextArea.setEditable(false);
                     jbTextArea.setBackground(getBackground());
                     jbTextArea.setLineWrap(true);
